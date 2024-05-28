@@ -8,6 +8,9 @@ import RecordList from "./components/RecordList";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+const EditUser = () => {
+  return <div>edit User</div>;
+};
 root.render(
   <React.StrictMode>
     <BrowserRouter>
@@ -23,6 +26,5 @@ root.render(
         </Route>
       </Routes>
     </BrowserRouter>
-    ;
   </React.StrictMode>
 );

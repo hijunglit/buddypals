@@ -194,6 +194,21 @@ export default function Record() {
                     >
                       Senior
                     </label>
+                    <input
+                      id='positionCeo'
+                      name='positionOptions'
+                      type='radio'
+                      value='CEO'
+                      className='h-4 w-4 border-slate-300 text-slate-600 focus:ring-slate-600 cursor-pointer'
+                      checked={form.level === "CEO"}
+                      onChange={(e) => updateForm({ level: e.target.value })}
+                    />
+                    <label
+                      htmlFor='positionCeo'
+                      className='ml-3 block text-sm font-medium leading-6 text-slate-900 mr-4'
+                    >
+                      CEO
+                    </label>
                   </div>
                 </div>
               </fieldset>
