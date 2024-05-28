@@ -23,9 +23,9 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("/", globalRouter);
-app.use("/record", records);
 app.use("/users", userRouter);
 app.use("posts", postRouter);
+app.use("/record", records);
 
 const handleListening = () =>
   console.log(`✅ Server listening on http://localhost:${PORT}`);
