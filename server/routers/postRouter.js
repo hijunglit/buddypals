@@ -1,9 +1,9 @@
 import express from "express";
+import { edit, see } from "../controllers/postControllers";
 
 const postRouter = express.Router();
 
-const handleSeePost = (req, res) => res.send("See post");
-
-postRouter.get("/see", handleSeePost);
+postRouter.get("/see", see);
+postRouter.get("/edit", edit);
 
 export default postRouter;
