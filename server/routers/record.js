@@ -18,7 +18,6 @@ router.get("/:id", async (req, res) => {
   let collection = await db.collection(records);
   let query = { _id: new objectId(req.params.id) };
   let result = await collection.findOne(query);
-
   if (!result) res.send("Not found").status(404);
   else res.send(result).status(200);
 });

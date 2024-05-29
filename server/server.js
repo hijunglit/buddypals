@@ -1,31 +1,21 @@
 import "./db.js";
 import express from "express";
 import cors from "cors";
-import records from "./routes/record.js";
+import records from "./routers/record.js";
 import morgan from "morgan";
+import globalRouter from "./routers/globalRouter.js";
+import userRouter from "./routers/userRouter.js";
+import postRouter from "./routers/postRouter.js";
 
 const PORT = process.env.PORT || 5050;
 const app = express();
 
-const globalRouter = express.Router();
-const userRouter = express.Router();
-const postRouter = express.Router();
-
-const handleHome = (req, res) => res.send("Home");
-const handleEditUser = (req, res) => res.send("Edit user");
-const handleSeePost = (req, res) => res.send("See post");
-
-globalRouter.get("/", handleHome);
-userRouter.get("/edit", handleEditUser);
-postRouter.get("/see", handleSeePost);
-
+app.use(morgan("dev"));
 app.use(cors());
 app.use(express.json());
-app.use(morgan("dev"));
 app.use("/", globalRouter);
 app.use("/users", userRouter);
-app.use("posts", postRouter);
-app.use("/record", records);
+app.use("/posts", postRouter);
 
 const handleListening = () =>
   console.log(`✅ Server listening on http://localhost:${PORT}`);

@@ -4,6 +4,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import Record from "./components/Record";
 import RecordList from "./components/RecordList";
+import User from "./components/User";
+import Home from "./components/Home";
+import Post from "./components/Post";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -13,13 +16,13 @@ root.render(
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<App />}>
-          <Route path='/' element={<RecordList />} />
+          <Route path='/' element={<Home />} />
         </Route>
-        <Route path='/edit/:id' element={<App />}>
-          <Route path='/edit/:id' element={<Record />} />
+        <Route path='/users/edit' element={<App />}>
+          <Route path='/users/edit' element={<User />} />
         </Route>
-        <Route path='/create' element={<App />}>
-          <Route path='/create' element={<Record />} />
+        <Route path='/posts/see' element={<App />}>
+          <Route path='/posts/see' element={<Post />} />
         </Route>
       </Routes>
     </BrowserRouter>
