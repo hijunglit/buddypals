@@ -1,10 +1,10 @@
 import express from "express";
-import { posts } from "../controllers/postControllers";
-import { join, login, search } from "../controllers/userController";
+import { join, login, search } from "../controllers/userController.js";
+import { posts } from "../controllers/postController.js";
 
 const globalRouter = express.Router();
 
-globalRouter.get("/", posts);
+globalRouter.get("/:id(\\d+)", posts);
 globalRouter.get("/join", join);
 globalRouter.get("/login", login);
 globalRouter.get("/search", search);

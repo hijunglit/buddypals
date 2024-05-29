@@ -1,6 +1,6 @@
 import express from "express";
-import { edit } from "../controllers/postControllers";
-import { logout, remove, see } from "../controllers/userController";
+import { edit } from "../controllers/postController.js";
+import { logout, remove, see } from "../controllers/userController.js";
 
 const userRouter = express.Router();
 

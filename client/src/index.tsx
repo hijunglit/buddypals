@@ -17,12 +17,13 @@ root.render(
       <Routes>
         <Route path='/' element={<App />}>
           <Route path='/' element={<Home />} />
+          <Route path='/:id' element={<Post />} />
         </Route>
         <Route path='/users/edit' element={<App />}>
           <Route path='/users/edit' element={<User />} />
         </Route>
-        <Route path='/posts/see' element={<App />}>
-          <Route path='/posts/see' element={<Post />} />
+        <Route path='/posts/:id' element={<App />}>
+          <Route path='/posts/:id' element={<Post />} />
         </Route>
       </Routes>
     </BrowserRouter>
