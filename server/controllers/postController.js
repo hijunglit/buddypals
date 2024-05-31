@@ -30,15 +30,16 @@ export const getEdit = async (req, res) => {
 export const postEdit = async (req, res) => {
   const { id } = req.params;
   const { text, hashtags } = req.body;
-  const post = await Post.findById(id);
+  const post = await Post.exists({ _id: id });
   if (!post) {
     return res.send("Not found").status(404);
   }
-  post.text = text;
-  post.hashtags = hashtags
-    .split(",")
-    .map((word) => (word.startWith("#") ? word : `#${word}`));
-  await post.save();
+  await Post.findByIdAndUpdate(id, {
+    text,
+    hashtags: hashtags
+      .split(",")
+      .map((word) => (word.startsWith("#") ? word : `#${word}`)),
+  });
   return res.send(`post edit`);
 };
 export const getUpload = (req, res) => {
