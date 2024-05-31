@@ -23,7 +23,6 @@ function Home() {
     getPosts();
     return;
   }, [posts.length]);
-  console.log(posts);
   return (
     <>
       <h1>Home!</h1>{" "}

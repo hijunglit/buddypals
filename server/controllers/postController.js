@@ -2,7 +2,6 @@ import Post from "../models/Post.js";
 
 export const home = async (req, res) => {
   try {
-    console.log(req.params);
     const posts = await Post.find({});
     return res.send(posts).status(200);
   } catch (err) {
@@ -28,9 +27,18 @@ export const getEdit = async (req, res) => {
     return res.status(500).send("Error fetching edit post data");
   }
 };
-export const postEdit = (req, res) => {
+export const postEdit = async (req, res) => {
   const { id } = req.params;
-  const { title } = req.body;
+  const { text, hashtags } = req.body;
+  const post = await Post.findById(id);
+  if (!post) {
+    return res.send("Not found").status(404);
+  }
+  post.text = text;
+  post.hashtags = hashtags
+    .split(",")
+    .map((word) => (word.startWith("#") ? word : `#${word}`));
+  await post.save();
   return res.send(`post edit`);
 };
 export const getUpload = (req, res) => {
@@ -44,7 +52,6 @@ export const postUpload = async (req, res) => {
       createdAt: Date.now(),
       hashtags: hashtags.split(",").map((word) => `#${word}`),
     });
-    console.log(post);
     const result = await Post.create({
       text,
       hashtags: hashtags.split(",").map((word) => `#${word}`),

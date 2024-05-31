@@ -1,16 +1,22 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
+interface IPost {
+  text: string;
+  hashtags: string[];
+}
+
 function Edit() {
-  const [post, setPost] = useState();
-  const [isNew, setIsNew] = useState(true);
+  const [form, setForm] = useState<IPost>({
+    text: "",
+    hashtags: [""],
+  });
   const params = useParams();
   const navigate = useNavigate();
   useEffect(() => {
     async function fetchData() {
       const id = params.id?.toString();
       if (!id) return;
-      setIsNew(false);
       const response = await fetch(
         `http://localhost:5050/posts/${params.id?.toString()}/edit`
       );
@@ -25,11 +31,56 @@ function Edit() {
         navigate("/");
         return;
       }
-      setPost(post);
+      setForm(post);
     }
     fetchData();
-  }, []);
-  return <h1>this is edit page!</h1>;
+  }, [params.id, navigate]);
+  function updateForm(value: any) {
+    return setForm((prev) => {
+      return { ...prev, ...value };
+    });
+  }
+  const onSubmit = async (e: any) => {
+    e.preventDefault();
+    const post = { ...form };
+    try {
+      let response;
+      response = await fetch(
+        `http://localhost:5050/posts/${params.id?.toString()}/edit`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(post),
+        }
+      );
+    } catch (err) {
+      console.error("A problem occurred with your fetch operation: ", err);
+    } finally {
+      setForm({ text: "", hashtags: [""] });
+      navigate(`/`);
+    }
+  };
+  return (
+    <form onSubmit={onSubmit}>
+      <input
+        type='text'
+        name='text'
+        id='text'
+        value={form?.text}
+        onChange={(e) => updateForm({ text: e.target.value })}
+      />
+      <input
+        type='text'
+        name='hashtags'
+        id='hashtags'
+        value={form?.hashtags}
+        onChange={(e) => updateForm({ hashtags: e.target.value })}
+      />
+      <input type='submit' value='Edit post' />
+    </form>
+  );
 }
 
 export default Edit;
