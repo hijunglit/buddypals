@@ -34,11 +34,11 @@ export const postUpload = async (req, res) => {
       hashtags: hashtags.split(",").map((word) => `#${word}`),
     });
     console.log(post);
-    await Post.create({
+    const result = await Post.create({
       text,
       hashtags: hashtags.split(",").map((word) => `#${word}`),
     });
-    return res.send(post);
+    return res.send(result).status(204);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error updating record");

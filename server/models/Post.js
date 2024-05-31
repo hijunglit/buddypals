@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
-  text: String,
+  text: { type: String, required: true },
   createdAt: { type: Date, required: true, default: Date.now },
   hashtags: [{ type: String }],
 });
