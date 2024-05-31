@@ -48,14 +48,9 @@ export const getUpload = (req, res) => {
 export const postUpload = async (req, res) => {
   const { text, hashtags } = req.body;
   try {
-    const post = new Post({
-      text,
-      createdAt: Date.now(),
-      hashtags: hashtags.split(",").map((word) => `#${word}`),
-    });
     const result = await Post.create({
       text,
-      hashtags: hashtags.split(",").map((word) => `#${word}`),
+      hashtags,
     });
     return res.send(result).status(204);
   } catch (err) {
