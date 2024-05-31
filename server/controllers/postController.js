@@ -2,20 +2,31 @@ import Post from "../models/Post.js";
 
 export const home = async (req, res) => {
   try {
+    console.log(req.params);
     const posts = await Post.find({});
-    console.log("fetching posts successful", posts);
     return res.send(posts).status(200);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error fetchgin posts data");
+    res.status(500).send("Error fetching posts data");
   }
 };
-export const see = (req, res) => {
-  console.log("the router parameter is", req.params.id);
-  return res.send(`Watch Post #${req.params.id}`);
+export const see = async (req, res) => {
+  const { id } = req.params;
+  const post = await Post.findById(id);
+  if (!post) {
+    return res.send("post not found").status(404);
+  }
+  return res.send(post).status(200);
 };
-export const getEdit = (req, res) => {
-  return res.send("Edit", { pageTitle: "Editing" });
+export const getEdit = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const post = await Post.findById(id);
+    return res.send(post).status(200);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Error fetching edit post data");
+  }
 };
 export const postEdit = (req, res) => {
   const { id } = req.params;

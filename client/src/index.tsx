@@ -7,6 +7,7 @@ import RecordList from "./components/RecordList";
 import User from "./components/User";
 import Home from "./components/Home";
 import Upload from "./components/Upload";
+import Edit from "./components/Edit";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -23,6 +24,7 @@ root.render(
         </Route>
         <Route path='/posts/*' element={<App />}>
           <Route path='upload' element={<Upload />} />
+          <Route path=':id/edit' element={<Edit />} />
         </Route>
       </Routes>
     </BrowserRouter>

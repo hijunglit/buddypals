@@ -1,6 +1,5 @@
 import express from "express";
 import {
-  deletePost,
   getEdit,
   getUpload,
   postUpload,
@@ -9,9 +8,8 @@ import {
 
 const postRouter = express.Router();
 
-postRouter.get("/:id(\\d+)", see);
-postRouter.get("/:id(\\d+)/edit", getEdit);
-postRouter.get("/:id(\\d+)/delete", deletePost);
+postRouter.get("/:id([0-9a-f]{24})", see);
+postRouter.get("/:id([0-9a-f]{24})/edit", getEdit);
 postRouter.route("/upload").get(getUpload).post(postUpload);
 
 export default postRouter;

@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 interface IData {
   text: string;
   hashtags: string;
+  _id: string;
 }
 
 function Home() {
@@ -21,7 +23,7 @@ function Home() {
     getPosts();
     return;
   }, [posts.length]);
-
+  console.log(posts);
   return (
     <>
       <h1>Home!</h1>{" "}
@@ -30,6 +32,7 @@ function Home() {
           <div key={index}>
             <h1>{post.text}</h1>
             <h1>{post.hashtags}</h1>
+            <Link to={`posts/${post._id}/edit`}>Edit post</Link>
           </div>
         ))}
       </div>
