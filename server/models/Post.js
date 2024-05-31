@@ -2,9 +2,8 @@ import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
   text: String,
-  createdAt: Date,
+  createdAt: { type: Date, required: true, default: Date.now },
   hashtags: [{ type: String }],
-  comments: [{ date: Date }],
 });
 
 const Post = mongoose.model("Post", postSchema);

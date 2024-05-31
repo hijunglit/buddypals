@@ -6,7 +6,7 @@ import Record from "./components/Record";
 import RecordList from "./components/RecordList";
 import User from "./components/User";
 import Home from "./components/Home";
-import Post from "./components/Post";
+import Upload from "./components/Upload";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -17,13 +17,12 @@ root.render(
       <Routes>
         <Route path='/' element={<App />}>
           <Route path='/' element={<Home />} />
-          <Route path='/:id' element={<Post />} />
         </Route>
-        <Route path='/users/edit' element={<App />}>
-          <Route path='/users/edit' element={<User />} />
+        <Route path='/users/*' element={<App />}>
+          <Route path='edit' element={<User />} />
         </Route>
-        <Route path='/posts/:id' element={<App />}>
-          <Route path='/posts/:id' element={<Post />} />
+        <Route path='/posts/*' element={<App />}>
+          <Route path='upload' element={<Upload />} />
         </Route>
       </Routes>
     </BrowserRouter>
