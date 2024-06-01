@@ -2,7 +2,7 @@ import Post from "../models/Post.js";
 
 export const home = async (req, res) => {
   try {
-    const posts = await Post.find({});
+    const posts = await Post.find({}).sort({ createdAt: "desc" });
     return res.send(posts).status(200);
   } catch (err) {
     console.error(err);
