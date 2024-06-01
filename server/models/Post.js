@@ -7,8 +7,8 @@ const postSchema = new mongoose.Schema({
   hashtags: [{ type: String, trim: true }],
 });
 
-postSchema.pre("save", async function () {
-  this.hashtags = this.hashtags[0]
+postSchema.static("formatHashtags", function (hashtags) {
+  return hashtags
     .split(",")
     .map((word) => (word.startsWith("#") ? word : `#${word}`));
 });

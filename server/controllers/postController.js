@@ -36,9 +36,7 @@ export const postEdit = async (req, res) => {
   }
   await Post.findByIdAndUpdate(id, {
     text,
-    hashtags: hashtags
-      .split(",")
-      .map((word) => (word.startsWith("#") ? word : `#${word}`)),
+    hashtags: Post.formatHashtags(hashtags),
   });
   return res.send(`post edit`);
 };
@@ -50,7 +48,7 @@ export const postUpload = async (req, res) => {
   try {
     const result = await Post.create({
       text,
-      hashtags,
+      hashtags: Post.formatHashtags(hashtags),
     });
     return res.send(result).status(204);
   } catch (err) {
