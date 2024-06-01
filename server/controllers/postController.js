@@ -56,6 +56,8 @@ export const postUpload = async (req, res) => {
     res.status(500).send("Error updating record");
   }
 };
-export const deletePost = (req, res) => {
+export const deletePost = async (req, res) => {
+  const { id } = req.params;
+  await Post.findByIdAndDelete(id);
   return res.send("Delete post");
 };
