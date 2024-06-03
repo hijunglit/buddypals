@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface IPost {
@@ -40,8 +40,8 @@ function Edit() {
       return { ...prev, ...value };
     });
   }
-  const onSubmit = async (e: any) => {
-    e.preventDefault();
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const post = { ...form };
     try {
       let response;
