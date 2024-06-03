@@ -1,4 +1,5 @@
-export const join = (req, res) => res.send("Join");
+export const getJoin = (req, res) => res.send("get join");
+export const postJoin = (req, res) => res.send("post join");
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
 export const login = (req, res) => res.send("Login");

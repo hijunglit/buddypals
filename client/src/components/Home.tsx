@@ -1,5 +1,19 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+
+const PostContainer = styled.div``;
+const Post = styled.div`
+  width: fit-content;
+  margin: 0 auto;
+  padding: 12px 16px;
+  & a {
+    color: #fff;
+    text-decoration: none;
+  }
+`;
+const Text = styled.h1``;
+const Hashtags = styled.h1``;
 
 interface IData {
   text: string;
@@ -31,19 +45,19 @@ function Home() {
   }, [posts.length]);
   return (
     <>
-      <h1>Home!</h1>{" "}
-      <div>
+      <h1 style={{ textAlign: "center" }}>Home!</h1>
+      <PostContainer>
         {posts?.map((post, index) => (
-          <div key={index}>
-            <h1>{post.text}</h1>
-            <h1>{post.hashtags}</h1>
+          <Post key={index}>
+            <Text>{post.text}</Text>
+            <Hashtags>{post.hashtags}</Hashtags>
             <button>
               <Link to={`posts/${post._id}/edit`}>Edit</Link>
             </button>
             <button onClick={() => deletePost(post._id)}>Delete</button>
-          </div>
+          </Post>
         ))}
-      </div>
+      </PostContainer>
     </>
   );
 }
