@@ -30,14 +30,14 @@ export const getLogin = (req, res) => res.send({ pageTitle: "Login" });
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
+  console.log("user info", user);
   if (!user) {
     return res.status(401).send({ message: "사용자를 찾을 수 없습니다." });
   }
-  const ok = await verifyPassword(password, user.salt, user.password);
-  if (!ok) {
-    return res
-      .status(401)
-      .send({ pageTitle, message: "비밀번호가 일치하지 않습니다." });
+  const verified = await verifyPassword(password, user.salt, user.password);
+  console.log(verified);
+  if (!verified) {
+    return res.status(401).send({ message: "비밀번호가 일치하지 않습니다." });
   }
   return res.send({ status: "login success" });
 };

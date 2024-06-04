@@ -17,18 +17,18 @@ const createSalt = async () => {
 };
 userSchema.pre("save", async function () {
   const salt = await createSalt();
-  console.log(salt);
-  this.salt = salt.toString();
+  this.salt = salt;
   this.password = (
     await pbkdf2Promise(this.password, salt, 104906, 64, "sha512")
   ).toString("base64");
 });
 
 export const verifyPassword = async (password, userSalt, userPassword) => {
-  const key = await pbkdf2Promise(password, userSalt, 99999, 64, "sha512");
-  const hashedPassword = key.toString("base64");
+  const hashedPassword = (
+    await pbkdf2Promise(password, userSalt, 104906, 64, "sha512")
+  ).toString("base64");
 
-  if (hashedPassword == userPassword) return true;
+  if (hashedPassword === userPassword) return true;
   return false;
 };
 
