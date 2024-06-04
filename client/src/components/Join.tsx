@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface IJoinForm {
   name: string;
@@ -23,7 +23,7 @@ function Join() {
     (async () => {
       const response = await fetch("http://localhost:5050/join");
       const json = await response.json();
-      setForm(json);
+      console.log(json);
     })();
   }, [message.length]);
   function updateForm(value: any) {
@@ -66,7 +66,7 @@ function Join() {
           name='name'
           type='text'
           value={form.name || ""}
-          placeholder='name'
+          placeholder='이름'
           onChange={(e) => updateForm({ name: e.target.value })}
           required
         />
@@ -74,7 +74,7 @@ function Join() {
           name='email'
           type='email'
           value={form.email || ""}
-          placeholder='email'
+          placeholder='이메일'
           onChange={(e) => updateForm({ email: e.target.value })}
           required
         />
@@ -82,7 +82,7 @@ function Join() {
           name='username'
           type='text'
           value={form.username || ""}
-          placeholder='username'
+          placeholder='사용자 이름'
           onChange={(e) => updateForm({ username: e.target.value })}
           required
         />
@@ -90,7 +90,7 @@ function Join() {
           name='password'
           type='password'
           value={form.password || ""}
-          placeholder='password'
+          placeholder='비밀번호'
           autoComplete='off'
           onChange={(e) => updateForm({ password: e.target.value })}
           required
@@ -99,13 +99,18 @@ function Join() {
           name='password2'
           type='password'
           value={form.password2 || ""}
-          placeholder='Confirm password'
+          placeholder='비밀번호 확인'
           autoComplete='off'
           onChange={(e) => updateForm({ password2: e.target.value })}
           required
         />
-        <input type='submit' value='Join' />
+        <input type='submit' value='계정 만들기' />
       </form>
+      <hr />
+      <div>
+        <span>이미 계정이 있으신가요?</span>
+        <Link to={"/login"}>지금 로그인 하기 &rarr;</Link>
+      </div>
     </>
   );
 }

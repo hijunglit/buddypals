@@ -13,7 +13,7 @@ export const see = async (req, res) => {
   const { id } = req.params;
   const post = await Post.findById(id);
   if (!post) {
-    return res.send("post not found").status(404);
+    return res.send("post Not found").status(404);
   }
   return res.send(post).status(200);
 };
@@ -32,7 +32,7 @@ export const postEdit = async (req, res) => {
   const { text, hashtags } = req.body;
   const post = await Post.exists({ _id: id });
   if (!post) {
-    return res.send("Not found").status(404);
+    return res.send("post Not found").status(404);
   }
   await Post.findByIdAndUpdate(id, {
     text,
