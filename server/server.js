@@ -1,6 +1,5 @@
 import express from "express";
 import cors from "cors";
-import records from "./routers/record.js";
 import morgan from "morgan";
 import rootRouter from "./routers/rootRouter.js";
 import userRouter from "./routers/userRouter.js";

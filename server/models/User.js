@@ -6,6 +6,7 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  salt: { type: String },
   name: { type: String, required: true },
 });
 const randomBytesPromise = util.promisify(crypto.randomBytes);
@@ -16,6 +17,8 @@ const createSalt = async () => {
 };
 userSchema.pre("save", async function () {
   const salt = await createSalt();
+  console.log(salt);
+  this.salt = salt;
   this.password = (
     await pbkdf2Promise(this.password, salt, 104906, 64, "sha512")
   ).toString("base64");

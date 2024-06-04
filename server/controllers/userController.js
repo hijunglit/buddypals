@@ -10,6 +10,7 @@ export const postJoin = async (req, res) => {
     email,
     password,
   });
+  console.log(newUser);
   return res.send(newUser);
 };
 export const edit = (req, res) => res.send("Edit User");

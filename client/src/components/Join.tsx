@@ -30,13 +30,13 @@ function Join() {
   }
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const post = { ...form };
+    const user = { ...form };
     try {
       let response;
       response = await fetch(`http://localhost:5050/join`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(post),
+        body: JSON.stringify(user),
       });
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
@@ -50,30 +50,34 @@ function Join() {
       <input
         name='name'
         type='text'
+        value={form.name || ""}
         placeholder='name'
-        onChange={(e) => updateForm(e.target.value)}
+        onChange={(e) => updateForm({ name: e.target.value })}
         required
       />
       <input
         name='email'
         type='email'
+        value={form.email || ""}
         placeholder='email'
-        onChange={(e) => updateForm(e.target.value)}
+        onChange={(e) => updateForm({ email: e.target.value })}
         required
       />
       <input
         name='username'
         type='text'
+        value={form.username || ""}
         placeholder='username'
-        onChange={(e) => updateForm(e.target.value)}
+        onChange={(e) => updateForm({ username: e.target.value })}
         required
       />
       <input
         name='password'
         type='password'
+        value={form.password || ""}
         placeholder='password'
         autoComplete='off'
-        onChange={(e) => e.target.value}
+        onChange={(e) => updateForm({ password: e.target.value })}
         required
       />
       <input type='submit' value='Join' />
