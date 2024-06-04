@@ -1,9 +1,18 @@
 import User from "../models/User.js";
 
 export const getJoin = (req, res) =>
-  res.send({ title: "get join" }).status(200);
+  res.send({ pageTitle: "Join" }).status(200);
 export const postJoin = async (req, res) => {
-  const { name, username, email, password } = req.body;
+  const { name, username, email, password, password2 } = req.body;
+  if (password !== password2) {
+    return res.send({ message: "password confirm failed" }).status(401);
+  }
+  const exists = await User.exists({ $or: [{ username }, { email }] });
+  if (exists) {
+    return res
+      .send({ message: "This username/email is already exist" })
+      .status(401);
+  }
   const newUser = await User.create({
     name,
     username,
