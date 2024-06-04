@@ -1,4 +1,4 @@
-import User from "../models/User.js";
+import User, { verifyPassword } from "../models/User.js";
 
 export const getJoin = (req, res) =>
   res.send({ pageTitle: "Join" }).status(200);
@@ -29,11 +29,17 @@ export const postJoin = async (req, res) => {
 export const getLogin = (req, res) => res.send({ pageTitle: "Login" });
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
-  const exists = await User.exists({ username });
-  if (!exists) {
-    return res.status(400).send({ message: "사용자를 찾을 수 없습니다." });
+  const user = await User.findOne({ username });
+  if (!user) {
+    return res.status(401).send({ message: "사용자를 찾을 수 없습니다." });
   }
-  return res.send({ pageTitle: "Post login" });
+  const ok = await verifyPassword(password, user.salt, user.password);
+  if (!ok) {
+    return res
+      .status(401)
+      .send({ pageTitle, message: "비밀번호가 일치하지 않습니다." });
+  }
+  return res.send({ status: "login success" });
 };
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
