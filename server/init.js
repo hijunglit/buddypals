@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "./db.js";
 import "./models/Post.js";
 import "./models/User.js";
