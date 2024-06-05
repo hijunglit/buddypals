@@ -11,7 +11,7 @@ export const postJoin = async (req, res) => {
   if (exists) {
     return res
       .status(401)
-      .send({ message: "This username/email is already exist" });
+      .send({ message: "사용자이름/ 이메일이 이미 존재합니다." });
   }
   try {
     const newUser = await User.create({
@@ -39,7 +39,9 @@ export const postLogin = async (req, res) => {
   if (!verified) {
     return res.status(401).send({ message: "비밀번호가 일치하지 않습니다." });
   }
-  return res.send({ status: "login success" });
+  req.session.loggedIn = true;
+  req.session.user = user;
+  return res.send({ message: "login success" }).status(200);
 };
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
