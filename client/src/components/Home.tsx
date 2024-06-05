@@ -22,7 +22,6 @@ interface IData {
 }
 
 function Home() {
-  const navigate = useNavigate();
   async function deletePost(id: any) {
     await fetch(`http://localhost:5050/posts/${id}/delete`);
     const newPost = posts.filter((el) => el._id !== id);
