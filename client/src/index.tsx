@@ -8,6 +8,7 @@ import Upload from "./components/Upload";
 import Edit from "./components/Edit";
 import Join from "./components/Join";
 import Login from "./components/Login";
+import Social from "./components/Social";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -23,6 +24,7 @@ root.render(
       </Route>
       <Route path='/users/*' element={<App />}>
         <Route path='edit' element={<User />} />
+        <Route path='kakao/start' element={<Social />} />
       </Route>
       <Route path='/posts/*' element={<App />}>
         <Route path='upload' element={<Upload />} />

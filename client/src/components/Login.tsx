@@ -45,6 +45,15 @@ function Login() {
       setForm({ username: "", password: "" });
     }
   };
+  const handleLogin = async () => {
+    const baseUrl = "https://kauth.kakao.com/oauth/authorize";
+    const redirectUrl = "http://127.0.0.1:5050/kakao-login";
+    const responseType = "code";
+    const response = await fetch("http://localhost:5050/users/kakao/start");
+    const json = await response.json();
+    const clientId = json.clientId;
+    window.location.href = `${baseUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=${responseType}`;
+  };
   return (
     <>
       {message ? <span>{message}</span> : ""}
@@ -73,6 +82,7 @@ function Login() {
       <hr />
       <div>
         <Link to={"/join"}>새 계정 만들기 &rarr;</Link>
+        <button onClick={handleLogin}>카카오 로그인 &rarr;</button>
       </div>
     </>
   );

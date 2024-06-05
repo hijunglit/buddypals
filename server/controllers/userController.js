@@ -30,12 +30,10 @@ export const getLogin = (req, res) => res.send({ pageTitle: "Login" });
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
-  console.log("user info", user);
   if (!user) {
     return res.status(401).send({ message: "사용자를 찾을 수 없습니다." });
   }
   const verified = await verifyPassword(password, user.salt, user.password);
-  console.log(verified);
   if (!verified) {
     return res.status(401).send({ message: "비밀번호가 일치하지 않습니다." });
   }
@@ -43,6 +41,19 @@ export const postLogin = async (req, res) => {
   req.session.user = user;
   return res.send({ message: "login success" }).status(200);
 };
+export const startKakaoLogin = (req, res) => {
+  const baseUrl = "https://kauth.kakao.com/oauth/authorize";
+  const config = {
+    client_id: process.env.KAKAO_CLIENT,
+    redirect_url: process.env.KAKAO_REDIRECT,
+    response_type: "code",
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  const clientId = process.env.KAKAO_CLIENT;
+  return res.send({ clientId }).status(200);
+};
+export const finishKakaoLogin = (req, res) => res.send("finish kakao login");
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
 export const logout = (req, res) => res.send("Log out");
