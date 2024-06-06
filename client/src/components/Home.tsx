@@ -22,6 +22,8 @@ interface IData {
 }
 
 function Home() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, SetUser] = useState({});
   async function deletePost(id: any) {
     await fetch(`http://localhost:5050/posts/${id}/delete`);
     const newPost = posts.filter((el) => el._id !== id);
@@ -44,19 +46,25 @@ function Home() {
   }, [posts.length]);
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Home!</h1>
-      <PostContainer>
-        {posts?.map((post, index) => (
-          <Post key={index}>
-            <Text>{post.text}</Text>
-            <Hashtags>{post.hashtags}</Hashtags>
-            <button>
-              <Link to={`posts/${post._id}/edit`}>Edit</Link>
-            </button>
-            <button onClick={() => deletePost(post._id)}>Delete</button>
-          </Post>
-        ))}
-      </PostContainer>
+      {isLoggedIn ? (
+        <h1>Welcome!</h1>
+      ) : (
+        <>
+          <h1 style={{ textAlign: "center" }}>Home!</h1>
+          <PostContainer>
+            {posts?.map((post, index) => (
+              <Post key={index}>
+                <Text>{post.text}</Text>
+                <Hashtags>{post.hashtags}</Hashtags>
+                <button>
+                  <Link to={`posts/${post._id}/edit`}>Edit</Link>
+                </button>
+                <button onClick={() => deletePost(post._id)}>Delete</button>
+              </Post>
+            ))}
+          </PostContainer>
+        </>
+      )}
     </>
   );
 }

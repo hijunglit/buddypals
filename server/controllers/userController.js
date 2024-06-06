@@ -29,7 +29,7 @@ export const postJoin = async (req, res) => {
 export const getLogin = (req, res) => res.send({ pageTitle: "Login" });
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ username, socialOnly: false });
   if (!user) {
     return res.status(401).send({ message: "사용자를 찾을 수 없습니다." });
   }
@@ -85,31 +85,37 @@ export const finishKakaoLogin = async (req, res) => {
         },
       })
     ).json();
-    const nickname = userData.kakao_account.profile.nickname;
-    const existingUser = await User.findOne({ username: nickname + "(kakao)" });
-    if (existingUser) {
-      req.session.loggedIn = true;
-      req.session.user = existingUser;
-      console.log(req.session);
-      return res.redirect("http://localhost:3000/");
-    } else {
-      const user = await User.create({
-        name: nickname,
-        username: nickname + "(kakao)",
+    const profile = userData.kakao_account.profile;
+    const user = await User.findOne({
+      username: profile.nickname + "(kakao)",
+    });
+    if (!user) {
+      await User.create({
+        name: profile.nickname,
+        username: profile.nickname + "(kakao)",
         email: "(소셜 회원의 이메일 정보를 사용할 수 없습니다.)",
+        profileImg: userData.kakao_account.profile.profile_image_url,
         password: "",
         socialOnly: true,
       });
       req.session.loggedIn = true;
       req.session.user = user;
+      console.log("kakao login sucess");
+      return res.redirect("http://localhost:3000/");
+    } else {
+      req.session.loggedIn = true;
+      req.session.user = user;
       return res.redirect("http://localhost:3000/");
     }
   } else {
-    return res.redirect("http://localhost:3000");
+    return res.redirect("http://localhost:3000/login");
   }
+};
+export const logout = (req, res) => {
+  req.session.destroy();
+  return res.send("Log out");
 };
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
-export const logout = (req, res) => res.send("Log out");
 export const see = (req, res) => res.send("See user");
 export const search = (req, res) => res.send("Search user");
