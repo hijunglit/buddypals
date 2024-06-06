@@ -53,7 +53,47 @@ export const startKakaoLogin = (req, res) => {
   const clientId = process.env.KAKAO_CLIENT;
   return res.send({ clientId }).status(200);
 };
-export const finishKakaoLogin = (req, res) => res.send("finish kakao login");
+export const finishKakaoLogin = async (req, res) => {
+  const baseUrl = "	https://kauth.kakao.com/oauth/token";
+  const config = {
+    grant_type: "authorization_code",
+    client_id: process.env.KAKAO_CLIENT,
+    redirect_uri: "http://localhost:5050/users/kakao/finish",
+    code: req.query.code,
+    client_secret: process.env.KAKAO_SECRET,
+  };
+  const params = new URLSearchParams(config).toString();
+  const finalUrl = `${baseUrl}?${params}`;
+  const tokenRequest = await (
+    await fetch(finalUrl, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/x-www-form-urlencoded;charset=utf-8",
+      },
+    })
+  ).json();
+  if ("access_token" in tokenRequest) {
+    const { access_token } = tokenRequest;
+    const apiUrl = "https://kapi.kakao.com/v2/user/me";
+    const userData = await (
+      await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+          "Content-type":
+            "Content-type: application/x-www-form-urlencoded;charset=utf-8",
+        },
+      })
+    ).json();
+    console.log(userData);
+    const nickname = userData.kakao_account.profile.nickname;
+    if (!nickname) {
+      return res.send(userData);
+    }
+  } else {
+    return res.send("login failed");
+  }
+};
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
 export const logout = (req, res) => res.send("Log out");

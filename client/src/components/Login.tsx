@@ -47,7 +47,7 @@ function Login() {
   };
   const handleLogin = async () => {
     const baseUrl = "https://kauth.kakao.com/oauth/authorize";
-    const redirectUrl = "http://127.0.0.1:5050/kakao-login";
+    const redirectUrl = "http://localhost:5050/users/kakao/finish";
     const responseType = "code";
     const response = await fetch("http://localhost:5050/users/kakao/start");
     const json = await response.json();
