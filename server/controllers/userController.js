@@ -85,13 +85,27 @@ export const finishKakaoLogin = async (req, res) => {
         },
       })
     ).json();
-    console.log(userData);
     const nickname = userData.kakao_account.profile.nickname;
-    if (!nickname) {
-      return res.send(userData);
+    const existingUser = await User.findOne({ username: nickname + "(kakao)" });
+    if (existingUser) {
+      req.session.loggedIn = true;
+      req.session.user = existingUser;
+      console.log(req.session);
+      return res.redirect("http://localhost:3000/");
+    } else {
+      const user = await User.create({
+        name: nickname,
+        username: nickname + "(kakao)",
+        email: "(소셜 회원의 이메일 정보를 사용할 수 없습니다.)",
+        password: "",
+        socialOnly: true,
+      });
+      req.session.loggedIn = true;
+      req.session.user = user;
+      return res.redirect("http://localhost:3000/");
     }
   } else {
-    return res.send("login failed");
+    return res.redirect("http://localhost:3000");
   }
 };
 export const edit = (req, res) => res.send("Edit User");
