@@ -4,11 +4,11 @@ import crypto from "crypto";
 
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
-  profileImg: { String },
+  profileImgUrl: String,
   socialOnly: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true },
   password: { type: String },
-  salt: { type: String },
+  salt: String,
   name: { type: String, required: true },
 });
 const randomBytesPromise = util.promisify(crypto.randomBytes);

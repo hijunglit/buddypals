@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 
 interface ILoginForm {
@@ -8,6 +9,7 @@ interface ILoginForm {
 
 function Login() {
   const navigate = useNavigate();
+  const [cookie, setCookie] = useCookies(["id"]);
   const [message, setMessage] = useState("");
   const [form, setForm] = useState<ILoginForm>({
     username: "",
@@ -39,6 +41,7 @@ function Login() {
         setMessage(result.message);
       }
       console.log(result);
+      navigate("/");
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
     } finally {
