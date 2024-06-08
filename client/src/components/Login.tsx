@@ -38,9 +38,9 @@ function Login() {
       });
       const result = await response.json();
       if (result.message) {
-        setMessage(result.message);
+        return setMessage(result.message);
       }
-      console.log(result);
+      setCookie('id', true, {path: '/'});
       navigate("/");
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -23,7 +24,28 @@ interface IData {
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, SetUser] = useState({});
+  const [cookies, setCoolie, removeCookie] = useCookies(["id"]);
+  const [userId, SetUserId] = useState(null);
+  const navigate = useNavigate();
+  // const authCheck = async () => {
+  //   const token = cookies.id;
+  //   await fetch(`http://localhost:5050/users/loginCheck`, {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify(token),
+  //   }).then((res) => {
+  //     SetUserId(res.token);
+  //     setIsLoggedIn(true);
+  //   }).catch(() => {
+  //     logOut();
+  //   });
+  // };
+  // useEffect(() => {
+  //   authCheck();
+  // });
+  // const logOut = () => {
+  //   removeCookie('id');
+  // }
   async function deletePost(id: any) {
     await fetch(`http://localhost:5050/posts/${id}/delete`);
     const newPost = posts.filter((el) => el._id !== id);
@@ -47,8 +69,6 @@ function Home() {
   return (
     <>
       {isLoggedIn ? (
-        <h1>Welcome!</h1>
-      ) : (
         <>
           <h1 style={{ textAlign: "center" }}>Home!</h1>
           <PostContainer>
@@ -64,6 +84,8 @@ function Home() {
             ))}
           </PostContainer>
         </>
+      ) : (
+        <h1>You have to log in </h1>
       )}
     </>
   );

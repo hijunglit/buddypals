@@ -22,7 +22,7 @@ app.use(
       mongoUrl: process.env.DB_URL,
     }),
     cookie: {
-      sameSite: true,
+      maxAge: 1000 * 60 * 60 * 24,
     },
   })
 );

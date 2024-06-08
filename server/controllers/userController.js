@@ -40,7 +40,7 @@ export const postLogin = async (req, res) => {
   }
   req.session.loggedIn = true;
   req.session.user = user;
-  return res.send({ user }).status(200);
+  return res.send({ user, token: req.sessionID }).status(200);
 };
 export const startKakaoLogin = (req, res) => {
   const baseUrl = "https://kauth.kakao.com/oauth/authorize";
@@ -116,7 +116,7 @@ export const finishKakaoLogin = async (req, res) => {
 };
 export const logout = (req, res) => {
   req.session.destroy();
-  return res.redirect("http://localhost:3000");
+  return res.status(200).send("logged out");
 };
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");

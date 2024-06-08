@@ -1,12 +1,17 @@
 import Post from "../models/Post.js";
 
 export const home = async (req, res) => {
-  try {
-    const posts = await Post.find({}).sort({ createdAt: "desc" });
-    return res.send(posts).status(200);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error fetching posts data");
+  if (req.session.user) {
+    const user = req.session.user;
+    try {
+      const posts = await Post.find({}).sort({ createdAt: "desc" });
+      return res.send(posts, user).status(200);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error fetching posts data");
+    }
+  } else {
+    return res.status(200).send({ message: "Not logged in" });
   }
 };
 export const see = async (req, res) => {
