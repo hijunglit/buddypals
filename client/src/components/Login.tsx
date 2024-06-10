@@ -9,7 +9,6 @@ interface ILoginForm {
 
 function Login() {
   const navigate = useNavigate();
-  const [cookie, setCookie] = useCookies(["id"]);
   const [message, setMessage] = useState("");
   const [form, setForm] = useState<ILoginForm>({
     username: "",
@@ -18,8 +17,6 @@ function Login() {
   useEffect(() => {
     (async () => {
       const response = await fetch("http://localhost:5050/login");
-      const json = await response.json();
-      console.log(json);
     })();
   }, []);
   const updateForm = (value: any) => {
@@ -40,7 +37,6 @@ function Login() {
       if (result.message) {
         return setMessage(result.message);
       }
-      setCookie('id', true, {path: '/'});
       navigate("/");
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);

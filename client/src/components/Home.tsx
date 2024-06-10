@@ -24,28 +24,8 @@ interface IData {
 
 function Home() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [cookies, setCoolie, removeCookie] = useCookies(["id"]);
-  const [userId, SetUserId] = useState(null);
   const navigate = useNavigate();
-  // const authCheck = async () => {
-  //   const token = cookies.id;
-  //   await fetch(`http://localhost:5050/users/loginCheck`, {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify(token),
-  //   }).then((res) => {
-  //     SetUserId(res.token);
-  //     setIsLoggedIn(true);
-  //   }).catch(() => {
-  //     logOut();
-  //   });
-  // };
-  // useEffect(() => {
-  //   authCheck();
-  // });
-  // const logOut = () => {
-  //   removeCookie('id');
-  // }
+
   async function deletePost(id: any) {
     await fetch(`http://localhost:5050/posts/${id}/delete`);
     const newPost = posts.filter((el) => el._id !== id);
@@ -53,6 +33,22 @@ function Home() {
   }
   const [posts, setPosts] = useState<IData[]>([]);
   useEffect(() => {
+    async function checkStatus() {
+      try {
+        const response = await fetch("http://localhost:5050/status");
+        const json = await response.json();
+        console.log(json);
+        if (json.message === "Logged in") {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+      } catch (err) {
+        console.error("Status check error:", err);
+        return setIsLoggedIn(false);
+      }
+    }
+    checkStatus();
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
       if (!response.ok) {

@@ -45,7 +45,7 @@ function Join() {
       if (results.message) {
         return setMessage(results.message);
       }
-      navigate("/");
+      navigate("/login");
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
     } finally {

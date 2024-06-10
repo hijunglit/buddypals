@@ -1,6 +1,16 @@
 import session from "express-session";
 import User, { verifyPassword } from "../models/User.js";
 
+export const getAuth = (req, res) => {
+  if (req.session.user) {
+    console.log(req.session.user);
+    return res
+      .status(200)
+      .send({ message: "Logged in", user: req.sessions.user });
+  } else {
+    return res.status(200).send({ message: "Not logged in" });
+  }
+};
 export const getJoin = (req, res) =>
   res.send({ pageTitle: "Join" }).status(200);
 export const postJoin = async (req, res) => {
@@ -40,7 +50,7 @@ export const postLogin = async (req, res) => {
   }
   req.session.loggedIn = true;
   req.session.user = user;
-  return res.send({ user, token: req.sessionID }).status(200);
+  return res.send({ message: "login success" }).status(200);
 };
 export const startKakaoLogin = (req, res) => {
   const baseUrl = "https://kauth.kakao.com/oauth/authorize";
