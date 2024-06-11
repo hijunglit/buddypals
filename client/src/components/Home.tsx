@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import store from "../store";
 
 const PostContainer = styled.div``;
 const Post = styled.div`
@@ -23,9 +24,7 @@ interface IData {
 }
 
 function Home() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
-
+  const user = store.getState().user;
   async function deletePost(id: any) {
     await fetch(`http://localhost:5050/posts/${id}/delete`);
     const newPost = posts.filter((el) => el._id !== id);
@@ -42,17 +41,16 @@ function Home() {
       }
       const json = await response.json();
       const posts = json.posts;
-      console.log(json);
       setPosts(posts);
     }
     getPosts();
     return;
-  }, [posts.length]);
+  }, [user.userId, posts.length]);
   return (
     <>
-      {isLoggedIn ? (
+      {user.userId !== "" ? (
         <>
-          <h1 style={{ textAlign: "center" }}>Home!</h1>
+          <h1 style={{ textAlign: "center" }}>Welcome {user.username}!</h1>
           <PostContainer>
             {posts?.map((post, index) => (
               <Post key={index}>

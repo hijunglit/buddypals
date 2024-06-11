@@ -28,6 +28,7 @@ export default function Navbar() {
         Upload
       </NavLink>
       <NavLink to='/login'>Login</NavLink>
+      <NavLink to='/users/logout'>Logout</NavLink>
       <NavLink to='/profile'>Profile</NavLink>
     </Nav>
   );

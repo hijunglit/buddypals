@@ -13,6 +13,7 @@ import Edit from "./components/Edit";
 import Join from "./components/Join";
 import Login from "./components/Login";
 import Social from "./components/Social";
+import Logout from "./components/Logout";
 
 export let persistor = persistStore(store);
 
@@ -32,6 +33,7 @@ root.render(
           </Route>
           <Route path='/users/*' element={<App />}>
             <Route path='edit' element={<User />} />
+            <Route path='logout' element={<Logout />} />
             <Route path='kakao/start' element={<Social />} />
           </Route>
           <Route path='/posts/*' element={<App />}>
