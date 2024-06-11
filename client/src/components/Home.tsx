@@ -33,22 +33,6 @@ function Home() {
   }
   const [posts, setPosts] = useState<IData[]>([]);
   useEffect(() => {
-    async function checkStatus() {
-      try {
-        const response = await fetch("http://localhost:5050/status");
-        const json = await response.json();
-        console.log(json);
-        if (json.message === "Logged in") {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-      } catch (err) {
-        console.error("Status check error:", err);
-        return setIsLoggedIn(false);
-      }
-    }
-    checkStatus();
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
       if (!response.ok) {
@@ -56,7 +40,9 @@ function Home() {
         console.error(message);
         return;
       }
-      const posts = await response.json();
+      const json = await response.json();
+      const posts = json.posts;
+      console.log(json);
       setPosts(posts);
     }
     getPosts();

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
+import { setUser } from "../store/userSlice";
 
 interface ILoginForm {
   username: string;
@@ -9,6 +10,7 @@ interface ILoginForm {
 
 function Login() {
   const navigate = useNavigate();
+  let dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [form, setForm] = useState<ILoginForm>({
     username: "",
@@ -16,7 +18,7 @@ function Login() {
   });
   useEffect(() => {
     (async () => {
-      const response = await fetch("http://localhost:5050/login");
+      await fetch("http://localhost:5050/login");
     })();
   }, []);
   const updateForm = (value: any) => {
@@ -34,10 +36,12 @@ function Login() {
         body: JSON.stringify(loginInfo),
       });
       const result = await response.json();
-      if (result.message) {
+      if (response.status === 401) {
         return setMessage(result.message);
       }
+      dispatch(setUser(result.user));
       navigate("/");
+      console.log(result.user);
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
     } finally {

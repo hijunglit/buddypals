@@ -1,9 +1,9 @@
 import Post from "../models/Post.js";
 
-export const home = async (req, res) => {
+export const home = async ({ session: { user } }, res) => {
   try {
     const posts = await Post.find({}).sort({ createdAt: "desc" });
-    return res.send(posts).status(200);
+    return res.send({ user, posts }).status(200);
   } catch (err) {
     console.error(err);
     res.status(500).send("Error fetching posts data");

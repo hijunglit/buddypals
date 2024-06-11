@@ -1,18 +1,10 @@
 import session from "express-session";
 import User, { verifyPassword } from "../models/User.js";
+import { sessionizeUser } from "../util/helpers.js";
 
-export const getAuth = (req, res) => {
-  if (req.session.user) {
-    console.log(req.session.user);
-    return res
-      .status(200)
-      .send({ message: "Logged in", user: req.sessions.user });
-  } else {
-    return res.status(200).send({ message: "Not logged in" });
-  }
-};
-export const getJoin = (req, res) =>
+export const getJoin = (req, res) => {
   res.send({ pageTitle: "Join" }).status(200);
+};
 export const postJoin = async (req, res) => {
   const { name, username, email, password, password2 } = req.body;
   if (password !== password2) {
@@ -37,7 +29,9 @@ export const postJoin = async (req, res) => {
     return res.status(500).send("Error create new user");
   }
 };
-export const getLogin = (req, res) => res.send({ pageTitle: "Login" });
+export const getLogin = (req, res) => {
+  return res.send({ pageTitle: "Login" });
+};
 export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username, socialOnly: false });
@@ -48,9 +42,10 @@ export const postLogin = async (req, res) => {
   if (!verified) {
     return res.status(401).send({ message: "비밀번호가 일치하지 않습니다." });
   }
+  const sessionUser = sessionizeUser(user);
   req.session.loggedIn = true;
-  req.session.user = user;
-  return res.send({ message: "login success" }).status(200);
+  req.session.user = sessionUser;
+  return res.send({ message: "login success", user: sessionUser }).status(200);
 };
 export const startKakaoLogin = (req, res) => {
   const baseUrl = "https://kauth.kakao.com/oauth/authorize";
