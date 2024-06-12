@@ -17,6 +17,17 @@ function EditProfile() {
   return (
     <>
       <h1>Edit Profile!</h1>
+      <div
+        style={{
+          borderRadius: "50px",
+          overflow: "hidden",
+          width: "100px",
+          height: "100px",
+          backgroundImage: `url(${profile.user?.thumbnailImage})`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+        }}
+      ></div>
       <form>
         <label htmlFor='username'>사용자 이름</label>
         <input
