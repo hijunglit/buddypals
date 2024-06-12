@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
-import store from "../store";
+import { authAtom } from "../atoms/atom";
+import Login from "./Login";
 
 const PostContainer = styled.div``;
 const Post = styled.div`
@@ -24,7 +25,7 @@ interface IData {
 }
 
 function Home() {
-  const user = store.getState().user;
+  const authState = useRecoilValue(authAtom);
   async function deletePost(id: any) {
     await fetch(`http://localhost:5050/posts/${id}/delete`);
     const newPost = posts.filter((el) => el._id !== id);
@@ -45,12 +46,16 @@ function Home() {
     }
     getPosts();
     return;
-  }, [user.userId, posts.length]);
+  }, [posts.length]);
+  console.log(authState);
+
   return (
     <>
-      {user.userId !== "" ? (
+      {authState.isAuthenticated ? (
         <>
-          <h1 style={{ textAlign: "center" }}>Welcome {user.username}!</h1>
+          <h1 style={{ textAlign: "center" }}>
+            Welcome! {authState.user?.username}!
+          </h1>
           <PostContainer>
             {posts?.map((post, index) => (
               <Post key={index}>
@@ -65,7 +70,7 @@ function Home() {
           </PostContainer>
         </>
       ) : (
-        <h1>You have to log in </h1>
+        <Login />
       )}
     </>
   );

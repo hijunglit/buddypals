@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { setUser } from "../store/userSlice";
+import { useRecoilState } from "recoil";
+import { authAtom } from "../atoms/atom";
 
 interface ILoginForm {
   username: string;
@@ -9,8 +9,8 @@ interface ILoginForm {
 }
 
 function Login() {
+  const [authState, setAuthState] = useRecoilState(authAtom);
   const navigate = useNavigate();
-  let dispatch = useDispatch();
   const [message, setMessage] = useState("");
   const [form, setForm] = useState<ILoginForm>({
     username: "",
@@ -39,9 +39,13 @@ function Login() {
       if (response.status === 401) {
         return setMessage(result.message);
       }
-      dispatch(setUser(result.user));
+      const user = result.user;
+      setAuthState({
+        user: { username: String(user.username), id: String(user.userId) },
+        isAuthenticated: true,
+      });
       navigate("/");
-      console.log(result.user);
+      console.log(authState);
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
     } finally {
