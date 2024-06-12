@@ -12,7 +12,7 @@ const userRouter = express.Router();
 userRouter.get("/logout", logout);
 userRouter.get("/edit", edit);
 userRouter.get("/kakao/start", startKakaoLogin);
-userRouter.get("/kakao/finish", finishKakaoLogin);
+userRouter.post("/kakao/finish", finishKakaoLogin);
 userRouter.get(":id", see);
 
 export default userRouter;

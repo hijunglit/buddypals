@@ -2,7 +2,13 @@ import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 interface IAuthState {
-  user: { username: string; id: string } | null;
+  user: {
+    username: string;
+    id: string;
+    profileImage?: string;
+    thumbnailImage?: string;
+    social: boolean;
+  } | null;
   isAuthenticated: boolean;
 }
 

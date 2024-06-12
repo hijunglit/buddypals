@@ -41,7 +41,11 @@ function Login() {
       }
       const user = result.user;
       setAuthState({
-        user: { username: String(user.username), id: String(user.userId) },
+        user: {
+          username: String(user.username),
+          id: String(user.userId),
+          social: false,
+        },
         isAuthenticated: true,
       });
       navigate("/");
@@ -54,7 +58,7 @@ function Login() {
   };
   const handleLogin = async () => {
     const baseUrl = "https://kauth.kakao.com/oauth/authorize";
-    const redirectUrl = "http://localhost:5050/users/kakao/finish";
+    const redirectUrl = "http://localhost:3000/users/kakao/finish";
     const responseType = "code";
     const response = await fetch("http://localhost:5050/users/kakao/start");
     const json = await response.json();

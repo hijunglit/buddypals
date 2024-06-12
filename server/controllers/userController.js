@@ -1,6 +1,6 @@
 import session from "express-session";
 import User, { verifyPassword } from "../models/User.js";
-import { sessionizeUser } from "../util/helpers.js";
+import { sessionizeUser, socialSessionizeUser } from "../util/helpers.js";
 
 export const getJoin = (req, res) => {
   res.send({ pageTitle: "Join" }).status(200);
@@ -48,14 +48,6 @@ export const postLogin = async (req, res) => {
   return res.send({ message: "login success", user: sessionUser }).status(200);
 };
 export const startKakaoLogin = (req, res) => {
-  const baseUrl = "https://kauth.kakao.com/oauth/authorize";
-  const config = {
-    client_id: process.env.KAKAO_CLIENT,
-    redirect_url: process.env.KAKAO_REDIRECT,
-    response_type: "code",
-  };
-  const params = new URLSearchParams(config).toString();
-  const finalUrl = `${baseUrl}?${params}`;
   const clientId = process.env.KAKAO_CLIENT;
   return res.send({ clientId }).status(200);
 };
@@ -64,12 +56,13 @@ export const finishKakaoLogin = async (req, res) => {
   const config = {
     grant_type: "authorization_code",
     client_id: process.env.KAKAO_CLIENT,
-    redirect_uri: "http://localhost:5050/users/kakao/finish",
-    code: req.query.code,
+    redirect_uri: "http://localhost:3000/users/kakao/finish",
+    code: req.body.code,
     client_secret: process.env.KAKAO_SECRET,
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
+  console.log("finalUrl: ", finalUrl);
   const tokenRequest = await (
     await fetch(finalUrl, {
       method: "POST",
@@ -93,30 +86,34 @@ export const finishKakaoLogin = async (req, res) => {
     ).json();
     const profile = userData.kakao_account.profile;
     console.log("It's kakao user data: ", userData);
-    console.log("kakao profile img url: ", profile.profile_image_url);
-    const user = await User.findOne({
+    let user = await User.findOne({
       username: profile.nickname + "(kakao)",
     });
     if (!user) {
       await User.create({
         profileImgUrl: userData.kakao_account.profile.profile_image_url,
+        thumbnailImageUrl: userData.kakao_account.profile.thumbnail_image_url,
         name: profile.nickname,
         username: profile.nickname + "(kakao)",
         email: "(소셜 회원의 이메일 정보를 사용할 수 없습니다.)",
         password: "",
         socialOnly: true,
       });
+      user = await User.findOne({ username: profile.nickname + "(kakao)" });
+      const sessionizeUser = socialSessionizeUser(user);
       req.session.loggedIn = true;
-      req.session.user = user;
+      req.session.user = sessionizeUser;
       console.log("kakao login success");
-      return res.redirect("http://localhost:3000");
+      console.log("userData", sessionizeUser);
+      return res.send({ user: req.session.user });
     } else {
+      const sessionizeUser = socialSessionizeUser(user);
       req.session.loggedIn = true;
-      req.session.user = user;
-      return res.redirect("http://localhost:3000");
+      req.session.user = sessionizeUser;
+      return res.send({ user: req.session.user });
     }
   } else {
-    return res.redirect("http://localhost:3000/login").status(400);
+    return res.send({ message: "Token request failed" }).status(400);
   }
 };
 export const logout = (req, res) => {
