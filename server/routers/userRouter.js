@@ -1,8 +1,9 @@
 import express from "express";
 import {
-  edit,
   finishKakaoLogin,
+  getEdit,
   logout,
+  postEdit,
   see,
   startKakaoLogin,
 } from "../controllers/userController.js";
@@ -10,7 +11,7 @@ import {
 const userRouter = express.Router();
 
 userRouter.get("/logout", logout);
-userRouter.get("/edit", edit);
+userRouter.route("/edit").get(getEdit).post(postEdit);
 userRouter.get("/kakao/start", startKakaoLogin);
 userRouter.post("/kakao/finish", finishKakaoLogin);
 userRouter.get(":id", see);

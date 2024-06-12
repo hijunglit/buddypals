@@ -11,7 +11,9 @@ import Login from "./components/Login";
 import Social from "./components/Social";
 import Logout from "./components/Logout";
 import { RecoilRoot } from "recoil";
-import Redirection from "./components/Redirection";
+import Redirection from "./Redirection";
+import Profile from "./components/Profile";
+import EditProfile from "./components/EditProfile";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -29,6 +31,8 @@ root.render(
         <Route path='/users/*' element={<App />}>
           <Route path='edit' element={<User />} />
           <Route path='logout' element={<Logout />} />
+          <Route path='profile' element={<Profile />} />
+          <Route path='profile/edit' element={<EditProfile />} />
           <Route path='kakao/start' element={<Social />} />
           <Route path='kakao/finish' element={<Redirection />} />
         </Route>

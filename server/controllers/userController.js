@@ -62,7 +62,6 @@ export const finishKakaoLogin = async (req, res) => {
   };
   const params = new URLSearchParams(config).toString();
   const finalUrl = `${baseUrl}?${params}`;
-  console.log("finalUrl: ", finalUrl);
   const tokenRequest = await (
     await fetch(finalUrl, {
       method: "POST",
@@ -85,14 +84,13 @@ export const finishKakaoLogin = async (req, res) => {
       })
     ).json();
     const profile = userData.kakao_account.profile;
-    console.log("It's kakao user data: ", userData);
     let user = await User.findOne({
       username: profile.nickname + "(kakao)",
     });
     if (!user) {
       await User.create({
-        profileImgUrl: userData.kakao_account.profile.profile_image_url,
-        thumbnailImageUrl: userData.kakao_account.profile.thumbnail_image_url,
+        profileImgUrl: profile.profile_image_url,
+        thumbnailImageUrl: profile.thumbnail_image_url,
         name: profile.nickname,
         username: profile.nickname + "(kakao)",
         email: "(소셜 회원의 이메일 정보를 사용할 수 없습니다.)",
@@ -104,7 +102,6 @@ export const finishKakaoLogin = async (req, res) => {
       req.session.loggedIn = true;
       req.session.user = sessionizeUser;
       console.log("kakao login success");
-      console.log("userData", sessionizeUser);
       return res.send({ user: req.session.user });
     } else {
       const sessionizeUser = socialSessionizeUser(user);
@@ -120,7 +117,8 @@ export const logout = (req, res) => {
   req.session.destroy();
   return res.status(200).send("logged out");
 };
-export const edit = (req, res) => res.send("Edit User");
+export const getEdit = (req, res) => res.send("Get edit User");
+export const postEdit = (req, res) => res.send("Post edit User");
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See user");
 export const search = (req, res) => res.send("Search user");
