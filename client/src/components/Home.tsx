@@ -41,7 +41,6 @@ function Home() {
         return;
       }
       const json = await response.json();
-      console.log(json);
       const posts = json.posts;
       setPosts(posts);
     }
