@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function EditProfile() {
   const [profile, setProfile] = useRecoilState(authAtom);
@@ -14,6 +14,11 @@ function EditProfile() {
     });
   }
   console.log(profile);
+  useEffect(() => {
+    (async () => {
+      await fetch("http://localhost:5050/users/profile/edit");
+    })();
+  }, []);
   return (
     <>
       <h1>Edit Profile!</h1>
@@ -23,7 +28,9 @@ function EditProfile() {
           overflow: "hidden",
           width: "100px",
           height: "100px",
-          backgroundImage: `url(${profile.user?.thumbnailImage})`,
+          backgroundImage: profile.user?.social
+            ? `url(${profile.user?.thumbnailImage})`
+            : "url(https://www.gravatar.com/avatar/?d=mp&f=y)",
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}

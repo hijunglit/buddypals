@@ -6,7 +6,7 @@ interface IPost {
   hashtags: string[];
 }
 
-function Edit() {
+function EditPost() {
   const [form, setForm] = useState<IPost>({
     text: "",
     hashtags: [""],
@@ -83,4 +83,4 @@ function Edit() {
   );
 }
 
-export default Edit;
+export default EditPost;

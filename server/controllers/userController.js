@@ -117,8 +117,16 @@ export const logout = (req, res) => {
   req.session.destroy();
   return res.status(200).send("logged out");
 };
-export const getEdit = (req, res) => res.send("Get edit User");
-export const postEdit = (req, res) => res.send("Post edit User");
+export const getProfile = (req, res) => {
+  return res.status(200).send("User Profile");
+};
+export const getEdit = (req, res) => {
+  console.log(req.session);
+  return res.status(200).send({ message: "Get edit User" });
+};
+export const postEdit = (req, res) => {
+  return res.send("Post edit User");
+};
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See user");
 export const search = (req, res) => res.send("Search user");

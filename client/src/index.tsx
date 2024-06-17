@@ -2,10 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
-import User from "./components/User";
 import Home from "./components/Home";
 import Upload from "./components/Upload";
-import Edit from "./components/Edit";
 import Join from "./components/Join";
 import Login from "./components/Login";
 import Social from "./components/Social";
@@ -14,6 +12,7 @@ import { RecoilRoot } from "recoil";
 import Redirection from "./Redirection";
 import Profile from "./components/Profile";
 import EditProfile from "./components/EditProfile";
+import EditPost from "./components/EditPost";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -29,7 +28,6 @@ root.render(
           <Route path='/login' element={<Login />} />
         </Route>
         <Route path='/users/*' element={<App />}>
-          <Route path='edit' element={<User />} />
           <Route path='logout' element={<Logout />} />
           <Route path='profile' element={<Profile />} />
           <Route path='profile/edit' element={<EditProfile />} />
@@ -38,7 +36,7 @@ root.render(
         </Route>
         <Route path='/posts/*' element={<App />}>
           <Route path='upload' element={<Upload />} />
-          <Route path=':id/edit' element={<Edit />} />
+          <Route path=':id/edit' element={<EditPost />} />
         </Route>
       </Routes>
     </BrowserRouter>
