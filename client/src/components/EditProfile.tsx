@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 function EditProfile() {
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
+  console.log("profile: ", profile);
   const [form, setForm] = useState({
     username: profile.user?.username || "",
     intro: profile.user?.intro || "",
@@ -22,9 +23,8 @@ function EditProfile() {
   }, []);
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const userId = profile.user?.id;
     const profileForm = { ...form };
-    const postData = { userId, profileForm };
+    const postData = { profileForm, profile };
     try {
       const response = await fetch("http://localhost:5050/users/profile/edit", {
         method: "POST",
@@ -34,6 +34,8 @@ function EditProfile() {
         body: JSON.stringify(postData),
       });
       const result = await response.json();
+      console.log(result);
+
       setProfile({
         user: {
           username: String(result.username),
@@ -74,16 +76,16 @@ function EditProfile() {
           name='username'
           type='text'
           id='username'
-          value={form.username}
           onChange={(e) => updateForm({ username: e.target.value })}
+          value={form.username}
         />
         <label htmlFor='intro'>소개</label>
         <input
           name='intro'
           type='text'
           id='intro'
-          value={form.intro}
           onChange={(e) => updateForm({ intro: e.target.value })}
+          value={form.intro}
         />
         <input type='submit' value={"저장"} />
       </form>

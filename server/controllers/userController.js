@@ -126,18 +126,30 @@ export const getEdit = (req, res) => {
 export const postEdit = async (req, res) => {
   const {
     body: {
-      userId,
+      profile,
       profileForm: { username, intro },
     },
   } = req;
-  const user = await User.findByIdAndUpdate(userId, {
-    username,
-    intro,
-  });
-  if (!user) {
-    return res.status(401).send({ message: "사용자를 찾을 수 없습니다." });
+  const existingUser = profile.user;
+  let exists = undefined;
+  console.log("existingUser: ", existingUser);
+  if (existingUser.username !== username) {
+    exists = await User.exists({ username });
+    console.log(exists);
   }
-  return res.send(user);
+  console.log("line: 140 exists: ", exists);
+  if (!exists) {
+    const updateUser = await User.findByIdAndUpdate(
+      existingUser.id,
+      {
+        username,
+        intro,
+      },
+      { new: true }
+    );
+    return res.status(200).send({ updateUser, message: "Update success" });
+  }
+  return res.status(200).send({ message: "Have no change" });
 };
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See user");
