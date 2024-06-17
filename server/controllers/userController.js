@@ -121,11 +121,23 @@ export const getProfile = (req, res) => {
   return res.status(200).send("User Profile");
 };
 export const getEdit = (req, res) => {
-  console.log(req.session);
   return res.status(200).send({ message: "Get edit User" });
 };
-export const postEdit = (req, res) => {
-  return res.send("Post edit User");
+export const postEdit = async (req, res) => {
+  const {
+    body: {
+      userId,
+      profileForm: { username, intro },
+    },
+  } = req;
+  const user = await User.findByIdAndUpdate(userId, {
+    username,
+    intro,
+  });
+  if (!user) {
+    return res.status(401).send({ message: "사용자를 찾을 수 없습니다." });
+  }
+  return res.send(user);
 };
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See user");

@@ -8,6 +8,7 @@ interface IAuthState {
     profileImage?: string;
     thumbnailImage?: string;
     social: boolean;
+    intro: string;
   } | null;
   isAuthenticated: boolean;
 }

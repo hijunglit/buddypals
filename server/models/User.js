@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
   password: { type: String },
   salt: String,
   name: { type: String, required: true },
+  intro: String,
 });
 const randomBytesPromise = util.promisify(crypto.randomBytes);
 const pbkdf2Promise = util.promisify(crypto.pbkdf2);

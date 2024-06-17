@@ -22,6 +22,7 @@ function Redirection() {
           profileImage: String(result.user.profileImage),
           thumbnailImage: String(result.user.thumbnailImage),
           social: true,
+          intro: "",
         },
         isAuthenticated: true,
       });

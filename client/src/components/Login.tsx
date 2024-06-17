@@ -45,6 +45,7 @@ function Login() {
           username: String(user.username),
           id: String(user.userId),
           social: false,
+          intro: "",
         },
         isAuthenticated: true,
       });
