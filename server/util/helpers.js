@@ -9,7 +9,7 @@ export const sessionizeUser = (user) => {
 export const socialSessionizeUser = (user) => {
   return {
     userId: user._id,
-    username: user.name,
+    username: user.username,
     profileImage: user.profileImgUrl,
     thumbnailImage: user.thumbnailImageUrl,
   };
