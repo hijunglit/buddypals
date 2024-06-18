@@ -1,7 +1,7 @@
 import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function EditProfile() {
   const [message, setMessage] = useState("");
@@ -98,6 +98,11 @@ function EditProfile() {
         />
         <input type='submit' value={"저장"} />
       </form>
+      {!profile.user?.social ? (
+        <Link to={"/users/change-password"}>비밀번호 변경</Link>
+      ) : (
+        ""
+      )}
     </>
   );
 }

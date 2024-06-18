@@ -10,7 +10,7 @@ function Profile() {
   return (
     <>
       <h1>User Profile</h1>
-      <Link to={"/users/profile/edit"}>프로필 편집</Link>
+      <Link to={"edit"}>프로필 편집</Link>
     </>
   );
 }

@@ -13,6 +13,7 @@ import Redirection from "./Redirection";
 import Profile from "./components/Profile";
 import EditProfile from "./components/EditProfile";
 import EditPost from "./components/EditPost";
+import ChangePassword from "./components/ChangePassword";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -33,6 +34,7 @@ root.render(
           <Route path='profile/edit' element={<EditProfile />} />
           <Route path='kakao/start' element={<Social />} />
           <Route path='kakao/finish' element={<Redirection />} />
+          <Route path='change-password' element={<ChangePassword />} />
         </Route>
         <Route path='/posts/*' element={<App />}>
           <Route path='upload' element={<Upload />} />

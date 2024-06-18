@@ -130,12 +130,9 @@ export const postEdit = async (req, res) => {
       profileForm: { username, intro },
     },
   } = req;
-  console.log("loggedInUser: ", profile);
-  console.log("submit Information: ", username, intro);
   let exists = undefined;
   if (profile.user.username !== String(username)) {
     exists = await User.exists({ username });
-    console.log("exists", exists);
   }
   if (exists === null || profile.user.intro !== intro) {
     const UpdateUser = await User.findByIdAndUpdate(
@@ -146,12 +143,10 @@ export const postEdit = async (req, res) => {
       },
       { new: true }
     );
-    return res
-      .status(201)
-      .send({
-        user: UpdateUser,
-        message: "사용자 이름/상태메세지가 변경되었습니다.",
-      });
+    return res.status(201).send({
+      user: UpdateUser,
+      message: "사용자 이름/상태메세지가 변경되었습니다.",
+    });
   } else if (exists) {
     return res
       .status(400)
@@ -160,6 +155,12 @@ export const postEdit = async (req, res) => {
   return res
     .status(200)
     .send({ message: "사용자 이름이 변경되지 않았습니다." });
+};
+export const getChangePassword = (req, res) => {
+  return res.send("get change password!");
+};
+export const postChangePassword = (req, res) => {
+  return res.send("post change password!");
 };
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See user");
