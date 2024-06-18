@@ -159,8 +159,28 @@ export const postEdit = async (req, res) => {
 export const getChangePassword = (req, res) => {
   return res.send("get change password!");
 };
-export const postChangePassword = (req, res) => {
-  return res.send("post change password!");
+export const postChangePassword = async (req, res) => {
+  const {
+    profile: {
+      user: { id },
+    },
+    passwordForm: { oldPassword, newPassword, newPasswordConfirmation },
+  } = req.body;
+  const user = await User.findById(id);
+  const verified = await verifyPassword(oldPassword, user.salt, user.password);
+  if (!verified) {
+    return res
+      .status(400)
+      .send({ message: "기존 비밀번호가 올바르지 않습니다." });
+  }
+  if (newPassword !== newPasswordConfirmation) {
+    return res
+      .status(400)
+      .send({ message: "새 비밀번호가 일치하지 않습니다." });
+  }
+  user.password = newPassword;
+  await user.save();
+  return res.status(200).send({ message: "password change success." });
 };
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See user");
