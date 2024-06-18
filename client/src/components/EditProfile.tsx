@@ -34,17 +34,25 @@ function EditProfile() {
         body: JSON.stringify(postData),
       });
       const result = await response.json();
-      console.log(result);
-
-      setProfile({
-        user: {
-          username: String(result.username),
-          id: String(result._id),
-          social: result.socialOnly,
-          intro: result.intro,
-        },
-        isAuthenticated: profile.isAuthenticated,
-      });
+      console.log(response, result);
+      if (response.status === 400) {
+        return setMessage(result.message);
+      }
+      if (response.status === 200) {
+        return setMessage("");
+      }
+      if (response.status === 201) {
+        setProfile({
+          user: {
+            username: String(result.user.username),
+            id: String(profile.user?.id),
+            social: Boolean(profile.user?.social),
+            intro: String(result.user.intro),
+          },
+          isAuthenticated: profile.isAuthenticated,
+        });
+        return setMessage(result.message);
+      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -70,6 +78,7 @@ function EditProfile() {
           backgroundSize: "cover",
         }}
       ></div>
+      {message ? <span>{message}</span> : ""}
       <form onSubmit={onSubmit}>
         <label htmlFor='username'>사용자 이름</label>
         <input
@@ -79,7 +88,7 @@ function EditProfile() {
           onChange={(e) => updateForm({ username: e.target.value })}
           value={form.username}
         />
-        <label htmlFor='intro'>소개</label>
+        <label htmlFor='intro'>상태메세지</label>
         <input
           name='intro'
           type='text'

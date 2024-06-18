@@ -130,26 +130,36 @@ export const postEdit = async (req, res) => {
       profileForm: { username, intro },
     },
   } = req;
-  const existingUser = profile.user;
+  console.log("loggedInUser: ", profile);
+  console.log("submit Information: ", username, intro);
   let exists = undefined;
-  console.log("existingUser: ", existingUser);
-  if (existingUser.username !== username) {
+  if (profile.user.username !== String(username)) {
     exists = await User.exists({ username });
-    console.log(exists);
+    console.log("exists", exists);
   }
-  console.log("line: 140 exists: ", exists);
-  if (!exists) {
-    const updateUser = await User.findByIdAndUpdate(
-      existingUser.id,
+  if (exists === null || profile.user.intro !== intro) {
+    const UpdateUser = await User.findByIdAndUpdate(
+      profile.user.id,
       {
         username,
         intro,
       },
       { new: true }
     );
-    return res.status(200).send({ updateUser, message: "Update success" });
+    return res
+      .status(201)
+      .send({
+        user: UpdateUser,
+        message: "사용자 이름/상태메세지가 변경되었습니다.",
+      });
+  } else if (exists) {
+    return res
+      .status(400)
+      .send({ message: "변경하신 사용자 이름은 이미 존재합니다." });
   }
-  return res.status(200).send({ message: "Have no change" });
+  return res
+    .status(200)
+    .send({ message: "사용자 이름이 변경되지 않았습니다." });
 };
 export const remove = (req, res) => res.send("Remove User");
 export const see = (req, res) => res.send("See user");
