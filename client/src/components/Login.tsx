@@ -40,17 +40,17 @@ function Login() {
         return setMessage(result.message);
       }
       const user = result.user;
+      console.log(user);
       setAuthState({
         user: {
           username: String(user.username),
           id: String(user.userId),
           social: false,
-          intro: "",
+          intro: String(user.userIntro),
         },
         isAuthenticated: true,
       });
       navigate("/");
-      console.log(authState);
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
     } finally {
