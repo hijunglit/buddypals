@@ -14,6 +14,7 @@ import Profile from "./components/Profile";
 import EditProfile from "./components/EditProfile";
 import EditPost from "./components/EditPost";
 import ChangePassword from "./components/ChangePassword";
+import ProtectedRoute from "./ProtectedRoute";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -29,16 +30,20 @@ root.render(
           <Route path='/login' element={<Login />} />
         </Route>
         <Route path='/users/*' element={<App />}>
-          <Route path='logout' element={<Logout />} />
-          <Route path='profile' element={<Profile />} />
-          <Route path='profile/edit' element={<EditProfile />} />
-          <Route path='kakao/start' element={<Social />} />
           <Route path='kakao/finish' element={<Redirection />} />
-          <Route path='change-password' element={<ChangePassword />} />
+          <Route path='' element={<ProtectedRoute />}>
+            <Route path='logout' element={<Logout />} />
+            <Route path='profile' element={<Profile />} />
+            <Route path='profile/edit' element={<EditProfile />} />
+            {/* <Route path='kakao/start' element={<Social />} /> */}
+            <Route path='change-password' element={<ChangePassword />} />
+          </Route>
         </Route>
         <Route path='/posts/*' element={<App />}>
-          <Route path='upload' element={<Upload />} />
-          <Route path=':id/edit' element={<EditPost />} />
+          <Route path='' element={<ProtectedRoute />}>
+            <Route path='upload' element={<Upload />} />
+            <Route path=':id/edit' element={<EditPost />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
