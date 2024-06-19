@@ -1,14 +1,13 @@
 import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { apiClient } from "../apiClient";
 
 function EditProfile() {
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
   console.log("profile: ", profile);
+  const [file, setFile] = useState<File>();
   const [form, setForm] = useState({
     username: profile.user?.username || "",
     intro: profile.user?.intro || "",
@@ -26,6 +25,8 @@ function EditProfile() {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const profileForm = { ...form };
+    const { target } = event;
+    console.log(event);
     const postData = { profileForm, profile };
     try {
       const response = await fetch("http://localhost:5050/users/profile/edit", {
@@ -64,32 +65,6 @@ function EditProfile() {
       });
     }
   };
-  // 프로필 이미지 제출
-  const uploadFile = async (file: any) => {
-    try {
-      const { data } = await apiClient.post("/users/profile/edit", file);
-      return data;
-    } catch (err) {
-      console.error(err);
-    }
-  };
-  const uploadAvatar = async (event: any) => {
-    event.preventDefault();
-    const formData = new FormData();
-    formData.append("avatar", event.target.files);
-    await uploadFile(formData);
-  };
-  // 프로필 이미지 미리보기
-  const uploadFiles = axios.create({
-    baseURL: "http://localhost:5050",
-    headers: { "Content-type": "multipart/form-data" },
-    timeout: 5000,
-  });
-  const onFileChanges = (event: any) => {
-    const {
-      target: { files },
-    } = event;
-  };
   return (
     <>
       <h1>Edit Profile!</h1>
@@ -107,15 +82,9 @@ function EditProfile() {
         }}
       ></div>
       {message ? <span>{message}</span> : ""}
-      <form onSubmit={onSubmit} encType='multipart/form-data'>
-        <label htmlFor='avatar'>프로필 사진 변경</label>
-        <input
-          type='file'
-          name='avatar'
-          id='avatar'
-          accept='image/*'
-          onChange={(event) => onFileChanges(event)}
-        />
+      <form encType='multipart/form-data' onSubmit={onSubmit}>
+        <label htmlFor='avatar'>프로필 사진</label>
+        <input type='file' name='avatar' id='avatar' />
         <label htmlFor='username'>사용자 이름</label>
         <input
           name='username'
