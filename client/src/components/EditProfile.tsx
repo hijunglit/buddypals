@@ -1,7 +1,9 @@
 import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { apiClient } from "../apiClient";
 
 function EditProfile() {
   const [message, setMessage] = useState("");
@@ -62,6 +64,32 @@ function EditProfile() {
       });
     }
   };
+  // 프로필 이미지 제출
+  const uploadFile = async (file: any) => {
+    try {
+      const { data } = await apiClient.post("/users/profile/edit", file);
+      return data;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const uploadAvatar = async (event: any) => {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("avatar", event.target.files);
+    await uploadFile(formData);
+  };
+  // 프로필 이미지 미리보기
+  const uploadFiles = axios.create({
+    baseURL: "http://localhost:5050",
+    headers: { "Content-type": "multipart/form-data" },
+    timeout: 5000,
+  });
+  const onFileChanges = (event: any) => {
+    const {
+      target: { files },
+    } = event;
+  };
   return (
     <>
       <h1>Edit Profile!</h1>
@@ -79,7 +107,15 @@ function EditProfile() {
         }}
       ></div>
       {message ? <span>{message}</span> : ""}
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} encType='multipart/form-data'>
+        <label htmlFor='avatar'>프로필 사진 변경</label>
+        <input
+          type='file'
+          name='avatar'
+          id='avatar'
+          accept='image/*'
+          onChange={(event) => onFileChanges(event)}
+        />
         <label htmlFor='username'>사용자 이름</label>
         <input
           name='username'

@@ -32,7 +32,9 @@ root.render(
           </Route>
         </Route>
         <Route path='/users/*' element={<App />}>
-          <Route path='kakao/finish' element={<Redirection />} />
+          <Route path='' element={<PublicOnlyRoute />}>
+            <Route path='kakao/finish' element={<Redirection />} />
+          </Route>
           <Route path='' element={<ProtectedRoute />}>
             <Route path='logout' element={<Logout />} />
             <Route path='profile' element={<Profile />} />

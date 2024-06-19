@@ -131,7 +131,6 @@ export const postEdit = async (req, res) => {
     },
     file,
   } = req;
-  console.log(file);
   let exists = undefined;
   if (profile.user.username !== String(username)) {
     exists = await User.exists({ username });
