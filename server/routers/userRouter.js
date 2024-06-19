@@ -10,12 +10,16 @@ import {
   getChangePassword,
   postChangePassword,
 } from "../controllers/userController.js";
+import { uploadFiles } from "../middleware.js";
 
 const userRouter = express.Router();
 
 userRouter.get("/logout", logout);
 userRouter.get("/profile", getProfile);
-userRouter.route("/profile/edit").get(getEdit).post(postEdit);
+userRouter
+  .route("/profile/edit")
+  .get(getEdit)
+  .post(uploadFiles.single("avatar"), postEdit);
 userRouter
   .route("/change-password")
   .get(getChangePassword)
