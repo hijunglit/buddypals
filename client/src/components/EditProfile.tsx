@@ -2,13 +2,13 @@ import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function EditProfile() {
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
-  console.log("profile: ", profile);
-  const [file, setFile] = useState<File>();
   const [form, setForm] = useState({
+    thumbnailImage: profile.user?.thumbnailImage || "",
     username: profile.user?.username || "",
     intro: profile.user?.intro || "",
   });
@@ -24,20 +24,18 @@ function EditProfile() {
   }, []);
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const profileForm = { ...form };
-    const { target } = event;
-    console.log(event);
-    const postData = { profileForm, profile };
+    const formData = new FormData();
+    formData.append("avatar", form.thumbnailImage);
+    formData.append("username", String(profile.user?.username));
+    formData.append("intro", String(profile.user?.intro));
+    console.log(formData);
     try {
-      const response = await fetch("http://localhost:5050/users/profile/edit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(postData),
-      });
-      const result = await response.json();
-      console.log(response, result);
+      const response = await axios.post(
+        "http://localhost:5050/users/profile/edit",
+        formData
+      );
+      const result = await response.data;
+      console.log(result);
       if (response.status === 400) {
         return setMessage(result.message);
       }
@@ -60,10 +58,16 @@ function EditProfile() {
       console.error(err);
     } finally {
       setForm({
+        thumbnailImage: profile.user?.thumbnailImage || "",
         username: profile.user?.username || "",
         intro: profile.user?.intro || "",
       });
     }
+  };
+  const handlePhoto = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const target = event.currentTarget;
+    const files = (target.files as FileList)[0];
+    updateForm({ thumbnailImage: files });
   };
   return (
     <>
@@ -84,7 +88,13 @@ function EditProfile() {
       {message ? <span>{message}</span> : ""}
       <form encType='multipart/form-data' onSubmit={onSubmit}>
         <label htmlFor='avatar'>프로필 사진</label>
-        <input type='file' name='avatar' id='avatar' />
+        <input
+          type='file'
+          name='avatar'
+          id='avatar'
+          accept='image/*'
+          onChange={handlePhoto}
+        />
         <label htmlFor='username'>사용자 이름</label>
         <input
           name='username'
