@@ -1,5 +1,4 @@
 import express from "express";
-import multer from "multer";
 import {
   finishKakaoLogin,
   getProfile,
@@ -11,8 +10,7 @@ import {
   getChangePassword,
   postChangePassword,
 } from "../controllers/userController.js";
-
-const uploadFiles = multer({ dest: "uploads/" });
+import { uploadFiles } from "../middleware.js";
 
 const userRouter = express.Router();
 

@@ -125,12 +125,11 @@ export const getEdit = (req, res) => {
 };
 export const postEdit = async (req, res) => {
   const {
-    body: {
-      profile,
-      profileForm: { username, intro },
-    },
+    body: { username, intro },
     file,
   } = req;
+  console.log("req.body: ", username, intro);
+  return console.log("req.file: ", file);
   let exists = undefined;
   if (profile.user.username !== String(username)) {
     exists = await User.exists({ username });
