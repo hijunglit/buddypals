@@ -36,6 +36,7 @@ function EditProfile() {
         formData
       );
       const result = await response.data;
+      console.log(response);
       console.log(result);
       if (response.status === 400) {
         return setMessage(result.message);
@@ -50,6 +51,7 @@ function EditProfile() {
             id: String(profile.user?.id),
             social: Boolean(profile.user?.social),
             intro: String(result.user.intro),
+            thumbnailImage: String(result.user.thumbnailImageUrl),
           },
           isAuthenticated: profile.isAuthenticated,
         });
@@ -79,7 +81,7 @@ function EditProfile() {
           overflow: "hidden",
           width: "100px",
           height: "100px",
-          backgroundImage: profile.user?.social
+          backgroundImage: profile.user?.thumbnailImage
             ? `url(${profile.user?.thumbnailImage})`
             : "url(https://www.gravatar.com/avatar/?d=mp&f=y)",
           backgroundPosition: "center",

@@ -131,15 +131,16 @@ export const postEdit = async (req, res) => {
   const loggedInUser = JSON.parse(req.body.profile);
   console.log("formData: ", username, intro);
   console.log("loggedInUser: ", loggedInUser);
-  return console.log("fileData: ", file.path);
+  console.log("fileData: ", file.path);
   let exists = undefined;
-  if (profile.user.username !== String(username)) {
+  if (loggedInUser.username !== String(username)) {
     exists = await User.exists({ username });
   }
-  if (exists === null || profile.user.intro !== intro) {
+  if (exists === null || loggedInUser.intro !== intro || file) {
     const UpdateUser = await User.findByIdAndUpdate(
-      profile.user.id,
+      loggedInUser.id,
       {
+        thumbnailImageUrl: String(file.path),
         username,
         intro,
       },
@@ -147,7 +148,7 @@ export const postEdit = async (req, res) => {
     );
     return res.status(201).send({
       user: UpdateUser,
-      message: "사용자 이름/상태메세지가 변경되었습니다.",
+      message: "사용자 정보가 변경되었습니다.",
     });
   } else if (exists) {
     return res
