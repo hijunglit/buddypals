@@ -27,8 +27,8 @@ function EditProfile() {
     event.preventDefault();
     const formData = new FormData();
     formData.append("avatar", form.thumbnailImage);
-    formData.append("username", String(profile.user?.username));
-    formData.append("intro", String(profile.user?.intro));
+    formData.append("username", String(form.username));
+    formData.append("intro", String(form.intro));
     formData.append("profile", JSON.stringify(profile.user));
     try {
       const response = await axios.post(

@@ -131,7 +131,7 @@ export const postEdit = async (req, res) => {
   const loggedInUser = JSON.parse(req.body.profile);
   console.log("formData: ", username, intro);
   console.log("loggedInUser: ", loggedInUser);
-  console.log("fileData: ", file.path);
+  console.log("files", file);
   let exists = undefined;
   if (loggedInUser.username !== String(username)) {
     exists = await User.exists({ username });
@@ -140,7 +140,7 @@ export const postEdit = async (req, res) => {
     const UpdateUser = await User.findByIdAndUpdate(
       loggedInUser.id,
       {
-        thumbnailImageUrl: String(file.path),
+        thumbnailImageUrl: file ? file.path : loggedInUser.thumbnailImage,
         username,
         intro,
       },
