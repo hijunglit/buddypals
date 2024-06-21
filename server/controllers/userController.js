@@ -128,8 +128,10 @@ export const postEdit = async (req, res) => {
     body: { username, intro },
     file,
   } = req;
-  console.log("req.body: ", username, intro);
-  return console.log("req.file: ", file);
+  const loggedInUser = JSON.parse(req.body.profile);
+  console.log("formData: ", username, intro);
+  console.log("loggedInUser: ", loggedInUser);
+  return console.log("fileData: ", file.path);
   let exists = undefined;
   if (profile.user.username !== String(username)) {
     exists = await User.exists({ username });

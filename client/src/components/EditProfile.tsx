@@ -2,11 +2,12 @@ import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios, { formToJSON } from "axios";
 
 function EditProfile() {
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
+  console.log(profile);
   const [form, setForm] = useState({
     thumbnailImage: profile.user?.thumbnailImage || "",
     username: profile.user?.username || "",
@@ -28,7 +29,7 @@ function EditProfile() {
     formData.append("avatar", form.thumbnailImage);
     formData.append("username", String(profile.user?.username));
     formData.append("intro", String(profile.user?.intro));
-    console.log(formData);
+    formData.append("profile", JSON.stringify(profile.user));
     try {
       const response = await axios.post(
         "http://localhost:5050/users/profile/edit",
