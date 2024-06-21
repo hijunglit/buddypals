@@ -2,7 +2,6 @@ import { atom } from "recoil";
 import { recoilPersist } from "recoil-persist";
 
 interface IAuthState {
-  [key: string]: any;
   user: {
     username: string;
     id: string;

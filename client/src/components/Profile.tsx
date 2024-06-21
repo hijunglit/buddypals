@@ -1,10 +1,17 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { authAtom } from "../atoms/atom";
 
 function Profile() {
+  const profile = useRecoilValue(authAtom);
+  const userId = profile.user?.id;
+  const [message, setMessage] = useState("");
   useEffect(() => {
     (async () => {
-      await fetch("http://localhost:5050/users/profile");
+      const response = await fetch(`http://localhost:5050/users/${userId}`);
+      const result = await response.json();
+      console.log(result);
     })();
   }, []);
   return (

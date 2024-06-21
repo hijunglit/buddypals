@@ -5,7 +5,6 @@ import {
   logout,
   getEdit,
   postEdit,
-  see,
   startKakaoLogin,
   getChangePassword,
   postChangePassword,
@@ -15,7 +14,6 @@ import { uploadFiles } from "../middleware.js";
 const userRouter = express.Router();
 
 userRouter.get("/logout", logout);
-userRouter.get("/profile", getProfile);
 userRouter
   .route("/profile/edit")
   .get(getEdit)
@@ -26,6 +24,6 @@ userRouter
   .post(postChangePassword);
 userRouter.get("/kakao/start", startKakaoLogin);
 userRouter.post("/kakao/finish", finishKakaoLogin);
-userRouter.get(":id", see);
+userRouter.get("/:id", getProfile);
 
 export default userRouter;

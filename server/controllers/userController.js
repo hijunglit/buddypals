@@ -117,8 +117,15 @@ export const logout = (req, res) => {
   req.session.destroy();
   return res.status(200).send("logged out");
 };
-export const getProfile = (req, res) => {
-  return res.status(200).send("User Profile");
+export const getProfile = async (req, res) => {
+  const { id } = req.params;
+  console.log("req.params", id);
+  const user = await User.findById(id);
+  console.log(user);
+  if (!user) {
+    return res.status(404).send({ message: "User not found." });
+  }
+  return res.status(200).send({ message: "User Profile" });
 };
 export const getEdit = (req, res) => {
   return res.status(200).send({ message: "Get edit User" });
@@ -186,5 +193,4 @@ export const postChangePassword = async (req, res) => {
   return res.status(200).send({ message: "password change success." });
 };
 export const remove = (req, res) => res.send("Remove User");
-export const see = (req, res) => res.send("See user");
 export const search = (req, res) => res.send("Search user");

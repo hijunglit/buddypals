@@ -19,6 +19,7 @@ const Nav = styled.nav`
 `;
 
 export default function Navbar() {
+  const profile = useRecoilValue(authAtom);
   const authState = useRecoilValue(authAtom);
   return (
     <>
@@ -33,7 +34,7 @@ export default function Navbar() {
             Upload
           </NavLink>
           <NavLink to='/users/logout'>Logout</NavLink>
-          <NavLink to='/users/profile'>Profile</NavLink>
+          <NavLink to={`/users/${profile.user?.id}`}>Profile</NavLink>
         </Nav>
       ) : (
         ""

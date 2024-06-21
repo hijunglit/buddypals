@@ -37,9 +37,9 @@ root.render(
           </Route>
           <Route path='' element={<ProtectedRoute />}>
             <Route path='logout' element={<Logout />} />
-            <Route path='profile' element={<Profile />} />
             <Route path='profile/edit' element={<EditProfile />} />
             <Route path='change-password' element={<ChangePassword />} />
+            <Route path=':id' element={<Profile />} />
           </Route>
         </Route>
         <Route path='/posts/*' element={<App />}>
