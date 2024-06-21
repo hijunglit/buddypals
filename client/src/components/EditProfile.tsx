@@ -82,7 +82,7 @@ function EditProfile() {
           width: "100px",
           height: "100px",
           backgroundImage: profile.user?.thumbnailImage
-            ? `url(${profile.user?.thumbnailImage})`
+            ? `url(http://localhost:5050/${profile.user?.thumbnailImage})`
             : "url(https://www.gravatar.com/avatar/?d=mp&f=y)",
           backgroundPosition: "center",
           backgroundSize: "cover",
