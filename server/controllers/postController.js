@@ -46,13 +46,12 @@ export const getUpload = (req, res) => {
 };
 export const postUpload = async (req, res) => {
   const {
-    text,
-    hashtags,
-    profile: {
-      user: { id },
-    },
-  } = req.body;
-  console.log(req.body.profile);
+    body: { text, hashtags },
+    file,
+  } = req;
+  const loggedInUser = JSON.parse(req.body.profile);
+  console.log("loggedInUser:", loggedInUser);
+  return console.log("req.file: ", file);
   try {
     const result = await Post.create({
       text,

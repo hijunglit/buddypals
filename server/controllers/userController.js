@@ -121,7 +121,6 @@ export const getProfile = async (req, res) => {
   const { id } = req.params;
   console.log("req.params", id);
   const user = await User.findById(id);
-  console.log(user);
   if (!user) {
     return res.status(404).send({ message: "User not found." });
   }
@@ -136,9 +135,6 @@ export const postEdit = async (req, res) => {
     file,
   } = req;
   const loggedInUser = JSON.parse(req.body.profile);
-  console.log("formData: ", username, intro);
-  console.log("loggedInUser: ", loggedInUser);
-  console.log("files", file);
   let exists = undefined;
   if (loggedInUser.username !== String(username)) {
     exists = await User.exists({ username });

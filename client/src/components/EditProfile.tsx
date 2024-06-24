@@ -7,8 +7,8 @@ import axios, { formToJSON } from "axios";
 function EditProfile() {
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
-  console.log(profile);
   const userId = profile.user?.id;
+  const [preview, setPreview] = useState("");
   const [form, setForm] = useState({
     thumbnailImage: profile.user?.thumbnailImage || "",
     username: profile.user?.username || "",
@@ -37,8 +37,6 @@ function EditProfile() {
         formData
       );
       const result = await response.data;
-      console.log(response);
-      console.log(result);
       if (response.status === 400) {
         return setMessage(result.message);
       }
@@ -71,9 +69,13 @@ function EditProfile() {
   const handlePhoto = (event: React.ChangeEvent<HTMLInputElement>) => {
     const target = event.currentTarget;
     const files = (target.files as FileList)[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(files);
+    reader.onload = () => {
+      setPreview(reader.result as string);
+    };
     updateForm({ thumbnailImage: files });
   };
-  console.log(form.thumbnailImage);
   return (
     <>
       <h1>Edit Profile!</h1>
@@ -83,7 +85,9 @@ function EditProfile() {
           overflow: "hidden",
           width: "100px",
           height: "100px",
-          backgroundImage: profile.user?.thumbnailImage
+          backgroundImage: preview
+            ? `url(${preview})`
+            : profile.user?.thumbnailImage
             ? `url(http://localhost:5050/${profile.user?.thumbnailImage})`
             : "url(https://www.gravatar.com/avatar/?d=mp&f=y)",
           backgroundPosition: "center",
