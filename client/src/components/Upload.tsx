@@ -29,11 +29,12 @@ function Upload() {
   }
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    const post = { ...form };
-    const postData = { post, profile };
     const formData = new FormData();
+    for (let i = 0; i < form.photos.length; i++) {
+      formData.append("photos", form.photos[i]);
+    }
     formData.append("photos", form.photos as any);
-    formData.append("description", form.text);
+    formData.append("text", form.text);
     formData.append("hashtags", form.hashtags);
     formData.append("profile", JSON.stringify(profile.user));
     try {

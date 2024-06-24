@@ -16,12 +16,20 @@ const Post = styled.div`
   }
 `;
 const Text = styled.h1``;
+const PhotoContainer = styled.div`
+  width: 500px;
+  height: 500px;
+`;
+const Photo = styled.img`
+  width: 100%;
+`;
 const Hashtags = styled.h1``;
 
 interface IData {
   text: string;
   hashtags: string;
   _id: string;
+  img: string[];
 }
 
 function Home() {
@@ -59,6 +67,9 @@ function Home() {
             {posts?.map((post, index) => (
               <Post key={index}>
                 <Text>{post.text}</Text>
+                <PhotoContainer>
+                  <Photo src={post.img[0]} alt='post img' />
+                </PhotoContainer>
                 <Hashtags>{post.hashtags}</Hashtags>
                 <button>
                   <Link to={`posts/${post._id}/edit`}>Edit</Link>

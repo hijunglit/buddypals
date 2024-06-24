@@ -47,21 +47,27 @@ export const getUpload = (req, res) => {
 export const postUpload = async (req, res) => {
   const {
     body: { text, hashtags },
-    file,
+    files,
   } = req;
   const loggedInUser = JSON.parse(req.body.profile);
+  console.log("req.body", text, hashtags);
   console.log("loggedInUser:", loggedInUser);
-  return console.log("req.file: ", file);
-  try {
-    const result = await Post.create({
-      text,
-      hashtags: Post.formatHashtags(hashtags),
-      owner: id,
-    });
-    return res.send(result).status(204);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send({ message: "Error updating record" });
+  console.log("req.files: ", files);
+  if (files) {
+    const image = req.files;
+    const path = image.map((img) => img.path);
+    try {
+      const result = await Post.create({
+        img: files ? path : "",
+        text,
+        hashtags: Post.formatHashtags(hashtags),
+        owner: loggedInUser.id,
+      });
+      return res.send(result).status(204);
+    } catch (err) {
+      console.error(err);
+      res.status(500).send({ message: "Error updating record" });
+    }
   }
 };
 export const deletePost = async (req, res) => {
