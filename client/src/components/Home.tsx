@@ -4,6 +4,8 @@ import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { authAtom } from "../atoms/atom";
 import Login from "./Login";
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
 
 const PostContainer = styled.div``;
 const Post = styled.div`
@@ -16,14 +18,24 @@ const Post = styled.div`
   }
 `;
 const Text = styled.h1``;
-const PhotoContainer = styled.div`
-  width: 500px;
-  height: 500px;
-`;
-const Photo = styled.img`
-  width: 100%;
-`;
+
+const Photo = styled.div``;
 const Hashtags = styled.h1``;
+
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 1,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
+};
 
 interface IData {
   text: string;
@@ -65,11 +77,34 @@ function Home() {
           </h1>
           <PostContainer>
             {posts?.map((post, index) => (
-              <Post key={index}>
+              <Post key={index} style={{ width: "500px", height: "500px" }}>
                 <Text>{post.text}</Text>
-                <PhotoContainer>
-                  <Photo src={post.img[0]} alt='post img' />
-                </PhotoContainer>
+                <Carousel
+                  responsive={responsive}
+                  swipeable={false}
+                  draggable={false}
+                  showDots={true}
+                  infinite={true}
+                >
+                  <Photo
+                    style={{
+                      background: `url(http://localhost:5050/${post.img})`,
+                      width: "100%",
+                      height: "100%",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  ></Photo>
+                  <Photo
+                    style={{
+                      background: `url(http://localhost:5050/${post.img})`,
+                      width: "100%",
+                      height: "100%",
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  ></Photo>
+                </Carousel>
                 <Hashtags>{post.hashtags}</Hashtags>
                 <button>
                   <Link to={`posts/${post._id}/edit`}>Edit</Link>
