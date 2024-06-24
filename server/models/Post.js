@@ -5,6 +5,7 @@ const postSchema = new mongoose.Schema({
   text: { type: String, required: true },
   createdAt: { type: Date, required: true, default: Date.now },
   hashtags: [{ type: String, trim: true }],
+  owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
 });
 
 postSchema.static("formatHashtags", function (hashtags) {

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { authAtom } from "../atoms/atom";
 
 function Upload() {
+  const profile = useRecoilValue(authAtom);
   const [form, setForm] = useState({
     text: "",
     hashtags: "",
@@ -9,7 +12,11 @@ function Upload() {
   const [isNew, setIsNew] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
-    const getUpload = fetch(`http://localhost:5050/posts/upload`);
+    (async () => {
+      const response = await fetch(`http://localhost:5050/posts/upload`);
+      const result = await response.json();
+      console.log(result);
+    })();
   }, []);
 
   function updateForm(value: any) {
@@ -20,6 +27,7 @@ function Upload() {
   const onSubmit = async (e: any) => {
     e.preventDefault();
     const post = { ...form };
+    const postData = { post, profile };
     try {
       let response;
       if (isNew) {
@@ -28,7 +36,7 @@ function Upload() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(post),
+          body: JSON.stringify(postData),
         });
       }
       if (!response?.ok) {

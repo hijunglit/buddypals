@@ -12,10 +12,11 @@ export const home = async ({ session: { user } }, res) => {
 export const see = async (req, res) => {
   const { id } = req.params;
   const post = await Post.findById(id);
+  const owner = await User.findById(post.owner);
   if (!post) {
     return res.send("post Not found").status(404);
   }
-  return res.send(post).status(200);
+  return res.status(200).send({ post, owner });
 };
 export const getEdit = async (req, res) => {
   const { id } = req.params;
@@ -41,19 +42,27 @@ export const postEdit = async (req, res) => {
   return res.send(`post edit`);
 };
 export const getUpload = (req, res) => {
-  return res.send("Get upload");
+  return res.status(200).send({ message: "Get upload" });
 };
 export const postUpload = async (req, res) => {
-  const { text, hashtags } = req.body;
+  const {
+    text,
+    hashtags,
+    profile: {
+      user: { id },
+    },
+  } = req.body;
+  console.log(req.body.profile);
   try {
     const result = await Post.create({
       text,
       hashtags: Post.formatHashtags(hashtags),
+      owner: id,
     });
     return res.send(result).status(204);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error updating record");
+    res.status(500).send({ message: "Error updating record" });
   }
 };
 export const deletePost = async (req, res) => {

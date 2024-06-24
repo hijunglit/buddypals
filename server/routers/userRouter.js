@@ -9,15 +9,15 @@ import {
   getChangePassword,
   postChangePassword,
 } from "../controllers/userController.js";
-import { uploadFiles } from "../middleware.js";
+import { uploadProfileImg } from "../middleware.js";
 
 const userRouter = express.Router();
 
 userRouter.get("/logout", logout);
 userRouter
-  .route("/profile/edit")
+  .route("/:id/edit")
   .get(getEdit)
-  .post(uploadFiles.single("avatar"), postEdit);
+  .post(uploadProfileImg.single("avatar"), postEdit);
 userRouter
   .route("/change-password")
   .get(getChangePassword)

@@ -8,6 +8,7 @@ function EditProfile() {
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
   console.log(profile);
+  const userId = profile.user?.id;
   const [form, setForm] = useState({
     thumbnailImage: profile.user?.thumbnailImage || "",
     username: profile.user?.username || "",
@@ -20,7 +21,7 @@ function EditProfile() {
   }
   useEffect(() => {
     (async () => {
-      await fetch("http://localhost:5050/users/profile/edit");
+      await fetch(`http://localhost:5050/users/${userId}/edit`);
     })();
   }, []);
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -32,7 +33,7 @@ function EditProfile() {
     formData.append("profile", JSON.stringify(profile.user));
     try {
       const response = await axios.post(
-        "http://localhost:5050/users/profile/edit",
+        `http://localhost:5050/users/${userId}/edit`,
         formData
       );
       const result = await response.data;
@@ -72,6 +73,7 @@ function EditProfile() {
     const files = (target.files as FileList)[0];
     updateForm({ thumbnailImage: files });
   };
+  console.log(form.thumbnailImage);
   return (
     <>
       <h1>Edit Profile!</h1>

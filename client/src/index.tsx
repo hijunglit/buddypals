@@ -15,6 +15,7 @@ import EditPost from "./components/EditPost";
 import ChangePassword from "./components/ChangePassword";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
+import Post from "./components/Post";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -37,14 +38,15 @@ root.render(
           </Route>
           <Route path='' element={<ProtectedRoute />}>
             <Route path='logout' element={<Logout />} />
-            <Route path='profile/edit' element={<EditProfile />} />
             <Route path='change-password' element={<ChangePassword />} />
             <Route path=':id' element={<Profile />} />
+            <Route path=':id/edit' element={<EditProfile />} />
           </Route>
         </Route>
         <Route path='/posts/*' element={<App />}>
           <Route path='' element={<ProtectedRoute />}>
             <Route path='upload' element={<Upload />} />
+            <Route path=':id' element={<Post />} />
             <Route path=':id/edit' element={<EditPost />} />
           </Route>
         </Route>

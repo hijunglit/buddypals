@@ -4,7 +4,7 @@ import path from "path";
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "uploads/avatars");
   },
   filename: (req, file, cb) => {
     cb(null, uuidv4() + "-" + Date.now() + path.extname(file.originalname));
@@ -19,7 +19,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-export const uploadFiles = multer({
+export const uploadProfileImg = multer({
   storage,
   fileFilter,
   limits: {
