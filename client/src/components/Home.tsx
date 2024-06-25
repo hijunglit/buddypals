@@ -16,6 +16,10 @@ const Post = styled.div`
     color: #fff;
     text-decoration: none;
   }
+  & div {
+    width: 500px;
+    height: 600px;
+  }
 `;
 const Text = styled.h1``;
 
@@ -38,14 +42,15 @@ const responsive = {
 };
 
 interface IData {
-  text: string;
-  hashtags: string;
   _id: string;
   img: string[];
+  text: string;
+  hashtags: string;
+  owner: string;
 }
 
 function Home() {
-  const authState = useRecoilValue(authAtom);
+  const profile = useRecoilValue(authAtom);
   async function deletePost(id: any) {
     await fetch(`http://localhost:5050/posts/${id}/delete`);
     const newPost = posts.filter((el) => el._id !== id);
@@ -67,24 +72,42 @@ function Home() {
     getPosts();
     return;
   }, [posts.length]);
-
+  console.log(posts);
   return (
     <>
-      {authState.isAuthenticated ? (
+      {profile.isAuthenticated ? (
         <>
-          <h1 style={{ textAlign: "center" }}>
-            Welcome! {authState.user?.username}!
-          </h1>
           <PostContainer>
-            {posts?.map((post, index) => (
-              <Post key={index} style={{ width: "500px", height: "500px" }}>
+            {posts?.map((post) => (
+              <Post key={post._id} style={{ width: "500px" }}>
+                {String(post.owner) === String(profile.user?.id) ? (
+                  <>
+                    <button>
+                      <Link to={`posts/${post._id}/edit`}>Edit</Link>
+                    </button>
+                    <button onClick={() => deletePost(post._id)}>Delete</button>
+                  </>
+                ) : (
+                  ""
+                )}
+                <Carousel
+                  responsive={responsive}
+                  showDots={true}
+                  infinite={true}
+                >
+                  {post.img.map((img) => (
+                    <Photo
+                      key={img}
+                      style={{
+                        background: `url(http://localhost:5050/${img})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    />
+                  ))}
+                </Carousel>
                 <Text>{post.text}</Text>
-
                 <Hashtags>{post.hashtags}</Hashtags>
-                <button>
-                  <Link to={`posts/${post._id}/edit`}>Edit</Link>
-                </button>
-                <button onClick={() => deletePost(post._id)}>Delete</button>
               </Post>
             ))}
           </PostContainer>

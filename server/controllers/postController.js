@@ -50,9 +50,6 @@ export const postUpload = async (req, res) => {
     files,
   } = req;
   const loggedInUser = JSON.parse(req.body.profile);
-  console.log("req.body", text, hashtags);
-  console.log("loggedInUser:", loggedInUser);
-  console.log("req.files: ", files);
   if (files) {
     const image = req.files;
     const path = image.map((img) => img.path);

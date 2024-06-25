@@ -16,6 +16,7 @@ const Nav = styled.nav`
     padding: 0 10px;
     text-decoration: none;
   }
+  z-index: 99;
 `;
 
 export default function Navbar() {
