@@ -79,32 +79,7 @@ function Home() {
             {posts?.map((post, index) => (
               <Post key={index} style={{ width: "500px", height: "500px" }}>
                 <Text>{post.text}</Text>
-                <Carousel
-                  responsive={responsive}
-                  swipeable={false}
-                  draggable={false}
-                  showDots={true}
-                  infinite={true}
-                >
-                  <Photo
-                    style={{
-                      background: `url(http://localhost:5050/${post.img})`,
-                      width: "100%",
-                      height: "100%",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  ></Photo>
-                  <Photo
-                    style={{
-                      background: `url(http://localhost:5050/${post.img})`,
-                      width: "100%",
-                      height: "100%",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  ></Photo>
-                </Carousel>
+
                 <Hashtags>{post.hashtags}</Hashtags>
                 <button>
                   <Link to={`posts/${post._id}/edit`}>Edit</Link>
