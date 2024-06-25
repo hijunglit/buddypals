@@ -72,6 +72,7 @@ function Home() {
     getPosts();
     return;
   }, [posts.length]);
+  console.log(posts);
   return (
     <>
       {profile.isAuthenticated ? (

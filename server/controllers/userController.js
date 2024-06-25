@@ -120,12 +120,12 @@ export const logout = (req, res) => {
 };
 export const getProfile = async (req, res) => {
   const { id } = req.params;
-  const user = await User.findById(id);
+  const user = await User.findById(id).populate("posts");
   if (!user) {
     return res.status(404).send({ message: "User not found." });
   }
-  const posts = await Post.find({ owner: user._id });
-  return res.status(200).send({ user, posts });
+  console.log(user);
+  return res.status(200).send({ user });
 };
 export const getEdit = (req, res) => {
   return res.status(200).send({ message: "Get edit User" });

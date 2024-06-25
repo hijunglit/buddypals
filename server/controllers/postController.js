@@ -1,4 +1,5 @@
 import Post from "../models/Post.js";
+import User from "../models/User.js";
 
 export const home = async ({ session: { user } }, res) => {
   try {
@@ -60,6 +61,9 @@ export const postUpload = async (req, res) => {
         hashtags: Post.formatHashtags(hashtags),
         owner: loggedInUser.id,
       });
+      const user = await User.findById(loggedInUser.id);
+      user.posts.push(result._id);
+      user.save();
       return res.send(result).status(204);
     } catch (err) {
       console.error(err);

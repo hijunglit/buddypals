@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   salt: String,
   name: { type: String, required: true },
   intro: { type: String, default: "" },
+  posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
 });
 const randomBytesPromise = util.promisify(crypto.randomBytes);
 const pbkdf2Promise = util.promisify(crypto.pbkdf2);
@@ -20,11 +21,13 @@ const createSalt = async () => {
   return buf.toString("base64");
 };
 userSchema.pre("save", async function () {
-  const salt = await createSalt();
-  this.salt = salt;
-  this.password = (
-    await pbkdf2Promise(this.password, salt, 104906, 64, "sha512")
-  ).toString("base64");
+  if (this.isModified("password")) {
+    const salt = await createSalt();
+    this.salt = salt;
+    this.password = (
+      await pbkdf2Promise(this.password, salt, 104906, 64, "sha512")
+    ).toString("base64");
+  }
 });
 
 export const verifyPassword = async (password, userSalt, userPassword) => {
