@@ -11,6 +11,7 @@ function Profile() {
     (async () => {
       const response = await fetch(`http://localhost:5050/users/${userId}`);
       const result = await response.json();
+      console.log(result);
     })();
   }, []);
   return (

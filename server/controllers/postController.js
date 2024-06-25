@@ -11,12 +11,12 @@ export const home = async ({ session: { user } }, res) => {
 };
 export const see = async (req, res) => {
   const { id } = req.params;
-  const post = await Post.findById(id);
-  const owner = await User.findById(post.owner);
+  const post = await Post.findById(id).populate("owner");
+  console.log(post);
   if (!post) {
     return res.send("post Not found").status(404);
   }
-  return res.status(200).send({ post, owner });
+  return res.status(200).send({ post });
 };
 export const getEdit = async (req, res) => {
   const { id } = req.params;

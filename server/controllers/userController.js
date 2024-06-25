@@ -1,6 +1,7 @@
 import session from "express-session";
 import User, { verifyPassword } from "../models/User.js";
 import { sessionizeUser, socialSessionizeUser } from "../util/helpers.js";
+import Post from "../models/Post.js";
 
 export const getJoin = (req, res) => {
   res.send({ pageTitle: "Join" }).status(200);
@@ -120,11 +121,11 @@ export const logout = (req, res) => {
 export const getProfile = async (req, res) => {
   const { id } = req.params;
   const user = await User.findById(id);
-  console.log(user);
   if (!user) {
     return res.status(404).send({ message: "User not found." });
   }
-  return res.status(200).send({ message: "User Profile" });
+  const posts = await Post.find({ owner: user._id });
+  return res.status(200).send({ user, posts });
 };
 export const getEdit = (req, res) => {
   return res.status(200).send({ message: "Get edit User" });

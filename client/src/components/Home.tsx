@@ -72,7 +72,6 @@ function Home() {
     getPosts();
     return;
   }, [posts.length]);
-  console.log(posts);
   return (
     <>
       {profile.isAuthenticated ? (
@@ -81,14 +80,27 @@ function Home() {
             {posts?.map((post) => (
               <Post key={post._id} style={{ width: "500px" }}>
                 {String(post.owner) === String(profile.user?.id) ? (
-                  <>
+                  <div
+                    style={{
+                      display: "flex",
+                      height: "80px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div style={{ height: "80px" }}>
+                      <button>
+                        <Link to={`posts/${post._id}/edit`}>수정</Link>
+                      </button>
+                      <button onClick={() => deletePost(post._id)}>삭제</button>
+                    </div>
                     <button>
-                      <Link to={`posts/${post._id}/edit`}>Edit</Link>
+                      <Link to={`posts/${post._id}`}>게시물 보기</Link>
                     </button>
-                    <button onClick={() => deletePost(post._id)}>Delete</button>
-                  </>
+                  </div>
                 ) : (
-                  ""
+                  <button>
+                    <Link to={`posts/${post._id}`}>게시물 보기</Link>
+                  </button>
                 )}
                 <Carousel
                   responsive={responsive}
