@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { authAtom } from "../atoms/atom";
 
 interface IPost {
   text: string;
@@ -7,6 +9,7 @@ interface IPost {
 }
 
 function EditPost() {
+  const profile = useRecoilValue(authAtom);
   const [form, setForm] = useState<IPost>({
     text: "",
     hashtags: [""],
@@ -31,6 +34,9 @@ function EditPost() {
         navigate("/");
         return;
       }
+      if (profile.user?.id !== post.owner) {
+        navigate("/");
+      }
       setForm(post);
     }
     fetchData();
@@ -43,6 +49,7 @@ function EditPost() {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const post = { ...form };
+    const user = profile.user;
     try {
       let response;
       response = await fetch(
@@ -52,9 +59,12 @@ function EditPost() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(post),
+          body: JSON.stringify({ post, user }),
         }
       );
+      if (response.status === 403) {
+        navigate("/");
+      }
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
     } finally {

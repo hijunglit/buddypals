@@ -34,10 +34,14 @@ export const getEdit = async (req, res) => {
 };
 export const postEdit = async (req, res) => {
   const { id } = req.params;
+  const { user } = req.body;
   const { text, hashtags } = req.body;
   const post = await Post.exists({ _id: id });
   if (!post) {
-    return res.send("post Not found").status(404);
+    return res.status(404).send("post Not found");
+  }
+  if (String(post.owner) !== String(user.id)) {
+    return res.status(403).send({ message: "Authentication error" });
   }
   await Post.findByIdAndUpdate(id, {
     text,
@@ -76,6 +80,14 @@ export const postUpload = async (req, res) => {
 };
 export const deletePost = async (req, res) => {
   const { id } = req.params;
+  const { user } = req.body;
+  const post = await Post.findById(id);
+  if (!post) {
+    return res.status(404).send({ message: "Post not found." });
+  }
+  if (String(post.owner) !== String(user.id)) {
+    return res.status(403).send({ message: "Authentication error" });
+  }
   await Post.findByIdAndDelete(id);
   return res.send("Delete post");
 };

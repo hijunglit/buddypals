@@ -7,6 +7,41 @@ import Login from "./Login";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
+const responsive = {
+  desktop: {
+    breakpoint: { max: 3000, min: 1024 },
+    items: 1,
+  },
+  tablet: {
+    breakpoint: { max: 1024, min: 464 },
+    items: 1,
+  },
+  mobile: {
+    breakpoint: { max: 464, min: 0 },
+    items: 1,
+  },
+};
+
+interface IPostInfo {
+  _id: string;
+  img: string[];
+  text: string;
+  hashtags: string[];
+  owner: {
+    _id: string;
+    email: string;
+    socialOnly: boolean;
+    username: string;
+    password: string;
+    name: string;
+    intro: string;
+    salt: string;
+    __v: number;
+    thumbnailImageUrl: string;
+  };
+  createdAt: string;
+}
+
 const PostContainer = styled.div``;
 const Post = styled.div`
   width: fit-content;
@@ -43,55 +78,35 @@ const Thumbnail = styled.div<{ $ownerthumb: string }>`
   background-position: center;
   border-radius: 50px;
 `;
-const UserName = styled.h3``;
+const UserName = styled.h3`
+  color: #000;
+`;
 const Text = styled.h1``;
 
 const Photo = styled.div``;
 const Hashtags = styled.h1``;
 
-const responsive = {
-  desktop: {
-    breakpoint: { max: 3000, min: 1024 },
-    items: 1,
-  },
-  tablet: {
-    breakpoint: { max: 1024, min: 464 },
-    items: 1,
-  },
-  mobile: {
-    breakpoint: { max: 464, min: 0 },
-    items: 1,
-  },
-};
-
-interface IPostInfo {
-  _id: string;
-  img: string[];
-  text: string;
-  hashtags: string[];
-  owner: {
-    _id: string;
-    email: string;
-    socialOnly: boolean;
-    username: string;
-    password: string;
-    name: string;
-    intro: string;
-    salt: string;
-    __v: number;
-    thumbnailImageUrl: string;
-  };
-  createdAt: string;
-}
-
 function Home() {
   const profile = useRecoilValue(authAtom);
   async function deletePost(id: any) {
-    await fetch(`http://localhost:5050/posts/${id}/delete`);
+    const response = await fetch(`http://localhost:5050/posts/${id}/delete`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(profile),
+    });
+    if (response.status === 404) {
+      return;
+    }
+    if (response.status === 403) {
+      return;
+    }
     const newPost = posts.filter((el) => el._id !== id);
     setPosts(newPost);
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
+  console.log(posts);
   useEffect(() => {
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
@@ -107,7 +122,6 @@ function Home() {
     getPosts();
     return;
   }, [posts.length]);
-  console.log(posts);
   return (
     <>
       {profile.isAuthenticated ? (
@@ -117,13 +131,17 @@ function Home() {
               <Post key={post._id} style={{ width: "500px" }}>
                 <PostTop>
                   <OwnerInfo>
-                    <Thumbnail
-                      {...{ $ownerthumb: post.owner.thumbnailImageUrl }}
-                    />
-                    <UserName>{post.owner.username}</UserName>
+                    <Link to={`users/${post.owner._id}`}>
+                      <Thumbnail
+                        {...{ $ownerthumb: post.owner.thumbnailImageUrl }}
+                      />
+                    </Link>
+                    <Link to={`users/${post.owner._id}`}>
+                      <UserName>{post.owner.username}</UserName>
+                    </Link>
                   </OwnerInfo>
                   <Controller>
-                    {String(post.owner) === String(profile.user?.id) ? (
+                    {String(post.owner._id) === String(profile.user?.id) ? (
                       <>
                         <OwnerController>
                           <Edit>

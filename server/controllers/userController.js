@@ -120,11 +120,11 @@ export const logout = (req, res) => {
 };
 export const getProfile = async (req, res) => {
   const { id } = req.params;
+  console.log(req.params);
   const user = await User.findById(id).populate("posts");
   if (!user) {
     return res.status(404).send({ message: "User not found." });
   }
-  console.log(user);
   return res.status(200).send({ user });
 };
 export const getEdit = (req, res) => {
