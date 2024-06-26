@@ -6,7 +6,7 @@ interface IAuthState {
     username: string;
     id: string;
     profileImage?: string;
-    thumbnailImage?: string;
+    thumbnailImage: string;
     social: boolean;
     intro: string;
   } | null;

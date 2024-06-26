@@ -76,6 +76,7 @@ function EditProfile() {
     };
     updateForm({ thumbnailImage: files });
   };
+  console.log(profile.user);
   return (
     <>
       <h1>Edit Profile!</h1>
@@ -87,9 +88,7 @@ function EditProfile() {
           height: "100px",
           backgroundImage: preview
             ? `url(${preview})`
-            : profile.user?.thumbnailImage
-            ? `url(http://localhost:5050/${profile.user?.thumbnailImage})`
-            : "url(https://www.gravatar.com/avatar/?d=mp&f=y)",
+            : `url(${profile.user?.thumbnailImage})`,
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}

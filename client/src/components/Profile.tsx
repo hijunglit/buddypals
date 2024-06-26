@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
 import styled from "styled-components";
@@ -20,8 +20,13 @@ interface IUserData {
   name: string;
   intro: string;
   posts: IPostData[];
+  _id: string;
 }
 
+const Header = styled.header``;
+const UserThumb = styled.div``;
+const Controller = styled.div``;
+const UserName = styled.h1``;
 const Posts = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -35,20 +40,28 @@ const Post = styled.div<{ $imgsrc: string }>`
 `;
 function Profile() {
   const profile = useRecoilValue(authAtom);
-  const userId = profile.user?.id;
+  const params = useParams();
+  const { id } = params;
   const [user, Setuser] = useState<IUserData>();
-  const [message, setMessage] = useState("");
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:5050/users/${userId}`);
+      const response = await fetch(`http://localhost:5050/users/${id}`);
       const result = await response.json();
       Setuser(result.user);
     })();
   }, []);
-  console.log(user);
   return (
     <>
-      <Link to={"edit"}>프로필 편집</Link>
+      <Header>
+        <UserName>{user?.username}</UserName>
+        {user?._id === profile.user?.id ? (
+          <Controller>
+            <Link to={"edit"}>프로필 편집</Link>
+          </Controller>
+        ) : (
+          ""
+        )}
+      </Header>
       <Posts>
         {user?.posts.map((post) => (
           <Post key={post._id} $imgsrc={post.img[0]}>

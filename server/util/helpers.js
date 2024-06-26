@@ -3,7 +3,12 @@ export const parseError = (err) => {
   return JSON.stringify(err, Object.getOwnPropertyNames(err));
 };
 export const sessionizeUser = (user) => {
-  return { userId: user._id, username: user.username, userIntro: user.intro };
+  return {
+    userId: user._id,
+    username: user.username,
+    userIntro: user.intro,
+    thumbnailImageUrl: "https://www.gravatar.com/avatar/?d=mp&f=y",
+  };
 };
 
 export const socialSessionizeUser = (user) => {

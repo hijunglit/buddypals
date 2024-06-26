@@ -47,6 +47,7 @@ function Login() {
           id: String(user.userId),
           social: false,
           intro: String(user.userIntro),
+          thumbnailImage: String(user.thumbnailImageUrl),
         },
         isAuthenticated: true,
       });
