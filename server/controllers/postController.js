@@ -3,7 +3,10 @@ import User from "../models/User.js";
 
 export const home = async ({ session: { user } }, res) => {
   try {
-    const posts = await Post.find({}).sort({ createdAt: "desc" });
+    const posts = await Post.find({})
+      .sort({ createdAt: "desc" })
+      .populate("owner");
+    console.log(posts);
     return res.send({ user, posts }).status(200);
   } catch (err) {
     console.error(err);

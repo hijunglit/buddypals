@@ -5,7 +5,10 @@ import crypto from "crypto";
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   profileImgUrl: String,
-  thumbnailImageUrl: String,
+  thumbnailImageUrl: {
+    type: String,
+    default: "https://www.gravatar.com/avatar/?d=mp&f=y",
+  },
   socialOnly: { type: Boolean, default: false },
   username: { type: String, required: true, unique: true },
   password: { type: String },

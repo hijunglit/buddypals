@@ -16,11 +16,34 @@ const Post = styled.div`
     color: #fff;
     text-decoration: none;
   }
-  & div {
-    width: 500px;
-    height: 600px;
-  }
 `;
+const PostTop = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+const OwnerInfo = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const OwnerController = styled.div`
+  display: "flex";
+  height: "80px";
+  alignitems: "center";
+`;
+const Edit = styled.button``;
+const Delete = styled.button``;
+const SeePost = styled.button``;
+const Controller = styled.div``;
+const Thumbnail = styled.div<{ $ownerthumb: string }>`
+  background-image: url(${(props) => props.$ownerthumb});
+  width: 60px !important;
+  height: 60px !important;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50px;
+`;
+const UserName = styled.h3``;
 const Text = styled.h1``;
 
 const Photo = styled.div``;
@@ -41,12 +64,24 @@ const responsive = {
   },
 };
 
-interface IData {
+interface IPostInfo {
   _id: string;
   img: string[];
   text: string;
-  hashtags: string;
-  owner: string;
+  hashtags: string[];
+  owner: {
+    _id: string;
+    email: string;
+    socialOnly: boolean;
+    username: string;
+    password: string;
+    name: string;
+    intro: string;
+    salt: string;
+    __v: number;
+    thumbnailImageUrl: string;
+  };
+  createdAt: string;
 }
 
 function Home() {
@@ -56,7 +91,7 @@ function Home() {
     const newPost = posts.filter((el) => el._id !== id);
     setPosts(newPost);
   }
-  const [posts, setPosts] = useState<IData[]>([]);
+  const [posts, setPosts] = useState<IPostInfo[]>([]);
   useEffect(() => {
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
@@ -80,29 +115,35 @@ function Home() {
           <PostContainer>
             {posts?.map((post) => (
               <Post key={post._id} style={{ width: "500px" }}>
-                {String(post.owner) === String(profile.user?.id) ? (
-                  <div
-                    style={{
-                      display: "flex",
-                      height: "80px",
-                      alignItems: "center",
-                    }}
-                  >
-                    <div style={{ height: "80px" }}>
-                      <button>
-                        <Link to={`posts/${post._id}/edit`}>수정</Link>
-                      </button>
-                      <button onClick={() => deletePost(post._id)}>삭제</button>
-                    </div>
-                    <button>
-                      <Link to={`posts/${post._id}`}>게시물 보기</Link>
-                    </button>
-                  </div>
-                ) : (
-                  <button>
-                    <Link to={`posts/${post._id}`}>게시물 보기</Link>
-                  </button>
-                )}
+                <PostTop>
+                  <OwnerInfo>
+                    <Thumbnail
+                      {...{ $ownerthumb: post.owner.thumbnailImageUrl }}
+                    />
+                    <UserName>{post.owner.username}</UserName>
+                  </OwnerInfo>
+                  <Controller>
+                    {String(post.owner) === String(profile.user?.id) ? (
+                      <>
+                        <OwnerController>
+                          <Edit>
+                            <Link to={`posts/${post._id}/edit`}>수정</Link>
+                          </Edit>
+                          <Delete onClick={() => deletePost(post._id)}>
+                            삭제
+                          </Delete>
+                        </OwnerController>
+                        <SeePost>
+                          <Link to={`posts/${post._id}`}>게시물 보기</Link>
+                        </SeePost>
+                      </>
+                    ) : (
+                      <SeePost>
+                        <Link to={`posts/${post._id}`}>게시물 보기</Link>
+                      </SeePost>
+                    )}
+                  </Controller>
+                </PostTop>
                 <Carousel
                   responsive={responsive}
                   showDots={true}
@@ -115,6 +156,8 @@ function Home() {
                         background: `url(http://localhost:5050/${img})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
+                        width: "500px",
+                        height: "500px",
                       }}
                     />
                   ))}
