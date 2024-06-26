@@ -82,6 +82,7 @@ export const deletePost = async (req, res) => {
   const { id } = req.params;
   const { user } = req.body;
   const post = await Post.findById(id);
+  const sessionUser = await User.findById(user.id);
   if (!post) {
     return res.status(404).send({ message: "Post not found." });
   }
@@ -89,5 +90,7 @@ export const deletePost = async (req, res) => {
     return res.status(403).send({ message: "Authentication error" });
   }
   await Post.findByIdAndDelete(id);
+  sessionUser.posts.splice(sessionUser.posts.indexOf(id), 1);
+  sessionUser.save();
   return res.send("Delete post");
 };
