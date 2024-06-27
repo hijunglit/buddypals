@@ -44,22 +44,32 @@ interface IPostInfo {
 
 const PostContainer = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
 `;
 const Post = styled.div`
-  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   margin: 0 auto;
+  width: 100%;
   padding: 12px 16px;
   & a {
     color: #fff;
     text-decoration: none;
   }
+  &:last-child {
+    margin-bottom: 100px;
+  }
 `;
 const PostTop = styled.div`
   display: flex;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
 `;
 const OwnerInfo = styled.div`
+  height: 100%;
   display: flex;
   align-items: center;
 `;
@@ -68,14 +78,29 @@ const OwnerController = styled.div`
   height: "80px";
   alignitems: "center";
 `;
-const Edit = styled.button``;
-const Delete = styled.button``;
-const SeePost = styled.button``;
-const Controller = styled.div``;
+const Edit = styled.button`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 6px;
+`;
+const Delete = styled.button`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 6px;
+  color: #fff;
+`;
+const SeePost = styled.button`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 6px;
+`;
+const Controller = styled.div`
+  display: flex;
+`;
 const Thumbnail = styled.div<{ $ownerthumb: string }>`
+  width: 32px;
+  height: 32px;
   background-image: url(${(props) => props.$ownerthumb});
-  width: 60px !important;
-  height: 60px !important;
   background-size: cover;
   background-position: center;
   border-radius: 50px;
@@ -85,7 +110,9 @@ const UserName = styled.h3`
 `;
 const Text = styled.h1``;
 
-const Photo = styled.div``;
+const Photo = styled.div`
+  height: 400px;
+`;
 const Hashtags = styled.h1``;
 
 function Home() {
@@ -129,7 +156,7 @@ function Home() {
         <>
           <PostContainer>
             {posts?.map((post) => (
-              <Post key={post._id} style={{ width: "500px" }}>
+              <Post key={post._id}>
                 <PostTop>
                   <OwnerInfo>
                     <Link to={`users/${post.owner._id}`}>
@@ -181,8 +208,6 @@ function Home() {
                         background: `url(http://localhost:5050/${img})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
-                        width: "500px",
-                        height: "500px",
                       }}
                     />
                   ))}

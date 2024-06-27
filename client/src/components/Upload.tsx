@@ -1,18 +1,41 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
 import axios from "axios";
+import styled from "styled-components";
+
+const UploadForm = styled.form``;
+const CustomFileInput = styled.div`
+  display: flex;
+  gap: 16px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+  width: 200px;
+`;
+const UploadButton = styled.div`
+  width: fit-content;
+  padding: 16px;
+  background-color: #191b27;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+`;
+const FileName = styled.p``;
 
 function Upload() {
   const profile = useRecoilValue(authAtom);
+  const [fileName, setFileName] = useState("");
+  const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     photos: [],
     text: "",
     hashtags: "",
   });
-  const [isNew, setIsNew] = useState(true);
   const [preview, setPreview] = useState<string[]>([]);
+  const [isNew, setIsNew] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
     (async () => {
@@ -29,6 +52,9 @@ function Upload() {
   }
   const onSubmit = async (e: any) => {
     e.preventDefault();
+    if (fileName.length === 0) {
+      return setMessage("사진을 선택해주세요.");
+    }
     const formData = new FormData();
     for (let i = 0; i < form.photos.length; i++) {
       formData.append("photos", form.photos[i]);
@@ -61,7 +87,6 @@ function Upload() {
     const target = event.currentTarget;
     const imgLists = target.files as FileList;
     let imgUrlLists: string[] = [...preview];
-    console.log(imgUrlLists);
     for (let i = 0; i < imgLists.length; i++) {
       const currentImgUrl = URL.createObjectURL(imgLists[i]);
       imgUrlLists.push(currentImgUrl);
@@ -70,16 +95,22 @@ function Upload() {
       imgUrlLists = imgUrlLists.slice(0, 3);
     }
     setPreview(imgUrlLists);
+    setFileName(imgLists[0].name);
     updateForm({ photos: imgLists });
   };
-
+  console.log(fileName);
   const handleDeletePrevie = (id: any) => {
     setPreview(preview.filter((_, index) => index !== id));
   };
   return (
     <>
-      <form onSubmit={onSubmit} encType='multipart/form-data'>
-        <label htmlFor='photos'>사진 업로드</label>
+      <UploadForm onSubmit={onSubmit} encType='multipart/form-data'>
+        <label htmlFor='photos'>
+          <CustomFileInput>
+            <UploadButton>🔗 FILE UPLOAD</UploadButton>
+            {fileName ? <FileName>{fileName}</FileName> : ""}
+          </CustomFileInput>
+        </label>
         <input
           type='file'
           name='photos'
@@ -87,9 +118,11 @@ function Upload() {
           accept='image/*'
           multiple
           onChange={handleAddPhotos}
+          style={{ display: "none" }}
+          required
         />
         <input
-          placeholder='Description'
+          placeholder='텍스트'
           type='text'
           name='text'
           value={form.text}
@@ -109,7 +142,7 @@ function Upload() {
           required
         />
         <input type='submit' value='Upload Post' />
-      </form>
+      </UploadForm>
       {preview.map((image, id) => (
         <div key={id} style={{ width: "100px" }}>
           <img src={image} alt={`${image}-${id}`} style={{ width: "100%" }} />
