@@ -5,6 +5,7 @@ import { authAtom } from "../atoms/atom";
 
 const Nav = styled.nav`
   display: flex;
+  justify-content: space-around;
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -12,6 +13,7 @@ const Nav = styled.nav`
   text-align: center;
   padding: 12px 0;
   margin: 0 auto;
+  border-top: 2px solid #262626;
   & a {
     padding: 0 10px;
     text-decoration: none;

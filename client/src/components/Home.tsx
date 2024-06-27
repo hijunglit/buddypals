@@ -42,7 +42,9 @@ interface IPostInfo {
   createdAt: string;
 }
 
-const PostContainer = styled.div``;
+const PostContainer = styled.div`
+  width: 100%;
+`;
 const Post = styled.div`
   width: fit-content;
   margin: 0 auto;

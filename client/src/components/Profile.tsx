@@ -23,31 +23,38 @@ interface IUserData {
   _id: string;
 }
 
-const Header = styled.header``;
+const Wrapper = styled.div``;
+const Header = styled.header`
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 120px;
+`;
 const UserThumb = styled.div<{ $userthumb: string }>`
   background-image: ${(props) => `url(${props.$userthumb})`};
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  width: 150px;
-  height: 150px;
+  width: 77px;
+  height: 77px;
   border-radius: 50%;
 `;
 const Controller = styled.div``;
 const UserName = styled.h1``;
+const Figures = styled.div``;
 const Posts = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  width: 50%;
+  grid-auto-rows: minmax(140px, 100%);
+  gap: 2px;
   margin: 0 auto;
-  padding: 50px;
 `;
 const Post = styled.div<{ $imgsrc: string }>`
-  width: 300px;
-  height: 300px;
   background-image: url(http://localhost:5050/${(props) => props.$imgsrc});
   background-size: cover;
   background-position: center;
+  height: 100%;
 `;
 function Profile() {
   const profile = useRecoilValue(authAtom);
@@ -64,7 +71,6 @@ function Profile() {
   return (
     <>
       <Header>
-        <UserName>{user?.username}</UserName>
         <UserThumb
           {...{
             $userthumb: user?.thumbnailImageUrl.includes("http://")
@@ -72,18 +78,26 @@ function Profile() {
               : `http://localhost:5050/${user?.thumbnailImageUrl}`,
           }}
         />
-        {user?._id === profile.user?.id ? (
-          <Controller>
-            <Link to={"edit"}>프로필 편집</Link>
-          </Controller>
-        ) : (
-          ""
-        )}
+        <Wrapper style={{ lineHeight: "1.6" }}>
+          <UserName>{user?.username}</UserName>
+          {user?._id === profile.user?.id ? (
+            <Controller>
+              <Link to={"edit"}>프로필 편집</Link>
+            </Controller>
+          ) : (
+            ""
+          )}
+          <Figures>
+            <h4>
+              게시물 <strong>{user?.posts.length}</strong>
+            </h4>
+          </Figures>
+        </Wrapper>
       </Header>
       <Posts>
         {user?.posts.map((post) => (
           <Link to={"/posts/" + post._id} key={post._id}>
-            <Post $imgsrc={post.img[0]}>{post.text}</Post>
+            <Post $imgsrc={post.img[0]} />
           </Link>
         ))}
       </Posts>
