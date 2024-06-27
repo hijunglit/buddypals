@@ -26,3 +26,8 @@ export const authAtom = atom<IAuthState>({
   },
   effects_UNSTABLE: [persistAtom],
 });
+
+export const isDarkAtom = atom({
+  key: "isDark",
+  default: true,
+});
