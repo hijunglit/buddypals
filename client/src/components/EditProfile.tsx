@@ -76,7 +76,6 @@ function EditProfile() {
     };
     updateForm({ thumbnailImage: files });
   };
-  console.log(profile.user);
   return (
     <>
       <h1>Edit Profile!</h1>

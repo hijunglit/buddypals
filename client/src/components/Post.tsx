@@ -32,7 +32,6 @@ function Post() {
       setPost(post);
     })();
   }, []);
-  console.log(post);
   return (
     <>
       <h1>Post!</h1>

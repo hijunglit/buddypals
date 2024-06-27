@@ -106,7 +106,6 @@ function Home() {
     setPosts(newPost);
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
-  console.log(posts);
   useEffect(() => {
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
@@ -133,7 +132,13 @@ function Home() {
                   <OwnerInfo>
                     <Link to={`users/${post.owner._id}`}>
                       <Thumbnail
-                        {...{ $ownerthumb: post.owner.thumbnailImageUrl }}
+                        {...{
+                          $ownerthumb: post.owner.thumbnailImageUrl.includes(
+                            "http://"
+                          )
+                            ? post.owner.thumbnailImageUrl
+                            : `http://localhost:5050/${post.owner.thumbnailImageUrl}`,
+                        }}
                       />
                     </Link>
                     <Link to={`users/${post.owner._id}`}>

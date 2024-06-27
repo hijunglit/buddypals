@@ -72,7 +72,6 @@ function Upload() {
     setPreview(imgUrlLists);
     updateForm({ photos: imgLists });
   };
-  console.log(form.photos);
 
   const handleDeletePrevie = (id: any) => {
     setPreview(preview.filter((_, index) => index !== id));

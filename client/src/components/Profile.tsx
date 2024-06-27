@@ -24,12 +24,23 @@ interface IUserData {
 }
 
 const Header = styled.header``;
-const UserThumb = styled.div``;
+const UserThumb = styled.div<{ $userthumb: string }>`
+  background-image: ${(props) => `url(${props.$userthumb})`};
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+`;
 const Controller = styled.div``;
 const UserName = styled.h1``;
 const Posts = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
+  width: 50%;
+  margin: 0 auto;
+  padding: 50px;
 `;
 const Post = styled.div<{ $imgsrc: string }>`
   width: 300px;
@@ -54,6 +65,13 @@ function Profile() {
     <>
       <Header>
         <UserName>{user?.username}</UserName>
+        <UserThumb
+          {...{
+            $userthumb: user?.thumbnailImageUrl.includes("http://")
+              ? user.thumbnailImageUrl
+              : `http://localhost:5050/${user?.thumbnailImageUrl}`,
+          }}
+        />
         {user?._id === profile.user?.id ? (
           <Controller>
             <Link to={"edit"}>프로필 편집</Link>
@@ -64,9 +82,9 @@ function Profile() {
       </Header>
       <Posts>
         {user?.posts.map((post) => (
-          <Post key={post._id} $imgsrc={post.img[0]}>
-            {post.text}
-          </Post>
+          <Link to={"/posts/" + post._id} key={post._id}>
+            <Post $imgsrc={post.img[0]}>{post.text}</Post>
+          </Link>
         ))}
       </Posts>
     </>
