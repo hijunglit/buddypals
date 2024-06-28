@@ -5,18 +5,22 @@ import { authAtom } from "../atoms/atom";
 import axios from "axios";
 import styled from "styled-components";
 
-const UploadForm = styled.form``;
+const UploadForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 0.625em;
+  padding: 1em;
+`;
 const CustomFileInput = styled.div`
   display: flex;
   gap: 16px;
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 16px;
-  width: 200px;
 `;
 const UploadButton = styled.div`
   width: fit-content;
-  padding: 16px;
+  padding: 8px;
   background-color: #191b27;
   border-radius: 12px;
   color: white;
@@ -24,11 +28,42 @@ const UploadButton = styled.div`
   cursor: pointer;
 `;
 const FileName = styled.p``;
+const Input = styled.input`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+`;
+const UploadPost = styled.input`
+  background: transparent;
+  border: none;
+  color: #0095e7;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 1.25em;
+`;
+const PreviewBox = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+`;
+const Preview = styled.div`
+  position: relative;
+`;
+const Img = styled.img`
+  width: 100px;
+`;
+const Cancel = styled.span`
+  position: absolute;
+  right: 0;
+`;
 
 function Upload() {
   const profile = useRecoilValue(authAtom);
   const [fileName, setFileName] = useState("");
-  const [message, setMessage] = useState("");
   const [form, setForm] = useState({
     photos: [],
     text: "",
@@ -52,9 +87,6 @@ function Upload() {
   }
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    if (fileName.length === 0) {
-      return setMessage("사진을 선택해주세요.");
-    }
     const formData = new FormData();
     for (let i = 0; i < form.photos.length; i++) {
       formData.append("photos", form.photos[i]);
@@ -111,7 +143,7 @@ function Upload() {
             {fileName ? <FileName>{fileName}</FileName> : ""}
           </CustomFileInput>
         </label>
-        <input
+        <Input
           type='file'
           name='photos'
           id='photos'
@@ -121,7 +153,7 @@ function Upload() {
           style={{ display: "none" }}
           required
         />
-        <input
+        <Input
           placeholder='텍스트'
           type='text'
           name='text'
@@ -129,8 +161,8 @@ function Upload() {
           onChange={(e) => updateForm({ text: e.target.value })}
           required
         />
-        <input
-          placeholder='Hashtags'
+        <Input
+          placeholder='해시태그'
           type='text'
           name='hashtags'
           value={form.hashtags}
@@ -141,19 +173,21 @@ function Upload() {
           }
           required
         />
-        <input type='submit' value='Upload Post' />
+        <UploadPost type='submit' value='게시하기' />
       </UploadForm>
-      {preview.map((image, id) => (
-        <div key={id} style={{ width: "100px" }}>
-          <img src={image} alt={`${image}-${id}`} style={{ width: "100%" }} />
-          <span
-            onClick={() => handleDeletePrevie(id)}
-            style={{ cursor: "pointer" }}
-          >
-            ❌
-          </span>
-        </div>
-      ))}
+      <PreviewBox>
+        {preview.map((image, id) => (
+          <Preview key={id} style={{ width: "100px" }}>
+            <Img src={image} alt={`${image}-${id}`} />
+            <Cancel
+              onClick={() => handleDeletePrevie(id)}
+              style={{ cursor: "pointer" }}
+            >
+              ❌
+            </Cancel>
+          </Preview>
+        ))}
+      </PreviewBox>
     </>
   );
 }

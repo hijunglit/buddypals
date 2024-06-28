@@ -2,7 +2,43 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
+import styled from "styled-components";
 
+const LoginForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 0.625em;
+  padding: 1em;
+`;
+const Input = styled.input`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+`;
+const LoginButton = styled.input`
+  background: transparent;
+  border: none;
+  color: #0095e7;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 1.25em;
+`;
+const LoginMethod = styled.div`
+  width: fit-content;
+  margin: 0 auto;
+`;
+const KakaoLogin = styled.button`
+  background-color: #ffe812;
+  border: 2px solid #000;
+  border-radius: 8px;
+  color: #000;
+  padding: 8px 12px;
+  font-weight: 800;
+`;
 interface ILoginForm {
   username: string;
   password: string;
@@ -70,8 +106,8 @@ function Login() {
   return (
     <>
       {message ? <span>{message}</span> : ""}
-      <form onSubmit={onSubmit}>
-        <input
+      <LoginForm onSubmit={onSubmit}>
+        <Input
           type='text'
           placeholder='사용자 이름'
           name='username'
@@ -81,7 +117,7 @@ function Login() {
           }}
           required
         />
-        <input
+        <Input
           type='password'
           placeholder='비밀번호'
           name='password'
@@ -90,13 +126,13 @@ function Login() {
           onChange={(e) => updateForm({ password: e.target.value })}
           required
         />
-        <input type='submit' value={"로그인"} />
-      </form>
+        <LoginButton type='submit' value={"로그인"} />
+      </LoginForm>
       <hr />
-      <div>
+      <LoginMethod>
         <Link to={"/join"}>새 계정 만들기 &rarr;</Link>
-        <button onClick={handleLogin}>카카오 로그인 &rarr;</button>
-      </div>
+        <KakaoLogin onClick={handleLogin}>카카오 로그인 &rarr;</KakaoLogin>
+      </LoginMethod>
     </>
   );
 }

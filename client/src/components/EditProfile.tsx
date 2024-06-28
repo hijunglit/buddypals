@@ -3,12 +3,59 @@ import { authAtom } from "../atoms/atom";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios, { formToJSON } from "axios";
+import styled from "styled-components";
+
+const ProfileImage = styled.div``;
+const Form = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 0.625em;
+  padding: 1em;
+`;
+const CustomFileInput = styled.div`
+  display: flex;
+  gap: 16px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 16px;
+`;
+const FileName = styled.p``;
+const UplodButton = styled.div`
+  width: fit-content;
+  padding: 8px;
+  background-color: #191b27;
+  border-radius: 12px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+`;
+const Input = styled.input`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+`;
+const EditProfileImage = styled.label``;
+const UserName = styled.label``;
+const StatusMessage = styled.label``;
+const SaveButton = styled.input`
+  background: transparent;
+  border: none;
+  color: #0095e7;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 1.25em;
+`;
 
 function EditProfile() {
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
   const userId = profile.user?.id;
   const [preview, setPreview] = useState("");
+  const [fileName, setFileName] = useState("");
   const [form, setForm] = useState({
     thumbnailImage: profile.user?.thumbnailImage || "",
     username: profile.user?.username || "",
@@ -73,53 +120,62 @@ function EditProfile() {
     reader.readAsDataURL(files);
     reader.onload = () => {
       setPreview(reader.result as string);
+      setFileName(files.name);
     };
     updateForm({ thumbnailImage: files });
   };
   return (
     <>
-      <h1>Edit Profile!</h1>
-      <div
+      <h1>프로필 편집</h1>
+      <ProfileImage
         style={{
           borderRadius: "50px",
           overflow: "hidden",
-          width: "100px",
-          height: "100px",
+          width: "56px",
+          height: "56px",
           backgroundImage: preview
             ? `url(${preview})`
-            : `url(${profile.user?.thumbnailImage})`,
+            : profile.user?.thumbnailImage.includes("http://")
+            ? `url(${profile.user.thumbnailImage})`
+            : `url(http://localhost:5050/${profile.user?.thumbnailImage})`,
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}
-      ></div>
+      ></ProfileImage>
       {message ? <span>{message}</span> : ""}
-      <form encType='multipart/form-data' onSubmit={onSubmit}>
-        <label htmlFor='avatar'>프로필 사진</label>
-        <input
+      <Form encType='multipart/form-data' onSubmit={onSubmit}>
+        <EditProfileImage htmlFor='avatar'>
+          <CustomFileInput>
+            <UplodButton>🔗 FILE UPLOAD</UplodButton>
+            {fileName ? <FileName>{fileName}</FileName> : ""}
+          </CustomFileInput>
+        </EditProfileImage>
+        <Input
           type='file'
           name='avatar'
           id='avatar'
           accept='image/*'
           onChange={handlePhoto}
+          style={{ display: "none" }}
         />
-        <label htmlFor='username'>사용자 이름</label>
-        <input
+        <UserName htmlFor='username'>사용자 이름</UserName>
+        <Input
           name='username'
           type='text'
           id='username'
           onChange={(e) => updateForm({ username: e.target.value })}
           value={form.username}
         />
-        <label htmlFor='intro'>상태메세지</label>
-        <input
+        <StatusMessage htmlFor='intro'>상태메세지</StatusMessage>
+        <Input
           name='intro'
           type='text'
           id='intro'
           onChange={(e) => updateForm({ intro: e.target.value })}
           value={form.intro}
         />
-        <input type='submit' value={"저장"} />
-      </form>
+        <SaveButton type='submit' value={"저장"} />
+      </Form>
       {!profile.user?.social ? (
         <Link to={"/users/change-password"}>비밀번호 변경</Link>
       ) : (

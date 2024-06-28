@@ -1,6 +1,30 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
+const JoinForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 0.625em;
+  padding: 1em;
+`;
+const Input = styled.input`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+`;
+const JoinButton = styled.input`
+  background: transparent;
+  border: none;
+  color: #0095e7;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 1.25em;
+`;
 interface IJoinForm {
   name: string;
   email: string;
@@ -61,8 +85,8 @@ function Join() {
   return (
     <>
       {message ? <span>{message}</span> : ""}
-      <form onSubmit={onSubmit}>
-        <input
+      <JoinForm onSubmit={onSubmit}>
+        <Input
           name='name'
           type='text'
           value={form.name || ""}
@@ -70,7 +94,7 @@ function Join() {
           onChange={(e) => updateForm({ name: e.target.value })}
           required
         />
-        <input
+        <Input
           name='email'
           type='email'
           value={form.email || ""}
@@ -78,7 +102,7 @@ function Join() {
           onChange={(e) => updateForm({ email: e.target.value })}
           required
         />
-        <input
+        <Input
           name='username'
           type='text'
           value={form.username || ""}
@@ -86,7 +110,7 @@ function Join() {
           onChange={(e) => updateForm({ username: e.target.value })}
           required
         />
-        <input
+        <Input
           name='password'
           type='password'
           value={form.password || ""}
@@ -95,7 +119,7 @@ function Join() {
           onChange={(e) => updateForm({ password: e.target.value })}
           required
         />
-        <input
+        <Input
           name='password2'
           type='password'
           value={form.password2 || ""}
@@ -104,12 +128,14 @@ function Join() {
           onChange={(e) => updateForm({ password2: e.target.value })}
           required
         />
-        <input type='submit' value='계정 만들기' />
-      </form>
+        <JoinButton type='submit' value='계정 만들기' />
+      </JoinForm>
       <hr />
       <div>
         <span>이미 계정이 있으신가요?</span>
-        <Link to={"/login"}>지금 로그인 하기 &rarr;</Link>
+        <Link to={"/login"}>
+          <span style={{ color: "#0095e7" }}>지금 로그인 하기 &rarr;</span>
+        </Link>
       </div>
     </>
   );
