@@ -46,7 +46,7 @@ root.render(
         <Route path='/posts/*' element={<App />}>
           <Route path='' element={<ProtectedRoute />}>
             <Route path='upload' element={<Upload />} />
-            <Route path=':id' element={<Post />} />
+            <Route path=':id' element={<Home />} />
             <Route path=':id/edit' element={<EditPost />} />
           </Route>
         </Route>

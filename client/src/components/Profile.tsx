@@ -32,6 +32,8 @@ const Wrapper = styled.div``;
 const Header = styled.header`
   margin: 0 auto;
   display: flex;
+  column-gap: 12px;
+  width: 100%;
   justify-content: center;
   align-items: center;
   height: 120px;
@@ -45,7 +47,16 @@ const UserThumb = styled.div<{ $userthumb: string }>`
   height: 77px;
   border-radius: 50%;
 `;
-const Controller = styled.div``;
+const Controller = styled.div`
+  & button {
+    background: #363636;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 6px 8px;
+  }
+`;
 const UserName = styled.h1``;
 const Figures = styled.div``;
 const Posts = styled.div<{ $isbigscreen: boolean }>`
@@ -94,11 +105,13 @@ function Profile() {
               : `http://localhost:5050/${user?.thumbnailImageUrl}`,
           }}
         />
-        <Wrapper style={{ lineHeight: "1.6" }}>
+        <Wrapper style={{ lineHeight: "2" }}>
           <UserName>{user?.username}</UserName>
           {user?._id === profile.user?.id ? (
             <Controller>
-              <Link to={"edit"}>프로필 편집</Link>
+              <Link to={"edit"}>
+                <button>프로필 편집</button>
+              </Link>
             </Controller>
           ) : (
             ""

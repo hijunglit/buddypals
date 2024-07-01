@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { authAtom } from "../atoms/atom";
@@ -7,6 +7,14 @@ import Login from "./Login";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useMediaQuery } from "react-responsive";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useViewportScroll,
+} from "framer-motion";
 
 const responsive = {
   desktop: {
@@ -49,10 +57,10 @@ const PostContainer = styled.div<{ $isbigscreen: boolean }>`
   flex-direction: column;
   margin: 0 auto;
 `;
-const Post = styled.div<{ $isbigscreen: boolean }>`
+const Post = styled(motion.div)<{ $isbigscreen: boolean }>`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
   margin: 0 auto;
   width: 100%;
   padding: 12px 0px;
@@ -73,10 +81,14 @@ const PostTop = styled.div`
 `;
 const PostBottom = styled.div`
   padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 6px;
 `;
 const OwnerInfo = styled.div`
   height: 100%;
   display: flex;
+  column-gap: 8px;
   align-items: center;
 `;
 const OwnerController = styled.div`
@@ -111,15 +123,38 @@ const Thumbnail = styled.div<{ $ownerthumb: string }>`
   background-position: center;
   border-radius: 50px;
 `;
-const UserName = styled.h3`
-  color: #000;
-`;
-const Text = styled.h1``;
+const UserName = styled.h3``;
 
 const Photo = styled.div`
   height: 400px;
 `;
+const More = styled.div``;
+const Comment = styled.div`
+  width: fit-content;
+  cursor: pointer;
+`;
+const Text = styled.h1``;
 const Hashtags = styled.h1``;
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  outline: 2px solid red;
+`;
+const PostModal = styled(motion.div)`
+  position: absolute;
+  width: 80vw;
+  height: 60vh;
+  background-color: ${(props) => props.theme.bgColor};
+  outline: 2px solid red;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+`;
 
 function Home(): JSX.Element {
   const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
@@ -130,6 +165,8 @@ function Home(): JSX.Element {
   const isMobile: boolean = useMediaQuery({
     maxWidth: 767,
   });
+  const { scrollY } = useScroll();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const profile = useRecoilValue(authAtom);
   async function deletePost(id: any) {
     const response = await fetch(`http://localhost:5050/posts/${id}/delete`, {
@@ -164,13 +201,18 @@ function Home(): JSX.Element {
     getPosts();
     return;
   }, [posts.length]);
+
   return (
     <>
       {profile.isAuthenticated ? (
         <>
           <PostContainer $isbigscreen={isTablet || isDesktop}>
             {posts?.map((post) => (
-              <Post key={post._id} $isbigscreen={isTablet || isDesktop}>
+              <Post
+                layoutId={post._id}
+                key={post._id}
+                $isbigscreen={isTablet || isDesktop}
+              >
                 <PostTop>
                   <OwnerInfo>
                     <Link to={`users/${post.owner._id}`}>
@@ -200,12 +242,12 @@ function Home(): JSX.Element {
                           </Delete>
                         </OwnerController>
                         <SeePost>
-                          <Link to={`posts/${post._id}`}>게시물 보기</Link>
+                          <Link to={`/posts/${post._id}`}>게시물로 이동</Link>
                         </SeePost>
                       </>
                     ) : (
                       <SeePost>
-                        <Link to={`posts/${post._id}`}>게시물 보기</Link>
+                        <Link to={`/posts/${post._id}`}>게시물로 이동</Link>
                       </SeePost>
                     )}
                   </Controller>
@@ -227,11 +269,35 @@ function Home(): JSX.Element {
                   ))}
                 </Carousel>
                 <PostBottom>
+                  <More>
+                    <Comment onClick={() => setSelectedId(post._id)}>
+                      <FontAwesomeIcon icon={faComment} size={"xl"} />
+                    </Comment>
+                  </More>
                   <Text>{post.text}</Text>
                   <Hashtags>{post.hashtags}</Hashtags>
                 </PostBottom>
               </Post>
             ))}
+            <AnimatePresence>
+              {selectedId ? (
+                <>
+                  <Overlay
+                    onClick={() => setSelectedId(null)}
+                    exit={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  />
+                  <PostModal
+                    layoutId={selectedId}
+                    style={{
+                      top: scrollY.get() + 100,
+                    }}
+                  >
+                    Hi
+                  </PostModal>
+                </>
+              ) : null}
+            </AnimatePresence>
           </PostContainer>
         </>
       ) : (
