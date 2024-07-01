@@ -15,3 +15,9 @@
 /posts/:id/delete -> Delete post
 /posts/upload -> Upload post
 /posts/comments -> Comment on a post
+
+추가해야 하는 기능
+
+1. 뒤로가기
+2. 긴 글 포스트 더보기
+3. 업로드 폼 개선: 프리뷰 지우면 폼에서 선택된 파일 삭제, 파일 선택 하지 않으면 핸들링
