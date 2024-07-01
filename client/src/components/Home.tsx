@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { authAtom } from "../atoms/atom";
@@ -9,12 +9,7 @@ import "react-multi-carousel/lib/styles.css";
 import { useMediaQuery } from "react-responsive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
-import {
-  AnimatePresence,
-  motion,
-  useScroll,
-  useViewportScroll,
-} from "framer-motion";
+import { motion } from "framer-motion";
 
 const responsive = {
   desktop: {
@@ -165,8 +160,6 @@ function Home(): JSX.Element {
   const isMobile: boolean = useMediaQuery({
     maxWidth: 767,
   });
-  const { scrollY } = useScroll();
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const profile = useRecoilValue(authAtom);
   async function deletePost(id: any) {
     const response = await fetch(`http://localhost:5050/posts/${id}/delete`, {
@@ -186,6 +179,8 @@ function Home(): JSX.Element {
     setPosts(newPost);
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
+  const location = useLocation();
+  console.log(location);
   useEffect(() => {
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
@@ -270,8 +265,13 @@ function Home(): JSX.Element {
                 </Carousel>
                 <PostBottom>
                   <More>
-                    <Comment onClick={() => setSelectedId(post._id)}>
-                      <FontAwesomeIcon icon={faComment} size={"xl"} />
+                    <Comment>
+                      <Link
+                        to={`/posts/${post._id}`}
+                        state={{ background: location }}
+                      >
+                        <FontAwesomeIcon icon={faComment} size={"xl"} />
+                      </Link>
                     </Comment>
                   </More>
                   <Text>{post.text}</Text>
@@ -279,25 +279,6 @@ function Home(): JSX.Element {
                 </PostBottom>
               </Post>
             ))}
-            <AnimatePresence>
-              {selectedId ? (
-                <>
-                  <Overlay
-                    onClick={() => setSelectedId(null)}
-                    exit={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  />
-                  <PostModal
-                    layoutId={selectedId}
-                    style={{
-                      top: scrollY.get() + 100,
-                    }}
-                  >
-                    Hi
-                  </PostModal>
-                </>
-              ) : null}
-            </AnimatePresence>
           </PostContainer>
         </>
       ) : (
