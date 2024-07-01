@@ -2,8 +2,44 @@ import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
+
+const Form = styled.form<{ $isbigscreen: boolean }>`
+  display: flex;
+  width: ${(props) => (props.$isbigscreen ? "40%" : null)};
+  flex-direction: column;
+  gap: 0.625em;
+  padding: 1em;
+  margin: ${(props) => (props.$isbigscreen ? "0 auto" : null)};
+`;
+const Input = styled.input`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+`;
+const ChangeButton = styled.input`
+  background: transparent;
+  border: none;
+  color: #0095e7;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 1.25em;
+`;
 
 function ChangePassword() {
+  const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
+  const isTablet: boolean = useMediaQuery({
+    minWidth: 768,
+    maxWidth: 991,
+  });
+  const isMobile: boolean = useMediaQuery({
+    maxWidth: 767,
+  });
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
@@ -62,10 +98,10 @@ function ChangePassword() {
   }
   return (
     <>
-      <h1>비밀번호 변경</h1>
+      <h1 style={{ textAlign: "center", fontSize: "1.6em" }}>비밀번호 변경</h1>
       {message ? <span>{message}</span> : ""}
-      <form onSubmit={onSubmit}>
-        <input
+      <Form onSubmit={onSubmit} $isbigscreen={isTablet || isDesktop}>
+        <Input
           name='oldPassword'
           id='oldPassword'
           type='password'
@@ -75,7 +111,7 @@ function ChangePassword() {
           value={form.oldPassword}
           required
         />
-        <input
+        <Input
           name='newPassword'
           id='newPassword'
           type='password'
@@ -85,7 +121,7 @@ function ChangePassword() {
           value={form.newPassword}
           required
         />
-        <input
+        <Input
           name='newPasswordConfirmation'
           id='newPasswordConfirmation'
           type='password'
@@ -97,8 +133,8 @@ function ChangePassword() {
           value={form.newPasswordConfirmation}
           required
         />
-        <input type='submit' value={"변경"} />
-      </form>
+        <ChangeButton type='submit' value={"변경"} />
+      </Form>
     </>
   );
 }

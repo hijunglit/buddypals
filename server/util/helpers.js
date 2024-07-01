@@ -7,7 +7,7 @@ export const sessionizeUser = (user) => {
     userId: user._id,
     username: user.username,
     userIntro: user.intro,
-    thumbnailImageUrl: "https://www.gravatar.com/avatar/?d=mp&f=y",
+    thumbnailImageUrl: user.thumbnailImageUrl,
   };
 };
 

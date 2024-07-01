@@ -6,6 +6,7 @@ import { authAtom } from "../atoms/atom";
 import Login from "./Login";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { useMediaQuery } from "react-responsive";
 
 const responsive = {
   desktop: {
@@ -42,18 +43,19 @@ interface IPostInfo {
   createdAt: string;
 }
 
-const PostContainer = styled.div`
-  width: 100%;
+const PostContainer = styled.div<{ $isbigscreen: boolean }>`
+  width: ${(props) => (props.$isbigscreen ? "468px" : "100%")};
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
 `;
-const Post = styled.div`
+const Post = styled.div<{ $isbigscreen: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 20px;
   margin: 0 auto;
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 0px;
   & a {
     color: #fff;
     text-decoration: none;
@@ -67,6 +69,10 @@ const PostTop = styled.div`
   width: 100%;
   justify-content: space-between;
   align-items: center;
+  padding: 0px 8px;
+`;
+const PostBottom = styled.div`
+  padding: 0 8px;
 `;
 const OwnerInfo = styled.div`
   height: 100%;
@@ -115,7 +121,15 @@ const Photo = styled.div`
 `;
 const Hashtags = styled.h1``;
 
-function Home() {
+function Home(): JSX.Element {
+  const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
+  const isTablet: boolean = useMediaQuery({
+    minWidth: 768,
+    maxWidth: 991,
+  });
+  const isMobile: boolean = useMediaQuery({
+    maxWidth: 767,
+  });
   const profile = useRecoilValue(authAtom);
   async function deletePost(id: any) {
     const response = await fetch(`http://localhost:5050/posts/${id}/delete`, {
@@ -154,9 +168,9 @@ function Home() {
     <>
       {profile.isAuthenticated ? (
         <>
-          <PostContainer>
+          <PostContainer $isbigscreen={isTablet || isDesktop}>
             {posts?.map((post) => (
-              <Post key={post._id}>
+              <Post key={post._id} $isbigscreen={isTablet || isDesktop}>
                 <PostTop>
                   <OwnerInfo>
                     <Link to={`users/${post.owner._id}`}>
@@ -212,8 +226,10 @@ function Home() {
                     />
                   ))}
                 </Carousel>
-                <Text>{post.text}</Text>
-                <Hashtags>{post.hashtags}</Hashtags>
+                <PostBottom>
+                  <Text>{post.text}</Text>
+                  <Hashtags>{post.hashtags}</Hashtags>
+                </PostBottom>
               </Post>
             ))}
           </PostContainer>

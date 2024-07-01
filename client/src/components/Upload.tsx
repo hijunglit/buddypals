@@ -4,12 +4,15 @@ import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
 import axios from "axios";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
-const UploadForm = styled.form`
+const UploadForm = styled.form<{ $isbigscreen: boolean }>`
   display: flex;
+  width: ${(props) => (props.$isbigscreen ? "50%" : null)};
   flex-direction: column;
   gap: 0.625em;
   padding: 1em;
+  margin: ${(props) => (props.$isbigscreen ? "0 auto" : null)};
 `;
 const CustomFileInput = styled.div`
   display: flex;
@@ -62,6 +65,14 @@ const Cancel = styled.span`
 `;
 
 function Upload() {
+  const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
+  const isTablet: boolean = useMediaQuery({
+    minWidth: 768,
+    maxWidth: 991,
+  });
+  const isMobile: boolean = useMediaQuery({
+    maxWidth: 767,
+  });
   const profile = useRecoilValue(authAtom);
   const [fileName, setFileName] = useState("");
   const [form, setForm] = useState({
@@ -136,7 +147,11 @@ function Upload() {
   };
   return (
     <>
-      <UploadForm onSubmit={onSubmit} encType='multipart/form-data'>
+      <UploadForm
+        onSubmit={onSubmit}
+        encType='multipart/form-data'
+        $isbigscreen={isTablet || isDesktop}
+      >
         <label htmlFor='photos'>
           <CustomFileInput>
             <UploadButton>🔗 FILE UPLOAD</UploadButton>

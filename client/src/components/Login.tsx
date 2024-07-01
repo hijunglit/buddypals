@@ -3,12 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
-const LoginForm = styled.form`
+const LoginForm = styled.form<{ $isbigscreen: boolean }>`
   display: flex;
+  width: ${(props) => (props.$isbigscreen ? "40%" : null)};
   flex-direction: column;
   gap: 0.625em;
   padding: 1em;
+  margin: ${(props) => (props.$isbigscreen ? "0 auto" : null)};
 `;
 const Input = styled.input`
   background: transparent;
@@ -27,9 +30,10 @@ const LoginButton = styled.input`
   font-weight: 700;
   font-size: 1.25em;
 `;
-const LoginMethod = styled.div`
-  width: fit-content;
+const LoginMethod = styled.div<{ $isbigscreen: boolean }>`
+  width: ${(props) => (props.$isbigscreen ? "40%" : null)};
   margin: 0 auto;
+  text-align: center;
 `;
 const KakaoLogin = styled.button`
   background-color: #ffe812;
@@ -45,6 +49,14 @@ interface ILoginForm {
 }
 
 function Login() {
+  const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
+  const isTablet: boolean = useMediaQuery({
+    minWidth: 768,
+    maxWidth: 991,
+  });
+  const isMobile: boolean = useMediaQuery({
+    maxWidth: 767,
+  });
   const [authState, setAuthState] = useRecoilState(authAtom);
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
@@ -76,7 +88,6 @@ function Login() {
         return setMessage(result.message);
       }
       const user = result.user;
-      console.log(user);
       setAuthState({
         user: {
           username: String(user.username),
@@ -106,7 +117,7 @@ function Login() {
   return (
     <>
       {message ? <span>{message}</span> : ""}
-      <LoginForm onSubmit={onSubmit}>
+      <LoginForm onSubmit={onSubmit} $isbigscreen={isTablet || isDesktop}>
         <Input
           type='text'
           placeholder='사용자 이름'
@@ -128,8 +139,8 @@ function Login() {
         />
         <LoginButton type='submit' value={"로그인"} />
       </LoginForm>
-      <hr />
-      <LoginMethod>
+      <LoginMethod $isbigscreen={isTablet || isDesktop}>
+        <hr />
         <Link to={"/join"}>새 계정 만들기 &rarr;</Link>
         <KakaoLogin onClick={handleLogin}>카카오 로그인 &rarr;</KakaoLogin>
       </LoginMethod>

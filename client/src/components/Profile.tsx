@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
 interface IPostData {
   _id: string;
@@ -23,6 +24,10 @@ interface IUserData {
   _id: string;
 }
 
+const PageWrapper = styled.div<{ $isbigscreen: boolean }>`
+  width: ${(props) => (props.$isbigscreen ? "calc(100% - 80px)" : null)};
+  margin-left: ${(props) => (props.$isbigscreen ? "auto" : null)};
+`;
 const Wrapper = styled.div``;
 const Header = styled.header`
   margin: 0 auto;
@@ -43,12 +48,15 @@ const UserThumb = styled.div<{ $userthumb: string }>`
 const Controller = styled.div``;
 const UserName = styled.h1``;
 const Figures = styled.div``;
-const Posts = styled.div`
+const Posts = styled.div<{ $isbigscreen: boolean }>`
   display: grid;
+  max-width: ${(props) => (props.$isbigscreen ? "975px" : null)};
   grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: minmax(140px, 100%);
+  grid-auto-rows: ${(props) =>
+    props.$isbigscreen ? "minmax(240px, 100%)" : "minmax(140px, 100%)"};
   gap: 2px;
   margin: 0 auto;
+  padding: ${(props) => (props.$isbigscreen ? "8px 12px" : null)};
 `;
 const Post = styled.div<{ $imgsrc: string }>`
   background-image: url(http://localhost:5050/${(props) => props.$imgsrc});
@@ -57,6 +65,14 @@ const Post = styled.div<{ $imgsrc: string }>`
   height: 100%;
 `;
 function Profile() {
+  const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
+  const isTablet: boolean = useMediaQuery({
+    minWidth: 768,
+    maxWidth: 991,
+  });
+  const isMobile: boolean = useMediaQuery({
+    maxWidth: 767,
+  });
   const profile = useRecoilValue(authAtom);
   const params = useParams();
   const { id } = params;
@@ -69,7 +85,7 @@ function Profile() {
     })();
   }, []);
   return (
-    <>
+    <PageWrapper $isbigscreen={isTablet || isDesktop}>
       <Header>
         <UserThumb
           {...{
@@ -94,14 +110,14 @@ function Profile() {
           </Figures>
         </Wrapper>
       </Header>
-      <Posts>
+      <Posts $isbigscreen={isTablet || isDesktop}>
         {user?.posts.map((post) => (
           <Link to={"/posts/" + post._id} key={post._id}>
             <Post $imgsrc={post.img[0]} />
           </Link>
         ))}
       </Posts>
-    </>
+    </PageWrapper>
   );
 }
 

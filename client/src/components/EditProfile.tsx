@@ -4,7 +4,12 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios, { formToJSON } from "axios";
 import styled from "styled-components";
+import { useMediaQuery } from "react-responsive";
 
+const Wrapper = styled.div<{ $isbigscreen: boolean }>`
+  width: ${(props) => (props.$isbigscreen ? "50%" : null)};
+  margin: ${(props) => (props.$isbigscreen ? "0 auto" : null)};
+`;
 const ProfileImage = styled.div``;
 const Form = styled.form`
   display: flex;
@@ -51,6 +56,14 @@ const SaveButton = styled.input`
 `;
 
 function EditProfile() {
+  const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
+  const isTablet: boolean = useMediaQuery({
+    minWidth: 768,
+    maxWidth: 991,
+  });
+  const isMobile: boolean = useMediaQuery({
+    maxWidth: 767,
+  });
   const [message, setMessage] = useState("");
   const [profile, setProfile] = useRecoilState(authAtom);
   const userId = profile.user?.id;
@@ -125,7 +138,7 @@ function EditProfile() {
     updateForm({ thumbnailImage: files });
   };
   return (
-    <>
+    <Wrapper $isbigscreen={isTablet || isDesktop}>
       <h1>프로필 편집</h1>
       <ProfileImage
         style={{
@@ -181,7 +194,7 @@ function EditProfile() {
       ) : (
         ""
       )}
-    </>
+    </Wrapper>
   );
 }
 

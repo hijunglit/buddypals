@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const JoinForm = styled.form`
+const JoinForm = styled.form<{ $isbigscreen: boolean }>`
   display: flex;
+  width: ${(props) => (props.$isbigscreen ? "40%" : null)};
   flex-direction: column;
   gap: 0.625em;
   padding: 1em;
+  margin: ${(props) => (props.$isbigscreen ? "0 auto" : null)};
 `;
 const Input = styled.input`
   background: transparent;
@@ -25,6 +28,10 @@ const JoinButton = styled.input`
   font-weight: 700;
   font-size: 1.25em;
 `;
+const SignIn = styled.div<{ $isbigscreen: boolean }>`
+  width: ${(props) => (props.$isbigscreen ? "40%" : null)};
+  margin: ${(props) => (props.$isbigscreen ? "0 auto" : null)};
+`;
 interface IJoinForm {
   name: string;
   email: string;
@@ -34,6 +41,14 @@ interface IJoinForm {
 }
 
 function Join() {
+  const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
+  const isTablet: boolean = useMediaQuery({
+    minWidth: 768,
+    maxWidth: 991,
+  });
+  const isMobile: boolean = useMediaQuery({
+    maxWidth: 767,
+  });
   const navigate = useNavigate();
   const [message, setMessage] = useState("");
   const [form, setForm] = useState<IJoinForm>({
@@ -85,7 +100,7 @@ function Join() {
   return (
     <>
       {message ? <span>{message}</span> : ""}
-      <JoinForm onSubmit={onSubmit}>
+      <JoinForm onSubmit={onSubmit} $isbigscreen={isTablet || isDesktop}>
         <Input
           name='name'
           type='text'
@@ -130,13 +145,13 @@ function Join() {
         />
         <JoinButton type='submit' value='계정 만들기' />
       </JoinForm>
-      <hr />
-      <div>
+      <SignIn $isbigscreen={isTablet || isDesktop}>
+        <hr />
         <span>이미 계정이 있으신가요?</span>
         <Link to={"/login"}>
           <span style={{ color: "#0095e7" }}>지금 로그인 하기 &rarr;</span>
         </Link>
-      </div>
+      </SignIn>
     </>
   );
 }
