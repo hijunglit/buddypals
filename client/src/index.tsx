@@ -28,6 +28,7 @@ root.render(
         <Route path='/' element={<App />}>
           <Route path='/' element={<Home />} />
           <Route path='/post/:id' element={<Home />} />
+          <Route path='/post/:id/comments' element={<Comments />} />
           <Route path='' element={<PublicOnlyRoute />}>
             <Route path='/login' element={<Login />} />
             <Route path='/join' element={<Join />} />
@@ -47,7 +48,6 @@ root.render(
         <Route path='/posts/*' element={<App />}>
           <Route path='' element={<ProtectedRoute />}>
             <Route path='upload' element={<Upload />} />
-            <Route path=':id/comments' element={<Comments />} />
             <Route path=':id/edit' element={<EditPost />} />
           </Route>
         </Route>

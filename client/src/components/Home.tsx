@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
@@ -10,7 +10,6 @@ import { useMediaQuery } from "react-responsive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
-import Comments from "./Comments";
 
 const responsive = {
   desktop: {
@@ -147,7 +146,7 @@ const PostModal = styled(motion.div)`
   position: absolute;
   display: flex;
   column-gap: 16px;
-  width: 70vw;
+  width: 80vw;
   height: 96vh;
   background-color: ${(props) => props.theme.bgColor};
   left: 0;
@@ -191,6 +190,7 @@ function Home(): JSX.Element {
   const history = useNavigate();
   const postMatch: PathMatch<string> | null = useMatch("/post/:postId");
   const { scrollY } = useScroll();
+  const scrollyValue = scrollY.get();
   const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
   const isTablet: boolean = useMediaQuery({
     minWidth: 768,
@@ -218,7 +218,14 @@ function Home(): JSX.Element {
     setPosts(newPost);
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
+  useLayoutEffect(() => {
+    if (sessionStorage.getItem("homeCoordinate") === undefined) {
+      return;
+    }
+    return window.scroll(0, sessionStorage.homeCoordinate);
+  });
   useEffect(() => {
+    window.addEventListener("pagehide", clearHomeCoordinate);
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
       if (!response.ok) {
@@ -231,18 +238,33 @@ function Home(): JSX.Element {
       setPosts(posts);
     }
     getPosts();
-    return;
+    return () => window.removeEventListener("pagehide", clearHomeCoordinate);
   }, [posts.length]);
   const onCommentClickedOnMobile = (postId: string) => {
-    history(`/posts/${postId}/comment`);
+    history(`/post/${postId}/comments`);
   };
   const onCommentClickedOnBigScreen = (postId: string) => {
     history(`/post/${postId}`);
+    const currentScrollY = window.scrollY;
+    sessionStorage.setItem("homeCoordinate", String(currentScrollY));
+    document.body.style.position = "fixed";
+    document.body.style.width = "100%";
+    document.body.style.top = `-${currentScrollY}px`;
+    document.body.style.overflowY = "scroll";
   };
-  const onOverlayClick = () => history("/");
+  const onOverlayClick = () => {
+    document.body.style.position = "";
+    document.body.style.width = "";
+    document.body.style.top = "";
+    document.body.style.overflowY = "";
+    history("/");
+  };
   const clickedPost =
     postMatch?.params.postId &&
     posts.find((post) => post._id === postMatch.params.postId);
+  const clearHomeCoordinate = () => {
+    sessionStorage.removeItem("homeCoordinate");
+  };
   return (
     <>
       {profile.isAuthenticated ? (
