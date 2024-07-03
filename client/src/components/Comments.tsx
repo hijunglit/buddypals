@@ -20,9 +20,10 @@ interface IPostInfo {
   };
   createdAt: string;
 }
-function Post() {
+function Comments() {
   const params = useParams();
   const { id } = params;
+  console.log(params);
   const [post, setPost] = useState<IPostInfo>();
   useEffect(() => {
     (async () => {
@@ -34,10 +35,10 @@ function Post() {
   }, []);
   return (
     <>
-      <h1>Post!</h1>
+      <h1>Comments!</h1>
       <small>Uploaded by {post?.owner.name}</small>
     </>
   );
 }
 
-export default Post;
+export default Comments;

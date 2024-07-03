@@ -30,7 +30,7 @@ const Nav = styled.nav<{ $isbigscreen: boolean }>`
     padding: ${(props) => (props.$isbigscreen ? "20px 10px" : "0px 10px")};
     text-decoration: none;
   }
-  z-index: 99;
+  z-index: 9999;
 `;
 const Profile = styled.div<{ $profileimg: string }>`
   width: 24px;

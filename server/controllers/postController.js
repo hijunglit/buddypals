@@ -6,7 +6,6 @@ export const home = async ({ session: { user } }, res) => {
     const posts = await Post.find({})
       .sort({ createdAt: "desc" })
       .populate("owner");
-    console.log(posts);
     return res.send({ user, posts }).status(200);
   } catch (err) {
     console.error(err);
@@ -16,7 +15,6 @@ export const home = async ({ session: { user } }, res) => {
 export const see = async (req, res) => {
   const { id } = req.params;
   const post = await Post.findById(id).populate("owner");
-  console.log(post);
   if (!post) {
     return res.send("post Not found").status(404);
   }

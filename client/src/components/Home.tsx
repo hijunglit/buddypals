@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, PathMatch, useMatch, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { authAtom } from "../atoms/atom";
@@ -9,7 +9,8 @@ import "react-multi-carousel/lib/styles.css";
 import { useMediaQuery } from "react-responsive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
+import Comments from "./Comments";
 
 const responsive = {
   desktop: {
@@ -121,7 +122,7 @@ const Thumbnail = styled.div<{ $ownerthumb: string }>`
 const UserName = styled.h3``;
 
 const Photo = styled.div`
-  height: 400px;
+  height: 468px;
 `;
 const More = styled.div``;
 const Comment = styled.div`
@@ -129,7 +130,9 @@ const Comment = styled.div`
   cursor: pointer;
 `;
 const Text = styled.h1``;
-const Hashtags = styled.h1``;
+const Hashtags = styled.h1`
+  color: #e0f1ff;
+`;
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
@@ -138,20 +141,56 @@ const Overlay = styled(motion.div)`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
-  outline: 2px solid red;
+  z-index: 99;
 `;
 const PostModal = styled(motion.div)`
   position: absolute;
-  width: 80vw;
-  height: 60vh;
+  display: flex;
+  column-gap: 16px;
+  width: 70vw;
+  height: 96vh;
   background-color: ${(props) => props.theme.bgColor};
-  outline: 2px solid red;
   left: 0;
   right: 0;
   margin: 0 auto;
+  z-index: 9999;
 `;
+const ModalPhotos = styled.div`
+  width: 60%;
+`;
+const ModalPohto = styled.div``;
+const PostDetail = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 16px;
+`;
+const DetailTop = styled.div`
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+  font-weight: 700;
+  border-bottom: 1px solid #262626;
+  line-height: 4;
+`;
+const DetailBody = styled.div``;
+const DetailBottom = styled.div``;
+const OwnerThumb = styled.div<{ $ownerthumb: string }>`
+  background-image: url(${(props) => props.$ownerthumb});
+  background-size: cover;
+  background-position: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+`;
+const OwnerName = styled.h5``;
+const PostText = styled.p``;
+const CommentSection = styled.div``;
 
 function Home(): JSX.Element {
+  const history = useNavigate();
+  const postMatch: PathMatch<string> | null = useMatch("/post/:postId");
+  const { scrollY } = useScroll();
   const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
   const isTablet: boolean = useMediaQuery({
     minWidth: 768,
@@ -179,8 +218,6 @@ function Home(): JSX.Element {
     setPosts(newPost);
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
-  const location = useLocation();
-  console.log(location);
   useEffect(() => {
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
@@ -196,7 +233,16 @@ function Home(): JSX.Element {
     getPosts();
     return;
   }, [posts.length]);
-
+  const onCommentClickedOnMobile = (postId: string) => {
+    history(`/posts/${postId}/comment`);
+  };
+  const onCommentClickedOnBigScreen = (postId: string) => {
+    history(`/post/${postId}`);
+  };
+  const onOverlayClick = () => history("/");
+  const clickedPost =
+    postMatch?.params.postId &&
+    posts.find((post) => post._id === postMatch.params.postId);
   return (
     <>
       {profile.isAuthenticated ? (
@@ -265,20 +311,90 @@ function Home(): JSX.Element {
                 </Carousel>
                 <PostBottom>
                   <More>
-                    <Comment>
-                      <Link
-                        to={`/posts/${post._id}`}
-                        state={{ background: location }}
+                    {isMobile && (
+                      <Comment
+                        onClick={() => onCommentClickedOnMobile(post._id)}
                       >
                         <FontAwesomeIcon icon={faComment} size={"xl"} />
-                      </Link>
-                    </Comment>
+                      </Comment>
+                    )}
+                    {isTablet ||
+                      (isDesktop && (
+                        <Comment
+                          onClick={() => onCommentClickedOnBigScreen(post._id)}
+                        >
+                          <FontAwesomeIcon icon={faComment} size={"xl"} />
+                        </Comment>
+                      ))}
                   </More>
                   <Text>{post.text}</Text>
                   <Hashtags>{post.hashtags}</Hashtags>
                 </PostBottom>
               </Post>
             ))}
+            <AnimatePresence>
+              {postMatch ? (
+                <>
+                  <Overlay
+                    onClick={onOverlayClick}
+                    exit={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                  />
+                  <PostModal style={{ top: scrollY.get() + 30 }}>
+                    {clickedPost && (
+                      <>
+                        <ModalPhotos>
+                          <Carousel
+                            responsive={responsive}
+                            showDots={true}
+                            infinite={true}
+                          >
+                            {clickedPost.img.map((photo) => (
+                              <ModalPohto
+                                key={`modalphoto:${photo}`}
+                                style={{
+                                  background: `url(http://localhost:5050/${photo})`,
+                                  backgroundSize: "cover",
+                                  backgroundPosition: "center",
+                                  width: "100%",
+                                  height: "90vh",
+                                }}
+                              />
+                            ))}
+                          </Carousel>
+                        </ModalPhotos>
+                        <PostDetail>
+                          <DetailTop>
+                            <Link to={`/users/${clickedPost.owner._id}`}>
+                              <OwnerThumb
+                                $ownerthumb={
+                                  clickedPost.owner.thumbnailImageUrl.includes(
+                                    "http"
+                                  )
+                                    ? clickedPost.owner.thumbnailImageUrl
+                                    : `http://localhost:5050/${clickedPost.owner.thumbnailImageUrl}`
+                                }
+                              />
+                            </Link>
+                            <Link to={`/users/${clickedPost.owner._id}`}>
+                              <OwnerName>
+                                {clickedPost.owner.username}
+                              </OwnerName>
+                            </Link>
+                          </DetailTop>
+                          <DetailBody>
+                            <PostText>{clickedPost.text}</PostText>
+                            <Hashtags>{clickedPost.hashtags}</Hashtags>
+                            <CommentSection></CommentSection>
+                          </DetailBody>
+                          <DetailBottom></DetailBottom>
+                        </PostDetail>
+                      </>
+                    )}
+                  </PostModal>
+                </>
+              ) : null}
+            </AnimatePresence>
           </PostContainer>
         </>
       ) : (

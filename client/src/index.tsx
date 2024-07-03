@@ -15,7 +15,7 @@ import EditPost from "./components/EditPost";
 import ChangePassword from "./components/ChangePassword";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicOnlyRoute from "./PublicOnlyRoute";
-import Post from "./components/Post";
+import Comments from "./components/Comments";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -27,6 +27,7 @@ root.render(
       <Routes>
         <Route path='/' element={<App />}>
           <Route path='/' element={<Home />} />
+          <Route path='/post/:id' element={<Home />} />
           <Route path='' element={<PublicOnlyRoute />}>
             <Route path='/login' element={<Login />} />
             <Route path='/join' element={<Join />} />
@@ -46,7 +47,7 @@ root.render(
         <Route path='/posts/*' element={<App />}>
           <Route path='' element={<ProtectedRoute />}>
             <Route path='upload' element={<Upload />} />
-            <Route path=':id' element={<Post />} />
+            <Route path=':id/comments' element={<Comments />} />
             <Route path=':id/edit' element={<EditPost />} />
           </Route>
         </Route>
