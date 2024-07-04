@@ -5,6 +5,7 @@ import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
+import axios from "axios";
 
 interface IPostInfo {
   _id: string;
@@ -54,6 +55,7 @@ function Comments() {
   const profile = useRecoilValue(authAtom);
   const { id } = params;
   const [post, setPost] = useState<IPostInfo>();
+  console.log(post);
   const [comment, setComment] = useState("");
   useEffect(() => {
     (async () => {
@@ -67,15 +69,28 @@ function Comments() {
   const handleSetValue = (event: any) => {
     setComment(event.target.value);
   };
-  const onSubmit = (event: any) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const form = event.target;
-    const formData = new FormData(form);
-    fetch("/some-api", { method: form.method, body: formData });
+    const formData = new FormData();
+    formData.append("text", comment);
+    formData.append("profile", JSON.stringify(profile.user));
+    console.log(formData);
     const formJson = Object.fromEntries(formData.entries());
     console.log(formJson);
+    if (formJson.comment === "") {
+      return;
+    }
+    try {
+      const response = await axios.post(
+        `http://localhost:5050/api/post/${post?._id}/comments`,
+        formJson
+      );
+      const result = await response.data;
+      console.log(result);
+    } catch (err) {
+      console.error(err);
+    }
   };
-
   return (
     <>
       <Header>
@@ -127,18 +142,20 @@ function Comments() {
           </div>
         </HeaderBody>
       </Header>
-      <CommentsSection></CommentsSection>
+      <CommentsSection>
+        <ul></ul>
+      </CommentsSection>
       {profile.isAuthenticated && (
         <div>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleSubmit}>
             <textarea
               style={{ resize: "none" }}
-              name='comment'
+              name='text'
               cols={50}
               rows={1}
               placeholder='댓글 달기...'
               value={comment}
-              onChange={(e) => handleSetValue(e)}
+              onChange={(e) => setComment(e.target.value)}
             />
             <button type='submit'>게시</button>
           </form>

@@ -221,7 +221,6 @@ function Home(): JSX.Element {
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
   useEffect(() => {
-    window.addEventListener("pagehide", () => clearHomeCoordinate("home"));
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
       if (!response.ok) {
@@ -234,8 +233,6 @@ function Home(): JSX.Element {
       setPosts(posts);
     }
     getPosts();
-    return () =>
-      window.removeEventListener("pagehide", () => clearHomeCoordinate("home"));
   }, [posts.length]);
   const onCommentClickedOnMobile = (postId: string) => {
     history(`/post/${postId}/comments`);
@@ -258,9 +255,6 @@ function Home(): JSX.Element {
   const clickedPost =
     postMatch?.params.postId &&
     posts.find((post) => post._id === postMatch.params.postId);
-  const clearHomeCoordinate = (pageName: string) => {
-    sessionStorage.removeItem(pageName);
-  };
   return (
     <>
       {profile.isAuthenticated ? (

@@ -6,6 +6,7 @@ import MongoStore from "connect-mongo";
 import rootRouter from "./routers/rootRouter.js";
 import userRouter from "./routers/userRouter.js";
 import postRouter from "./routers/postRouter.js";
+import apiRouter from "./routers/apiRouter.js";
 
 const app = express();
 
@@ -31,5 +32,6 @@ app.use("/uploads", express.static("uploads"));
 app.use("/", rootRouter);
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
+app.use("/api", apiRouter);
 
 export default app;

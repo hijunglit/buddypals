@@ -1,3 +1,4 @@
+import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
@@ -14,7 +15,8 @@ export const home = async ({ session: { user } }, res) => {
 };
 export const see = async (req, res) => {
   const { id } = req.params;
-  const post = await Post.findById(id).populate("owner");
+  const post = await Post.findById(id).populate("owner").populate("comments");
+  console.log(post);
   if (!post) {
     return res.send("post Not found").status(404);
   }
@@ -91,4 +93,24 @@ export const deletePost = async (req, res) => {
   sessionUser.posts.splice(sessionUser.posts.indexOf(id), 1);
   sessionUser.save();
   return res.send("Delete post");
+};
+export const createComment = async (req, res) => {
+  const {
+    params: { id },
+    body: { text, profile },
+  } = req;
+  const loggedInUser = JSON.parse(profile);
+  const post = await Post.findById(id);
+  if (!post) {
+    return res.status(404).send({ message: "Not post found" });
+  }
+  const comment = await Comment.create({
+    text,
+    owner: loggedInUser.id,
+    post: id,
+  });
+  console.log(comment);
+  post.comments.push(comment._id);
+  post.save();
+  return res.status(201);
 };
