@@ -43,10 +43,12 @@ const PageTitle = styled.h1`
 const CommentsSection = styled.div``;
 const HeaderBody = styled.div`
   display: flex;
+  align-items: center;
   margin-top: 44px;
 `;
+const PostBody = styled.div``;
 
-function Comments() {
+function PostDetail() {
   const history = useNavigate();
   const params = useParams();
   const { id } = params;
@@ -76,7 +78,7 @@ function Comments() {
             <Goback onClick={onGobackClick}>
               <FontAwesomeIcon icon={faChevronLeft} size='xl' />
             </Goback>
-            <PageTitle>댓글</PageTitle>
+            <PageTitle>게시물</PageTitle>
             <div style={{ width: "15px", height: "15px" }}></div>
           </div>
         </HeaderTop>
@@ -95,18 +97,13 @@ function Comments() {
               borderRadius: "50%",
             }}
           ></div>
-          <div>
-            <div style={{ display: "flex" }}>
-              <h5>{post?.owner.username}</h5>
-              <p style={{ overflowWrap: "anywhere" }}>{post?.text}</p>
-            </div>
-            <p style={{ color: "#e0f1ff" }}>{post?.hashtags}</p>
-          </div>
+          <h5>{post?.owner.username}</h5>
         </HeaderBody>
+        <PostBody></PostBody>
       </Header>
       <CommentsSection></CommentsSection>
     </>
   );
 }
 
-export default Comments;
+export default PostDetail;

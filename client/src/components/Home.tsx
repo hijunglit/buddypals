@@ -190,7 +190,6 @@ function Home(): JSX.Element {
   const history = useNavigate();
   const postMatch: PathMatch<string> | null = useMatch("/post/:postId");
   const { scrollY } = useScroll();
-  const scrollyValue = scrollY.get();
   const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
   const isTablet: boolean = useMediaQuery({
     minWidth: 768,
@@ -218,14 +217,8 @@ function Home(): JSX.Element {
     setPosts(newPost);
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
-  useLayoutEffect(() => {
-    if (sessionStorage.getItem("homeCoordinate") === undefined) {
-      return;
-    }
-    return window.scroll(0, sessionStorage.homeCoordinate);
-  });
   useEffect(() => {
-    window.addEventListener("pagehide", clearHomeCoordinate);
+    window.addEventListener("pagehide", () => clearHomeCoordinate("home"));
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
       if (!response.ok) {
@@ -238,7 +231,8 @@ function Home(): JSX.Element {
       setPosts(posts);
     }
     getPosts();
-    return () => window.removeEventListener("pagehide", clearHomeCoordinate);
+    return () =>
+      window.removeEventListener("pagehide", () => clearHomeCoordinate("home"));
   }, [posts.length]);
   const onCommentClickedOnMobile = (postId: string) => {
     history(`/post/${postId}/comments`);
@@ -246,7 +240,7 @@ function Home(): JSX.Element {
   const onCommentClickedOnBigScreen = (postId: string) => {
     history(`/post/${postId}`);
     const currentScrollY = window.scrollY;
-    sessionStorage.setItem("homeCoordinate", String(currentScrollY));
+    console.log(currentScrollY);
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
     document.body.style.top = `-${currentScrollY}px`;
@@ -262,8 +256,8 @@ function Home(): JSX.Element {
   const clickedPost =
     postMatch?.params.postId &&
     posts.find((post) => post._id === postMatch.params.postId);
-  const clearHomeCoordinate = () => {
-    sessionStorage.removeItem("homeCoordinate");
+  const clearHomeCoordinate = (pageName: string) => {
+    sessionStorage.removeItem(pageName);
   };
   return (
     <>
@@ -409,7 +403,7 @@ function Home(): JSX.Element {
                             <Hashtags>{clickedPost.hashtags}</Hashtags>
                             <CommentSection></CommentSection>
                           </DetailBody>
-                          <DetailBottom></DetailBottom>
+                          <DetailBottom>Comments Section</DetailBottom>
                         </PostDetail>
                       </>
                     )}
