@@ -2,6 +2,7 @@ import "dotenv/config";
 import "./db.js";
 import "./models/Post.js";
 import "./models/User.js";
+import "./models/Comment.js";
 import app from "./server.js";
 
 const PORT = process.env.PORT || 5050;

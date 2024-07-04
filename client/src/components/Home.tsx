@@ -132,6 +132,9 @@ const Text = styled.h1``;
 const Hashtags = styled.h1`
   color: #e0f1ff;
 `;
+const CreatedAt = styled.small`
+  color: #a8a8a8;
+`;
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
@@ -240,7 +243,6 @@ function Home(): JSX.Element {
   const onCommentClickedOnBigScreen = (postId: string) => {
     history(`/post/${postId}`);
     const currentScrollY = window.scrollY;
-    console.log(currentScrollY);
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
     document.body.style.top = `-${currentScrollY}px`;
@@ -345,6 +347,14 @@ function Home(): JSX.Element {
                   </More>
                   <Text>{post.text}</Text>
                   <Hashtags>{post.hashtags}</Hashtags>
+                  <CreatedAt>
+                    {new Date(post.createdAt).toLocaleDateString("ko-kr", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </CreatedAt>
                 </PostBottom>
               </Post>
             ))}

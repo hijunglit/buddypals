@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
   salt: String,
   name: { type: String, required: true },
   intro: { type: String, default: "" },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
   posts: [{ type: mongoose.Schema.Types.ObjectId, ref: "Post" }],
 });
 const randomBytesPromise = util.promisify(crypto.randomBytes);
