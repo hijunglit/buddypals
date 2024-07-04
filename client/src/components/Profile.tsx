@@ -94,7 +94,7 @@ function Profile() {
       const result = await response.json();
       Setuser(result.user);
     })();
-  }, []);
+  }, [params.id]);
   return (
     <PageWrapper $isbigscreen={isTablet || isDesktop}>
       <Header>

@@ -3,6 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRecoilValue } from "recoil";
+import { authAtom } from "../atoms/atom";
 
 interface IPostInfo {
   _id: string;
@@ -49,9 +51,10 @@ const HeaderBody = styled.div`
 function Comments() {
   const history = useNavigate();
   const params = useParams();
+  const profile = useRecoilValue(authAtom);
   const { id } = params;
-  console.log(params);
   const [post, setPost] = useState<IPostInfo>();
+  const [comment, setComment] = useState("");
   useEffect(() => {
     (async () => {
       const response = await fetch(`http://localhost:5050/posts/${id}`);
@@ -61,6 +64,18 @@ function Comments() {
     })();
   }, []);
   const onGobackClick = () => history(-1);
+  const handleSetValue = (event: any) => {
+    setComment(event.target.value);
+  };
+  const onSubmit = (event: any) => {
+    event.preventDefault();
+    const form = event.target;
+    const formData = new FormData(form);
+    fetch("/some-api", { method: form.method, body: formData });
+    const formJson = Object.fromEntries(formData.entries());
+    console.log(formJson);
+  };
+
   return (
     <>
       <Header>
@@ -101,10 +116,34 @@ function Comments() {
               <p style={{ overflowWrap: "anywhere" }}>{post?.text}</p>
             </div>
             <p style={{ color: "#e0f1ff" }}>{post?.hashtags}</p>
+            <small style={{ color: "#a8a8a8" }}>
+              {new Date().toLocaleDateString("ko-kr", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </small>
           </div>
         </HeaderBody>
       </Header>
       <CommentsSection></CommentsSection>
+      {profile.isAuthenticated && (
+        <div>
+          <form onSubmit={onSubmit}>
+            <textarea
+              style={{ resize: "none" }}
+              name='comment'
+              cols={50}
+              rows={1}
+              placeholder='댓글 달기...'
+              value={comment}
+              onChange={(e) => handleSetValue(e)}
+            />
+            <button type='submit'>게시</button>
+          </form>
+        </div>
+      )}
     </>
   );
 }
