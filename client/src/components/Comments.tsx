@@ -24,6 +24,14 @@ interface IPostInfo {
     __v: number;
     thumbnailImageUrl: string;
   };
+
+  comments: {
+    _id: string;
+    text: string;
+    owner: string;
+    post: string;
+    createdAt: string;
+  }[];
   createdAt: string;
 }
 const Header = styled.header``;
@@ -55,8 +63,8 @@ function Comments() {
   const profile = useRecoilValue(authAtom);
   const { id } = params;
   const [post, setPost] = useState<IPostInfo>();
-  console.log(post);
   const [comment, setComment] = useState("");
+  console.log(post);
   useEffect(() => {
     (async () => {
       const response = await fetch(`http://localhost:5050/posts/${id}`);
@@ -64,7 +72,7 @@ function Comments() {
       const post = result.post;
       setPost(post);
     })();
-  }, []);
+  }, [post?.comments.length]);
   const onGobackClick = () => history(-1);
   const handleSetValue = (event: any) => {
     setComment(event.target.value);
@@ -74,9 +82,7 @@ function Comments() {
     const formData = new FormData();
     formData.append("text", comment);
     formData.append("profile", JSON.stringify(profile.user));
-    console.log(formData);
     const formJson = Object.fromEntries(formData.entries());
-    console.log(formJson);
     if (formJson.comment === "") {
       return;
     }
@@ -86,7 +92,8 @@ function Comments() {
         formJson
       );
       const result = await response.data;
-      console.log(result);
+      if (response.status === 201) {
+      }
     } catch (err) {
       console.error(err);
     }
@@ -143,7 +150,11 @@ function Comments() {
         </HeaderBody>
       </Header>
       <CommentsSection>
-        <ul></ul>
+        <ul>
+          {post?.comments.map((comment) => (
+            <li key={comment._id}>{comment.text}</li>
+          ))}
+        </ul>
       </CommentsSection>
       {profile.isAuthenticated && (
         <div>

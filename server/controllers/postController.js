@@ -109,8 +109,7 @@ export const createComment = async (req, res) => {
     owner: loggedInUser.id,
     post: id,
   });
-  console.log(comment);
   post.comments.push(comment._id);
   post.save();
-  return res.status(201);
+  return res.status(201).send(post);
 };
