@@ -18,7 +18,7 @@ const Nav = styled.nav<{ $isbigscreen: boolean }>`
   position: fixed;
   bottom: 0;
   width: ${(props) => (props.$isbigscreen ? "80px" : "100%")};
-  height: ${(props) => (props.$isbigscreen ? "100%" : "fit-content")};
+  height: ${(props) => (props.$isbigscreen ? "100%" : "50px")};
   border-right: ${(props) =>
     props.$isbigscreen ? "1px solid #262626" : "none"};
   background: #000;

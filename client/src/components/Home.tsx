@@ -10,6 +10,7 @@ import { useMediaQuery } from "react-responsive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
+import axios from "axios";
 
 const responsive = {
   desktop: {
@@ -43,6 +44,24 @@ interface IPostInfo {
     __v: number;
     thumbnailImageUrl: string;
   };
+  comments: {
+    _id: string;
+    text: string;
+    owner: {
+      _id: string;
+      email: string;
+      socialOnly: boolean;
+      username: string;
+      password: string;
+      name: string;
+      intro: string;
+      salt: string;
+      __v: number;
+      thumbnailImageUrl: string;
+    };
+    post: string;
+    createdAt: string;
+  }[];
   createdAt: string;
 }
 
@@ -143,7 +162,7 @@ const Overlay = styled(motion.div)`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
-  z-index: 99;
+  z-index: 9999;
 `;
 const PostModal = styled(motion.div)`
   position: absolute;
@@ -220,6 +239,7 @@ function Home(): JSX.Element {
     setPosts(newPost);
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
+  const [comment, setComment] = useState("");
   useEffect(() => {
     async function getPosts() {
       const response = await fetch("http://localhost:5050");
@@ -255,6 +275,7 @@ function Home(): JSX.Element {
   const clickedPost =
     postMatch?.params.postId &&
     posts.find((post) => post._id === postMatch.params.postId);
+
   return (
     <>
       {profile.isAuthenticated ? (
@@ -407,7 +428,115 @@ function Home(): JSX.Element {
                             <Hashtags>{clickedPost.hashtags}</Hashtags>
                             <CommentSection></CommentSection>
                           </DetailBody>
-                          <DetailBottom>Comments Section</DetailBottom>
+                          <DetailBottom>
+                            <ul style={{ display: "grid", gap: "12px" }}>
+                              {clickedPost.comments.map((comment) => (
+                                <li key={comment._id}>
+                                  <div
+                                    style={{
+                                      display: "flex",
+                                      columnGap: "6px",
+                                    }}
+                                  >
+                                    <div
+                                      style={{
+                                        backgroundImage:
+                                          comment.owner.thumbnailImageUrl.includes(
+                                            "http://"
+                                          )
+                                            ? `url(${comment.owner.thumbnailImageUrl})`
+                                            : `url(http://localhost:5050/${comment.owner.thumbnailImageUrl})`,
+                                        width: "32px",
+                                        height: "32px",
+                                        borderRadius: "50%",
+                                        backgroundSize: "cover",
+                                        backgroundPosition: "center",
+                                      }}
+                                    ></div>
+                                    <div style={{ lineHeight: "1.4" }}>
+                                      <p>{comment.text}</p>
+                                      <small
+                                        style={{
+                                          fontSize: "12px",
+                                          color: "#a8a8a8",
+                                        }}
+                                      >
+                                        {new Date(
+                                          comment.createdAt
+                                        ).toLocaleDateString("ko-kr", {
+                                          weekday: "long",
+                                          year: "numeric",
+                                          month: "long",
+                                          day: "numeric",
+                                        })}
+                                      </small>
+                                    </div>
+                                  </div>
+                                </li>
+                              ))}
+                            </ul>
+                            <div>
+                              <form
+                                onSubmit={async (
+                                  event: React.FormEvent<HTMLFormElement>
+                                ) => {
+                                  event.preventDefault();
+                                  const formData = new FormData();
+                                  formData.append("text", comment);
+                                  formData.append(
+                                    "profile",
+                                    JSON.stringify(profile.user)
+                                  );
+                                  const formJson = Object.fromEntries(
+                                    formData.entries()
+                                  );
+                                  if (comment === "") {
+                                    return;
+                                  }
+                                  try {
+                                    const response = await axios.post(
+                                      `http://localhost:5050/api/post/${clickedPost._id}/comments`,
+                                      formJson
+                                    );
+                                    const result = await response.data;
+                                    if (response.status === 201) {
+                                    }
+                                  } catch (err) {
+                                    console.error(err);
+                                  }
+                                }}
+                                style={{ display: "flex" }}
+                              >
+                                <textarea
+                                  style={{
+                                    resize: "none",
+                                    background: "#000",
+                                    border: "none",
+                                    color: "#fff",
+                                  }}
+                                  name='text'
+                                  cols={50}
+                                  rows={1}
+                                  placeholder='댓글 달기...'
+                                  value={comment}
+                                  onChange={(e) => setComment(e.target.value)}
+                                />
+                                <button
+                                  type='submit'
+                                  style={{
+                                    display:
+                                      comment.length > 0 ? "block" : "none",
+                                    background: "none",
+                                    color: "#0095f6",
+                                    border: "none",
+                                    fontWeight: "700",
+                                  }}
+                                >
+                                  게시
+                                </button>
+                              </form>
+                            </div>
+                          </DetailBottom>
                         </PostDetail>
                       </>
                     )}

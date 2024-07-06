@@ -6,7 +6,8 @@ export const home = async ({ session: { user } }, res) => {
   try {
     const posts = await Post.find({})
       .sort({ createdAt: "desc" })
-      .populate("owner");
+      .populate("owner")
+      .populate({ path: "comments", populate: "owner" });
     return res.send({ user, posts }).status(200);
   } catch (err) {
     console.error(err);
@@ -15,8 +16,9 @@ export const home = async ({ session: { user } }, res) => {
 };
 export const see = async (req, res) => {
   const { id } = req.params;
-  const post = await Post.findById(id).populate("owner").populate("comments");
-  console.log(post);
+  const post = await Post.findById(id)
+    .populate("owner")
+    .populate({ path: "comments", populate: "owner" });
   if (!post) {
     return res.send("post Not found").status(404);
   }
