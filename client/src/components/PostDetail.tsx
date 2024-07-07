@@ -153,7 +153,7 @@ function PostDetail() {
               <Goback onClick={onGobackClick}>
                 <FontAwesomeIcon icon={faChevronLeft} size='xl' />
               </Goback>
-              <PageTitle>댓글</PageTitle>
+              <PageTitle>게시물</PageTitle>
               <div style={{ width: "15px", height: "15px" }}></div>
             </div>
           </HeaderTop>

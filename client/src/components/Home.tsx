@@ -195,7 +195,13 @@ const DetailTop = styled.div`
   line-height: 4;
 `;
 const DetailBody = styled.div``;
-const DetailBottom = styled.div``;
+const DetailBottom = styled.div`
+  overflow-y: auto;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
 const OwnerThumb = styled.div<{ $ownerthumb: string }>`
   background-image: url(${(props) => props.$ownerthumb});
   background-size: cover;
@@ -429,7 +435,12 @@ function Home(): JSX.Element {
                             <CommentSection></CommentSection>
                           </DetailBody>
                           <DetailBottom>
-                            <ul style={{ display: "grid", gap: "12px" }}>
+                            <ul
+                              style={{
+                                display: "grid",
+                                gap: "12px",
+                              }}
+                            >
                               {clickedPost.comments.map((comment) => (
                                 <li key={comment._id}>
                                   <div
@@ -475,7 +486,7 @@ function Home(): JSX.Element {
                                 </li>
                               ))}
                             </ul>
-                            <div>
+                            <div style={{ position: "fixed" }}>
                               <form
                                 onSubmit={async (
                                   event: React.FormEvent<HTMLFormElement>
