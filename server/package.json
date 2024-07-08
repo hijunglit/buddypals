@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --exec babel-node -- init.js",
+    "dev": "nodemon --exec babel-node -- src/init.js",
+    "build": "babel src -d dist",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node init.js"
+    "start": "node dist/init.js"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +26,8 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.6",
+    "@babel/cli": "^7.24.7",
+    "@babel/core": "^7.24.7",
     "@babel/node": "^7.24.6",
     "@babel/preset-env": "^7.24.6",
     "@flydotio/dockerfile": "^0.5.7"
