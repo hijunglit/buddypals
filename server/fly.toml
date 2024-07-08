@@ -1,0 +1,22 @@
+# fly.toml app configuration file generated for buddypals-server-ver01 on 2024-07-08T17:05:54+09:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'buddypals-server-ver01'
+primary_region = 'hkg'
+
+[build]
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

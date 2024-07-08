@@ -12,8 +12,8 @@ function Logout() {
     })();
     setAuthState({
       user: null,
-      isAuthenticated: false
-    })
+      isAuthenticated: false,
+    });
     navigate("/");
   }, []);
   return <h1>Logout</h1>;
