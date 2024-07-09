@@ -2,13 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon --exec babel-node -- src/init.js",
-    "build": "babel src -d dist",
+    "dev": "nodemon --exec babel-node -- init.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dist/init.js"
+    "start": "node init.js"
   },
   "keywords": [],
   "author": "",
