@@ -56,7 +56,6 @@
   },
   "proxy": "http://localhost:5050",
   "devDependencies": {
-    "@flydotio/dockerfile": "^0.5.7",
     "react-router-dom": "^6.24.1"
   }
 }
