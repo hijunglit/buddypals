@@ -13,6 +13,8 @@ import { AnimatePresence, motion, useScroll } from "framer-motion";
 import axios from "axios";
 import { API_BASE_URL } from "../urls";
 
+console.log(API_BASE_URL);
+
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
