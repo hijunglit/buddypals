@@ -17,6 +17,7 @@
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
     "axios": "^1.7.2",
+    "env-cmd": "^10.1.0",
     "framer-motion": "^11.2.12",
     "react": "^18.3.1",
     "react-cookie": "^7.1.4",
@@ -31,7 +32,7 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "export PORT=3000 && react-scripts start",
+    "start": "PORT=3000 && react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

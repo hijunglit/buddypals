@@ -11,6 +11,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import axios from "axios";
+import { API_BASE_URL } from "../urls";
+console.log(API_BASE_URL);
 
 const responsive = {
   desktop: {
@@ -228,7 +230,7 @@ function Home(): JSX.Element {
   });
   const profile = useRecoilValue(authAtom);
   async function deletePost(id: any) {
-    const response = await fetch(`http://localhost:5050/posts/${id}/delete`, {
+    const response = await fetch(`${API_BASE_URL}/posts/${id}/delete`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -248,7 +250,7 @@ function Home(): JSX.Element {
   const [comment, setComment] = useState("");
   useEffect(() => {
     async function getPosts() {
-      const response = await fetch("http://localhost:5050");
+      const response = await fetch(`${API_BASE_URL}`);
       if (!response.ok) {
         const message = `An Error occurred: ${response.statusText}`;
         console.error(message);
@@ -302,7 +304,7 @@ function Home(): JSX.Element {
                             "http://"
                           )
                             ? post.owner.thumbnailImageUrl
-                            : `http://localhost:5050/${post.owner.thumbnailImageUrl}`,
+                            : `${API_BASE_URL}/${post.owner.thumbnailImageUrl}`,
                         }}
                       />
                     </Link>
@@ -341,7 +343,7 @@ function Home(): JSX.Element {
                     <Photo
                       key={img}
                       style={{
-                        background: `url(http://localhost:5050/${img})`,
+                        background: `url(${API_BASE_URL}/${img})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                       }}
@@ -400,7 +402,7 @@ function Home(): JSX.Element {
                               <ModalPohto
                                 key={`modalphoto:${photo}`}
                                 style={{
-                                  background: `url(http://localhost:5050/${photo})`,
+                                  background: `url(${API_BASE_URL}/${photo})`,
                                   backgroundSize: "cover",
                                   backgroundPosition: "center",
                                   width: "100%",
@@ -419,7 +421,7 @@ function Home(): JSX.Element {
                                     "http"
                                   )
                                     ? clickedPost.owner.thumbnailImageUrl
-                                    : `http://localhost:5050/${clickedPost.owner.thumbnailImageUrl}`
+                                    : `${API_BASE_URL}/${clickedPost.owner.thumbnailImageUrl}`
                                 }
                               />
                             </Link>
@@ -456,7 +458,7 @@ function Home(): JSX.Element {
                                             "http://"
                                           )
                                             ? `url(${comment.owner.thumbnailImageUrl})`
-                                            : `url(http://localhost:5050/${comment.owner.thumbnailImageUrl})`,
+                                            : `url(${API_BASE_URL}/${comment.owner.thumbnailImageUrl})`,
                                         width: "32px",
                                         height: "32px",
                                         borderRadius: "50%",
@@ -506,7 +508,7 @@ function Home(): JSX.Element {
                                   }
                                   try {
                                     const response = await axios.post(
-                                      `http://localhost:5050/api/post/${clickedPost._id}/comments`,
+                                      `${API_BASE_URL}/api/post/${clickedPost._id}/comments`,
                                       formJson
                                     );
                                     const result = await response.data;
