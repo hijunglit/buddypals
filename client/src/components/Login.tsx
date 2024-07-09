@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import { API_BASE_URL } from "../urls";
 
 const LoginForm = styled.form<{ $isbigscreen: boolean }>`
   display: flex;
@@ -66,7 +67,7 @@ function Login() {
   });
   useEffect(() => {
     (async () => {
-      await fetch("http://localhost:5050/login");
+      await fetch(`${API_BASE_URL}/login`);
     })();
   }, []);
   const updateForm = (value: any) => {
@@ -78,7 +79,7 @@ function Login() {
     event.preventDefault();
     const loginInfo = { ...form };
     try {
-      const response = await fetch("http://localhost:5050/login", {
+      const response = await fetch(`${API_BASE_URL}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginInfo),
@@ -109,7 +110,7 @@ function Login() {
     const baseUrl = "https://kauth.kakao.com/oauth/authorize";
     const redirectUrl = "http://localhost:3000/users/kakao/finish";
     const responseType = "code";
-    const response = await fetch("http://localhost:5050/users/kakao/start");
+    const response = await fetch(`${API_BASE_URL}/users/kakao/start`);
     const json = await response.json();
     const clientId = json.clientId;
     window.location.href = `${baseUrl}?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=${responseType}`;
