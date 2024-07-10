@@ -1,8 +1,6 @@
 import multer from "multer";
-import { v4 as uuidv4 } from "uuid";
-import path from "path";
 import fs from "fs";
-import { S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import multerS3 from "multer-s3";
 
 const s3Client = new S3Client({
@@ -12,6 +10,20 @@ const s3Client = new S3Client({
     secretAccessKey: process.env.AWS_SECRET,
   },
 });
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: process.env.AWS_KEY,
+    secretAccessKey: process.env.AWS_SECRET,
+  },
+  region: "ap-northeast-2",
+});
+export const removeFile = async (url) =>
+  await s3.send(
+    new DeleteObjectCommand({
+      Bucket: "buddypals",
+      Key: decodeURIComponent(url.split(".amazonaws.com/").pop().toString()),
+    })
+  );
 
 const s3AvatarStorage = multerS3({
   s3: s3Client,
@@ -39,22 +51,6 @@ try {
   fs.mkdirSync("uploads/posts");
 }
 
-// const s3AvatarStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "uploads/avatars");
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, uuidv4() + "-" + Date.now() + path.extname(file.originalname));
-//   },
-// });
-// const s3PostStorage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     cb(null, "uploads/posts");
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, uuidv4() + "-" + Date.now() + path.extname(file.originalname));
-//   },
-// });
 const fileFilter = (req, file, cb) => {
   const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
   if (allowedFileTypes.includes(file.mimetype)) {

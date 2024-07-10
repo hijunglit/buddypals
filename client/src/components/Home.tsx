@@ -283,8 +283,6 @@ function Home(): JSX.Element {
     postMatch?.params.postId &&
     posts.find((post) => post._id === postMatch.params.postId);
 
-  console.log(API_BASE_URL);
-
   return (
     <>
       {profile.isAuthenticated ? (

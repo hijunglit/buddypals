@@ -56,7 +56,6 @@ export default function Navbar() {
   });
   const profile = useRecoilValue(authAtom);
   const authState = useRecoilValue(authAtom);
-  console.log(profile);
   return (
     <>
       {authState.isAuthenticated ? (
