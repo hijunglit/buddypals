@@ -37,7 +37,7 @@ const Profile = styled.div<{ $profileimg: string }>`
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-image: url(${(props) => props.$profileimg});
+  background-image: url(/${(props) => props.$profileimg});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
