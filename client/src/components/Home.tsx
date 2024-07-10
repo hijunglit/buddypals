@@ -344,7 +344,7 @@ function Home(): JSX.Element {
                     <Photo
                       key={img}
                       style={{
-                        background: `url(${API_BASE_URL}/${img})`,
+                        background: `url(${img})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                       }}
@@ -403,7 +403,7 @@ function Home(): JSX.Element {
                               <ModalPohto
                                 key={`modalphoto:${photo}`}
                                 style={{
-                                  background: `url(${API_BASE_URL}/${photo})`,
+                                  background: `url(${photo})`,
                                   backgroundSize: "cover",
                                   backgroundPosition: "center",
                                   width: "100%",
