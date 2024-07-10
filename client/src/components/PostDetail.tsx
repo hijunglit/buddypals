@@ -128,7 +128,7 @@ function PostDetail() {
     }
     try {
       const response = await axios.post(
-        `http://localhost:5050/api/post/${post?._id}/comments`,
+        `${API_BASE_URL}/api/post/${post?._id}/comments`,
         formJson
       );
       const result = await response.data;
@@ -166,7 +166,7 @@ function PostDetail() {
                 backgroundImage: `url(${
                   post?.owner.thumbnailImageUrl.includes("http")
                     ? post?.owner.thumbnailImageUrl
-                    : `http://localhost:5050/${post?.owner.thumbnailImageUrl}`
+                    : `${API_BASE_URL}/${post?.owner.thumbnailImageUrl}`
                 })`,
                 backgroundSize: "cover",
                 backgroundPosition: "center",
@@ -206,7 +206,7 @@ function PostDetail() {
                         "http://"
                       )
                         ? `url(${comment.owner.thumbnailImageUrl})`
-                        : `url(http://localhost:5050/${comment.owner.thumbnailImageUrl})`,
+                        : `url(${API_BASE_URL}/${comment.owner.thumbnailImageUrl})`,
                       width: "32px",
                       height: "32px",
                       borderRadius: "50%",

@@ -9,6 +9,7 @@ import {
   faSignOutAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { useMediaQuery } from "react-responsive";
+import { API_BASE_URL } from "../urls";
 
 const Nav = styled.nav<{ $isbigscreen: boolean }>`
   display: flex;
@@ -86,7 +87,7 @@ export default function Navbar() {
               $profileimg={String(
                 profile.user?.thumbnailImage.includes("http://")
                   ? profile.user.thumbnailImage
-                  : `http://localhost:5050/${profile.user?.thumbnailImage}`
+                  : `${API_BASE_URL}/${profile.user?.thumbnailImage}`
               )}
             />
             {isTablet || (isDesktop && <p>프로필</p>)}

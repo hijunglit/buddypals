@@ -71,7 +71,7 @@ const Posts = styled.div<{ $isbigscreen: boolean }>`
   padding: ${(props) => (props.$isbigscreen ? "8px 12px" : null)};
 `;
 const Post = styled.div<{ $imgsrc: string }>`
-  background-image: url(http://localhost:5050/${(props) => props.$imgsrc});
+  background-image: url(${API_BASE_URL}/${(props) => props.$imgsrc});
   background-size: cover;
   background-position: center;
   height: 100%;
@@ -103,7 +103,7 @@ function Profile() {
           {...{
             $userthumb: user?.thumbnailImageUrl.includes("http://")
               ? user.thumbnailImageUrl
-              : `http://localhost:5050/${user?.thumbnailImageUrl}`,
+              : `${API_BASE_URL}/${user?.thumbnailImageUrl}`,
           }}
         />
         <Wrapper style={{ lineHeight: "2" }}>

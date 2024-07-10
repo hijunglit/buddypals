@@ -95,7 +95,7 @@ function EditProfile() {
     formData.append("profile", JSON.stringify(profile.user));
     try {
       const response = await axios.post(
-        `http://localhost:5050/users/${userId}/edit`,
+        `${API_BASE_URL}/users/${userId}/edit`,
         formData
       );
       const result = await response.data;
@@ -152,7 +152,7 @@ function EditProfile() {
             ? `url(${preview})`
             : profile.user?.thumbnailImage.includes("http://")
             ? `url(${profile.user.thumbnailImage})`
-            : `url(http://localhost:5050/${profile.user?.thumbnailImage})`,
+            : `url(${API_BASE_URL}/${profile.user?.thumbnailImage})`,
           backgroundPosition: "center",
           backgroundSize: "cover",
         }}

@@ -111,10 +111,7 @@ function Upload() {
       let response;
       let result;
       if (isNew) {
-        response = await axios.post(
-          `http://localhost:5050/posts/upload`,
-          formData
-        );
+        response = await axios.post(`${API_BASE_URL}/posts/upload`, formData);
         result = await response.data;
       }
       if (response?.status !== 200) {

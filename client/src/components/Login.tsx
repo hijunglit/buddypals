@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
-import { API_BASE_URL } from "../urls";
+import { API_BASE_URL, HOME_URL } from "../urls";
 
 const LoginForm = styled.form<{ $isbigscreen: boolean }>`
   display: flex;
@@ -108,7 +108,7 @@ function Login() {
   };
   const handleLogin = async () => {
     const baseUrl = "https://kauth.kakao.com/oauth/authorize";
-    const redirectUrl = "http://localhost:3000/users/kakao/finish";
+    const redirectUrl = `${HOME_URL}/users/kakao/finish`;
     const responseType = "code";
     const response = await fetch(`${API_BASE_URL}/users/kakao/start`);
     const json = await response.json();

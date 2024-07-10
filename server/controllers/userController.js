@@ -57,7 +57,7 @@ export const finishKakaoLogin = async (req, res) => {
   const config = {
     grant_type: "authorization_code",
     client_id: process.env.KAKAO_CLIENT,
-    redirect_uri: "http://localhost:3000/users/kakao/finish",
+    redirect_uri: process.env.KAKAO_REDIRECT,
     code: req.body.code,
     client_secret: process.env.KAKAO_SECRET,
   };
