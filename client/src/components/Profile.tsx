@@ -101,7 +101,7 @@ function Profile() {
       <Header>
         <UserThumb
           {...{
-            $userthumb: user?.thumbnailImageUrl.includes("http://")
+            $userthumb: user?.thumbnailImageUrl.includes("http")
               ? user.thumbnailImageUrl
               : `${API_BASE_URL}/${user?.thumbnailImageUrl}`,
           }}

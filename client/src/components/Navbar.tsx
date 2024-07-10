@@ -56,6 +56,7 @@ export default function Navbar() {
   });
   const profile = useRecoilValue(authAtom);
   const authState = useRecoilValue(authAtom);
+  console.log(profile);
   return (
     <>
       {authState.isAuthenticated ? (
@@ -85,7 +86,7 @@ export default function Navbar() {
           <NavLink to={`/users/${profile.user?.id}`}>
             <Profile
               $profileimg={String(
-                profile.user?.thumbnailImage.includes("http://")
+                profile.user?.thumbnailImage.includes("http")
                   ? profile.user.thumbnailImage
                   : `${API_BASE_URL}/${profile.user?.thumbnailImage}`
               )}

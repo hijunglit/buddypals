@@ -203,7 +203,7 @@ function PostDetail() {
                   <div
                     style={{
                       backgroundImage: comment.owner.thumbnailImageUrl.includes(
-                        "http://"
+                        "http"
                       )
                         ? `url(${comment.owner.thumbnailImageUrl})`
                         : `url(${API_BASE_URL}/${comment.owner.thumbnailImageUrl})`,

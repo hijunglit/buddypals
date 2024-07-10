@@ -302,7 +302,7 @@ function Home(): JSX.Element {
                       <Thumbnail
                         {...{
                           $ownerthumb: post.owner.thumbnailImageUrl.includes(
-                            "http://"
+                            "http"
                           )
                             ? post.owner.thumbnailImageUrl
                             : `${API_BASE_URL}/${post.owner.thumbnailImageUrl}`,
@@ -456,7 +456,7 @@ function Home(): JSX.Element {
                                       style={{
                                         backgroundImage:
                                           comment.owner.thumbnailImageUrl.includes(
-                                            "http://"
+                                            "http"
                                           )
                                             ? `url(${comment.owner.thumbnailImageUrl})`
                                             : `url(${API_BASE_URL}/${comment.owner.thumbnailImageUrl})`,

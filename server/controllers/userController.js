@@ -143,7 +143,7 @@ export const postEdit = async (req, res) => {
     const UpdateUser = await User.findByIdAndUpdate(
       loggedInUser.id,
       {
-        thumbnailImageUrl: file ? file.path : loggedInUser.thumbnailImage,
+        thumbnailImageUrl: file ? file.location : loggedInUser.thumbnailImage,
         username,
         intro,
       },

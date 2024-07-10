@@ -62,7 +62,7 @@ export const postUpload = async (req, res) => {
   const loggedInUser = JSON.parse(req.body.profile);
   if (files) {
     const image = req.files;
-    const path = image.map((img) => img.path);
+    const path = image.map((img) => img.location);
     try {
       const result = await Post.create({
         img: files ? path : "",

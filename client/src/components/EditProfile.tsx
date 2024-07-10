@@ -150,7 +150,7 @@ function EditProfile() {
           height: "56px",
           backgroundImage: preview
             ? `url(${preview})`
-            : profile.user?.thumbnailImage.includes("http://")
+            : profile.user?.thumbnailImage.includes("http")
             ? `url(${profile.user.thumbnailImage})`
             : `url(${API_BASE_URL}/${profile.user?.thumbnailImage})`,
           backgroundPosition: "center",
