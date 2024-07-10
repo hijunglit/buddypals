@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { authAtom } from "./atoms/atom";
+import { API_BASE_URL } from "./urls";
 
 function Redirection() {
   const navigate = useNavigate();
@@ -9,7 +10,7 @@ function Redirection() {
   const code = new URL(document.location.toString()).searchParams.get("code");
   useEffect(() => {
     (async () => {
-      const response = await fetch("http://localhost:5050/users/kakao/finish", {
+      const response = await fetch(`${API_BASE_URL}/users/kakao/finish`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: code }),

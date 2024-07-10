@@ -5,6 +5,7 @@ import { authAtom } from "../atoms/atom";
 import axios from "axios";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import { API_BASE_URL } from "../urls";
 
 const UploadForm = styled.form<{ $isbigscreen: boolean }>`
   display: flex;
@@ -85,7 +86,7 @@ function Upload() {
   const navigate = useNavigate();
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:5050/posts/upload`);
+      const response = await fetch(`${API_BASE_URL}/posts/upload`);
       const result = await response.json();
       console.log(result);
     })();

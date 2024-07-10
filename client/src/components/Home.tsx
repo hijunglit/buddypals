@@ -13,8 +13,6 @@ import { AnimatePresence, motion, useScroll } from "framer-motion";
 import axios from "axios";
 import { API_BASE_URL } from "../urls";
 
-console.log(API_BASE_URL);
-
 const responsive = {
   desktop: {
     breakpoint: { max: 3000, min: 1024 },
@@ -284,6 +282,8 @@ function Home(): JSX.Element {
   const clickedPost =
     postMatch?.params.postId &&
     posts.find((post) => post._id === postMatch.params.postId);
+
+  console.log(API_BASE_URL);
 
   return (
     <>

@@ -7,6 +7,7 @@ import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
 import axios from "axios";
 import { useMediaQuery } from "react-responsive";
+import { API_BASE_URL } from "../urls";
 
 interface IPostInfo {
   _id: string;
@@ -106,7 +107,7 @@ function PostDetail() {
   const [comment, setComment] = useState("");
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:5050/posts/${id}`);
+      const response = await fetch(`${API_BASE_URL}/posts/${id}`);
       const result = await response.json();
       const post = result.post;
       setPost(post);

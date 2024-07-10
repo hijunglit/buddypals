@@ -2,13 +2,14 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetRecoilState } from "recoil";
 import { authAtom } from "../atoms/atom";
+import { API_BASE_URL } from "../urls";
 
 function Logout() {
   const navigate = useNavigate();
   const setAuthState = useSetRecoilState(authAtom);
   useEffect(() => {
     (async () => {
-      await fetch("http://localhost:5050/users/logout", {});
+      await fetch(`${API_BASE_URL}/users/logout`, {});
     })();
     setAuthState({
       user: null,

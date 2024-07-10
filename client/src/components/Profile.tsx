@@ -4,6 +4,7 @@ import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import { API_BASE_URL } from "../urls";
 
 interface IPostData {
   _id: string;
@@ -90,7 +91,7 @@ function Profile() {
   const [user, Setuser] = useState<IUserData>();
   useEffect(() => {
     (async () => {
-      const response = await fetch(`http://localhost:5050/users/${id}`);
+      const response = await fetch(`${API_BASE_URL}/users/${id}`);
       const result = await response.json();
       Setuser(result.user);
     })();

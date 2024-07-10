@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
+import { API_BASE_URL } from "../urls";
 
 interface IPost {
   text: string;
@@ -21,7 +22,7 @@ function EditPost() {
       const id = params.id?.toString();
       if (!id) return;
       const response = await fetch(
-        `http://localhost:5050/posts/${params.id?.toString()}/edit`
+        `${API_BASE_URL}/posts/${params.id?.toString()}/edit`
       );
       if (!response.ok) {
         const message = `An error has occurred: ${response.statusText}`;
@@ -53,7 +54,7 @@ function EditPost() {
     try {
       let response;
       response = await fetch(
-        `http://localhost:5050/posts/${params.id?.toString()}/edit`,
+        `${API_BASE_URL}/posts/${params.id?.toString()}/edit`,
         {
           method: "POST",
           headers: {

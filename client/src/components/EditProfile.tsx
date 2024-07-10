@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios, { formToJSON } from "axios";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import { API_BASE_URL } from "../urls";
 
 const Wrapper = styled.div<{ $isbigscreen: boolean }>`
   width: ${(props) => (props.$isbigscreen ? "50%" : null)};
@@ -81,7 +82,8 @@ function EditProfile() {
   }
   useEffect(() => {
     (async () => {
-      await fetch(`http://localhost:5050/users/${userId}/edit`);
+      await fetch(`
+        ${API_BASE_URL}/users/${userId}/edit`);
     })();
   }, []);
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {

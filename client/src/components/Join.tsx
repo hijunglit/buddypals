@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { API_BASE_URL } from "../urls";
 
 const JoinForm = styled.form<{ $isbigscreen: boolean }>`
   display: flex;
@@ -60,7 +61,7 @@ function Join() {
   });
   useEffect(() => {
     (async () => {
-      const response = await fetch("http://localhost:5050/join");
+      const response = await fetch(`${API_BASE_URL}/join`);
       const json = await response.json();
       console.log(json);
     })();
@@ -75,7 +76,7 @@ function Join() {
     const user = { ...form };
     try {
       let response;
-      response = await fetch(`http://localhost:5050/join`, {
+      response = await fetch(`${API_BASE_URL}/join`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(user),

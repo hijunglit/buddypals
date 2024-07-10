@@ -4,6 +4,7 @@ import { authAtom } from "../atoms/atom";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useMediaQuery } from "react-responsive";
+import { API_BASE_URL } from "../urls";
 
 const Form = styled.form<{ $isbigscreen: boolean }>`
   display: flex;
@@ -50,7 +51,7 @@ function ChangePassword() {
   });
   useEffect(() => {
     (async () => {
-      await fetch("http://localhost:5050/users/change-password");
+      await fetch(`${API_BASE_URL}/users/change-password`);
     })();
   }, []);
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -58,23 +59,20 @@ function ChangePassword() {
     const passwordForm = { ...form };
     const postData = { passwordForm, profile };
     try {
-      const response = await fetch(
-        "http://localhost:5050/users/change-password",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(postData),
-        }
-      );
+      const response = await fetch(`${API_BASE_URL}/users/change-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(postData),
+      });
       const json = await response.json();
       console.log(json);
       if (response.status === 400) {
         return setMessage(json.message);
       }
       if (response.status === 200) {
-        await fetch("http://localhost:5050/users/logout");
+        await fetch(`${API_BASE_URL}/users/logout`);
         setProfile({
           user: null,
           isAuthenticated: false,
