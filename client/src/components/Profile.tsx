@@ -71,7 +71,7 @@ const Posts = styled.div<{ $isbigscreen: boolean }>`
   padding: ${(props) => (props.$isbigscreen ? "8px 12px" : null)};
 `;
 const Post = styled.div<{ $imgsrc: string }>`
-  background-image: url(${API_BASE_URL}/${(props) => props.$imgsrc});
+  background-image: url(${(props) => props.$imgsrc});
   background-size: cover;
   background-position: center;
   height: 100%;
@@ -127,7 +127,13 @@ function Profile() {
       <Posts $isbigscreen={isTablet || isDesktop}>
         {user?.posts.map((post) => (
           <Link to={"/posts/" + post._id} key={post._id}>
-            <Post $imgsrc={post.img[0]} />
+            <Post
+              $imgsrc={
+                post.img[0].includes("http")
+                  ? post.img[0]
+                  : `http://localhost:5050/${post.img[0]}`
+              }
+            />
           </Link>
         ))}
       </Posts>
