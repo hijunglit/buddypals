@@ -75,7 +75,6 @@ function Upload() {
     maxWidth: 767,
   });
   const profile = useRecoilValue(authAtom);
-  console.log(profile.user);
   const [fileName, setFileName] = useState("");
   const [form, setForm] = useState({
     photos: [],
@@ -114,7 +113,7 @@ function Upload() {
         result = await response.data;
       }
       if (response?.status !== 200) {
-        console.log(response?.data);
+        console.log(response);
         throw new Error(`HTTP error! status: ${response?.statusText}`);
       }
     } catch (err) {

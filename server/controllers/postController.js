@@ -59,12 +59,11 @@ export const postUpload = async (req, res) => {
     body: { text, hashtags },
     files,
   } = req;
-  console.log("req.body", req.body);
-  console.log("req.files", files);
   const loggedInUser = JSON.parse(req.body.profile);
   if (files) {
     const image = req.files;
     const path = image.map((img) => img.location);
+    console.log(path);
     try {
       const result = await Post.create({
         img: files ? path : "",
@@ -77,8 +76,7 @@ export const postUpload = async (req, res) => {
       user.save();
       return res.send(result).status(204);
     } catch (err) {
-      console.error(err);
-      res.status(500).send({ message: "Error updating record" });
+      res.status(500).send({ result, message: "Error updating record" });
     }
   }
 };
