@@ -3,13 +3,48 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { authAtom } from "../atoms/atom";
 import { API_BASE_URL } from "../urls";
+import { useMediaQuery } from "react-responsive";
+import styled from "styled-components";
 
 interface IPost {
   text: string;
   hashtags: string;
 }
+const EditForm = styled.form<{ $isbigscreen: boolean }>`
+  display: flex;
+  width: ${(props) => (props.$isbigscreen ? "50%" : null)};
+  flex-direction: column;
+  gap: 0.625em;
+  padding: 1em;
+  margin: ${(props) => (props.$isbigscreen ? "0 auto" : null)};
+`;
+const Input = styled.input`
+  background: transparent;
+  border: 1px solid #fff;
+  border-radius: 12px;
+  padding: 12px;
+  color: #fff;
+`;
+const SubmitEdit = styled.input`
+  background: transparent;
+  border: none;
+  color: #0095e7;
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 auto;
+  font-weight: 700;
+  font-size: 1.25em;
+`;
 
 function EditPost() {
+  const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
+  const isTablet: boolean = useMediaQuery({
+    minWidth: 768,
+    maxWidth: 991,
+  });
+  const isMobile: boolean = useMediaQuery({
+    maxWidth: 767,
+  });
   const profile = useRecoilValue(authAtom);
   const [form, setForm] = useState<IPost>({
     text: "",
@@ -71,23 +106,23 @@ function EditPost() {
     }
   };
   return (
-    <form onSubmit={onSubmit}>
-      <input
+    <EditForm onSubmit={onSubmit} $isbigscreen={isTablet || isDesktop}>
+      <Input
         type='text'
         name='text'
         id='text'
         value={form?.text}
         onChange={(e) => updateForm({ text: e.target.value })}
       />
-      <input
+      <Input
         type='text'
         name='hashtags'
         id='hashtags'
         value={form?.hashtags}
         onChange={(e) => updateForm({ hashtags: e.target.value })}
       />
-      <input type='submit' value='Edit post' />
-    </form>
+      <SubmitEdit type='submit' value='Edit post' />
+    </EditForm>
   );
 }
 

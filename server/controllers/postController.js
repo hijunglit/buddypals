@@ -59,7 +59,6 @@ export const postUpload = async (req, res) => {
     body: { text, hashtags },
     files,
   } = req;
-  console.log(hashtags);
   const loggedInUser = JSON.parse(req.body.profile);
   if (files) {
     const image = req.files;
