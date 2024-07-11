@@ -38,12 +38,14 @@ export const postEdit = async (req, res) => {
   const { id } = req.params;
   const {
     post: { text, hashtags },
+    user,
   } = req.body;
-  console.log(text);
-  console.log("hashtags", hashtags);
-  const post = await Post.exists({ _id: id });
+  const post = await Post.findById(id);
   if (!post) {
     return res.status(404).send("post Not found");
+  }
+  if (String(post.owner) !== String(user.id)) {
+    return res.status(403).send({ message: "doesn't match owner and user." });
   }
   await Post.findByIdAndUpdate(id, {
     text,
@@ -63,7 +65,6 @@ export const postUpload = async (req, res) => {
   if (files) {
     const image = req.files;
     const path = image.map((img) => img.location);
-    console.log(path);
     try {
       const result = await Post.create({
         img: files ? path : "",

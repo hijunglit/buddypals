@@ -98,6 +98,9 @@ function EditPost() {
           body: JSON.stringify({ post, user }),
         }
       );
+      if (response.status === 403) {
+        navigate("/");
+      }
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
     } finally {
