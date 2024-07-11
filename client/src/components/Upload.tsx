@@ -114,6 +114,7 @@ function Upload() {
         result = await response.data;
       }
       if (response?.status !== 200) {
+        console.log(response?.data);
         throw new Error(`HTTP error! status: ${response?.statusText}`);
       }
     } catch (err) {
