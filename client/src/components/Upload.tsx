@@ -75,6 +75,7 @@ function Upload() {
     maxWidth: 767,
   });
   const profile = useRecoilValue(authAtom);
+  console.log(profile.user);
   const [fileName, setFileName] = useState("");
   const [form, setForm] = useState({
     photos: [],
@@ -90,7 +91,6 @@ function Upload() {
       const result = await response.json();
     })();
   }, []);
-
   function updateForm(value: any) {
     return setForm((prev) => {
       return { ...prev, ...value };

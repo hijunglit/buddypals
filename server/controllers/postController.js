@@ -78,7 +78,7 @@ export const postUpload = async (req, res) => {
       return res.send(result).status(204);
     } catch (err) {
       console.error(err);
-      res.status(500).send({ message: err });
+      res.status(500).send({ message: "Error updating record" });
     }
   }
 };
