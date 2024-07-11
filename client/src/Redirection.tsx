@@ -16,6 +16,7 @@ function Redirection() {
         body: JSON.stringify({ code: code }),
       });
       const result = await response.json();
+      console.log(result);
       setAuthState({
         user: {
           username: String(result.user.username),

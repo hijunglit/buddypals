@@ -53,7 +53,7 @@ export const startKakaoLogin = (req, res) => {
   return res.send({ clientId }).status(200);
 };
 export const finishKakaoLogin = async (req, res) => {
-  const baseUrl = "	https://kauth.kakao.com/oauth/token";
+  const baseUrl = "https://kauth.kakao.com/oauth/token";
   const config = {
     grant_type: "authorization_code",
     client_id: process.env.KAKAO_CLIENT,
@@ -84,6 +84,7 @@ export const finishKakaoLogin = async (req, res) => {
         },
       })
     ).json();
+    console.log(userData);
     const profile = userData.kakao_account.profile;
     let user = await User.findOne({
       username: profile.nickname + "(kakao)",
@@ -102,12 +103,13 @@ export const finishKakaoLogin = async (req, res) => {
       const sessionizeUser = socialSessionizeUser(user);
       req.session.loggedIn = true;
       req.session.user = sessionizeUser;
-      console.log("kakao login success");
+      console.log("kakao join success");
       return res.send({ user: req.session.user });
     } else {
       const sessionizeUser = socialSessionizeUser(user);
       req.session.loggedIn = true;
       req.session.user = sessionizeUser;
+      console.log("kakao login success");
       return res.send({ user: req.session.user });
     }
   } else {
