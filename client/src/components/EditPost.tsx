@@ -6,14 +6,14 @@ import { API_BASE_URL } from "../urls";
 
 interface IPost {
   text: string;
-  hashtags: string[];
+  hashtags: string;
 }
 
 function EditPost() {
   const profile = useRecoilValue(authAtom);
   const [form, setForm] = useState<IPost>({
     text: "",
-    hashtags: [""],
+    hashtags: "",
   });
   const params = useParams();
   const navigate = useNavigate();
@@ -63,13 +63,10 @@ function EditPost() {
           body: JSON.stringify({ post, user }),
         }
       );
-      if (response.status === 403) {
-        navigate("/");
-      }
     } catch (err) {
       console.error("A problem occurred with your fetch operation: ", err);
     } finally {
-      setForm({ text: "", hashtags: [""] });
+      setForm({ text: "", hashtags: "" });
       navigate(`/`);
     }
   };

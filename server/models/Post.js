@@ -13,6 +13,7 @@ const postSchema = new mongoose.Schema({
 
 postSchema.static("formatHashtags", function (hashtags) {
   return hashtags
+    .join()
     .split(",")
     .map((word) => (word.startsWith("#") ? word : `#${word}`));
 });

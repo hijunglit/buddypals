@@ -36,14 +36,14 @@ export const getEdit = async (req, res) => {
 };
 export const postEdit = async (req, res) => {
   const { id } = req.params;
-  const { user } = req.body;
-  const { text, hashtags } = req.body;
+  const {
+    post: { text, hashtags },
+  } = req.body;
+  console.log(text);
+  console.log("hashtags", hashtags);
   const post = await Post.exists({ _id: id });
   if (!post) {
     return res.status(404).send("post Not found");
-  }
-  if (String(post.owner) !== String(user.id)) {
-    return res.status(403).send({ message: "Authentication error" });
   }
   await Post.findByIdAndUpdate(id, {
     text,
@@ -59,6 +59,7 @@ export const postUpload = async (req, res) => {
     body: { text, hashtags },
     files,
   } = req;
+  console.log(hashtags);
   const loggedInUser = JSON.parse(req.body.profile);
   if (files) {
     const image = req.files;

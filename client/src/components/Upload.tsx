@@ -88,7 +88,6 @@ function Upload() {
     (async () => {
       const response = await fetch(`${API_BASE_URL}/posts/upload`);
       const result = await response.json();
-      console.log(result);
     })();
   }, []);
 
@@ -139,7 +138,6 @@ function Upload() {
     setFileName(imgLists[0].name);
     updateForm({ photos: imgLists });
   };
-  console.log(fileName);
   const handleDeletePrevie = (id: any) => {
     setPreview(preview.filter((_, index) => index !== id));
   };
