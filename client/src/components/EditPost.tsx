@@ -121,7 +121,7 @@ function EditPost() {
         value={form?.hashtags}
         onChange={(e) => updateForm({ hashtags: e.target.value })}
       />
-      <SubmitEdit type='submit' value='Edit post' />
+      <SubmitEdit type='submit' value='완료' />
     </EditForm>
   );
 }
