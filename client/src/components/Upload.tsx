@@ -101,7 +101,6 @@ function Upload() {
     for (let i = 0; i < form.photos.length; i++) {
       formData.append("photos", form.photos[i]);
     }
-    formData.append("photos", form.photos as any);
     formData.append("text", form.text);
     formData.append("hashtags", form.hashtags);
     formData.append("profile", JSON.stringify(profile.user));
