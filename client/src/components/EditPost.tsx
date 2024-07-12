@@ -73,7 +73,13 @@ function EditPost() {
       if (profile.user?.id !== post.owner) {
         navigate("/");
       }
-      setForm(post);
+      const { hashtags, ...otherData } = post;
+      const stringifiedKey = Array.isArray(hashtags)
+        ? hashtags.join()
+        : hashtags;
+      const processedData = { ...otherData, hashtags: stringifiedKey };
+      setForm(processedData);
+      console.log(form);
     }
     fetchData();
   }, [params.id, navigate]);

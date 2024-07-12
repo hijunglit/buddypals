@@ -149,7 +149,11 @@ function Upload() {
         <label htmlFor='photos'>
           <CustomFileInput>
             <UploadButton>🔗 FILE UPLOAD</UploadButton>
-            {fileName ? <FileName>{fileName}</FileName> : ""}
+            {fileName ? (
+              <FileName>{fileName}</FileName>
+            ) : (
+              "최대 3장까지 업로드 할 수 있습니다."
+            )}
           </CustomFileInput>
         </label>
         <Input
@@ -188,12 +192,12 @@ function Upload() {
         {preview.map((image, id) => (
           <Preview key={id} style={{ width: "100px" }}>
             <Img src={image} alt={`${image}-${id}`} />
-            <Cancel
+            {/* <Cancel
               onClick={() => handleDeletePrevie(id)}
               style={{ cursor: "pointer" }}
             >
               ❌
-            </Cancel>
+            </Cancel> */}
           </Preview>
         ))}
       </PreviewBox>
