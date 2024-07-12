@@ -42,15 +42,6 @@ const s3PostStorage = multerS3({
   },
 });
 
-try {
-  fs.readdirSync("uploads/avatars");
-  fs.readdirSync("uploads/posts");
-} catch (err) {
-  console.error("upload 폴더가 없습니다. 폴더를 생성합니다.");
-  fs.mkdirSync("uploads/avatars");
-  fs.mkdirSync("uploads/posts");
-}
-
 const fileFilter = (req, file, cb) => {
   const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
   if (allowedFileTypes.includes(file.mimetype)) {
