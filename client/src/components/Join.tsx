@@ -63,7 +63,6 @@ function Join() {
     (async () => {
       const response = await fetch(`${API_BASE_URL}/join`);
       const json = await response.json();
-      console.log(json);
     })();
   }, [message.length]);
   function updateForm(value: any) {

@@ -105,6 +105,7 @@ function Comments() {
   const { id } = params;
   const [post, setPost] = useState<IPostInfo>();
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   useEffect(() => {
     (async () => {
       const response = await fetch(`${API_BASE_URL}/posts/${id}`);
@@ -112,7 +113,7 @@ function Comments() {
       const post = result.post;
       setPost(post);
     })();
-  }, []);
+  }, [comments]);
   const onGobackClick = () => history(-1);
   const handleSetValue = (event: any) => {
     setComment(event.target.value);
@@ -133,9 +134,14 @@ function Comments() {
       );
       const result = await response.data;
       if (response.status === 201) {
+        setComments((prev) => {
+          return { ...prev, comment };
+        });
       }
     } catch (err) {
       console.error(err);
+    } finally {
+      setComment("");
     }
   };
   return (

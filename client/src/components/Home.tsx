@@ -247,6 +247,7 @@ function Home(): JSX.Element {
   }
   const [posts, setPosts] = useState<IPostInfo[]>([]);
   const [comment, setComment] = useState("");
+  const [comments, setComments] = useState([]);
   useEffect(() => {
     async function getPosts() {
       const response = await fetch(`${API_BASE_URL}`);
@@ -260,7 +261,7 @@ function Home(): JSX.Element {
       setPosts(posts);
     }
     getPosts();
-  }, [posts.length]);
+  }, [posts.length, comments]);
   const onCommentClickedOnMobile = (postId: string) => {
     history(`/post/${postId}/comments`);
   };
@@ -433,60 +434,61 @@ function Home(): JSX.Element {
                           <DetailBody>
                             <PostText>{clickedPost.text}</PostText>
                             <Hashtags>{clickedPost.hashtags}</Hashtags>
-                            <CommentSection></CommentSection>
                           </DetailBody>
                           <DetailBottom>
-                            <ul
-                              style={{
-                                display: "grid",
-                                gap: "12px",
-                              }}
-                            >
-                              {clickedPost.comments.map((comment) => (
-                                <li key={comment._id}>
-                                  <div
-                                    style={{
-                                      display: "flex",
-                                      columnGap: "6px",
-                                    }}
-                                  >
+                            <CommentSection>
+                              <ul
+                                style={{
+                                  display: "grid",
+                                  gap: "12px",
+                                }}
+                              >
+                                {clickedPost.comments.map((comment) => (
+                                  <li key={comment._id}>
                                     <div
                                       style={{
-                                        backgroundImage:
-                                          comment.owner.thumbnailImageUrl.includes(
-                                            "http"
-                                          )
-                                            ? `url(${comment.owner.thumbnailImageUrl})`
-                                            : `url(${API_BASE_URL}/${comment.owner.thumbnailImageUrl})`,
-                                        width: "32px",
-                                        height: "32px",
-                                        borderRadius: "50%",
-                                        backgroundSize: "cover",
-                                        backgroundPosition: "center",
+                                        display: "flex",
+                                        columnGap: "6px",
                                       }}
-                                    ></div>
-                                    <div style={{ lineHeight: "1.4" }}>
-                                      <p>{comment.text}</p>
-                                      <small
+                                    >
+                                      <div
                                         style={{
-                                          fontSize: "12px",
-                                          color: "#a8a8a8",
+                                          backgroundImage:
+                                            comment.owner.thumbnailImageUrl.includes(
+                                              "http"
+                                            )
+                                              ? `url(${comment.owner.thumbnailImageUrl})`
+                                              : `url(${API_BASE_URL}/${comment.owner.thumbnailImageUrl})`,
+                                          width: "32px",
+                                          height: "32px",
+                                          borderRadius: "50%",
+                                          backgroundSize: "cover",
+                                          backgroundPosition: "center",
                                         }}
-                                      >
-                                        {new Date(
-                                          comment.createdAt
-                                        ).toLocaleDateString("ko-kr", {
-                                          weekday: "long",
-                                          year: "numeric",
-                                          month: "long",
-                                          day: "numeric",
-                                        })}
-                                      </small>
+                                      ></div>
+                                      <div style={{ lineHeight: "1.4" }}>
+                                        <p>{comment.text}</p>
+                                        <small
+                                          style={{
+                                            fontSize: "12px",
+                                            color: "#a8a8a8",
+                                          }}
+                                        >
+                                          {new Date(
+                                            comment.createdAt
+                                          ).toLocaleDateString("ko-kr", {
+                                            weekday: "long",
+                                            year: "numeric",
+                                            month: "long",
+                                            day: "numeric",
+                                          })}
+                                        </small>
+                                      </div>
                                     </div>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
+                                  </li>
+                                ))}
+                              </ul>
+                            </CommentSection>
                             <div style={{ position: "fixed" }}>
                               <form
                                 onSubmit={async (
@@ -512,9 +514,14 @@ function Home(): JSX.Element {
                                     );
                                     const result = await response.data;
                                     if (response.status === 201) {
+                                      setComments((prev) => {
+                                        return { ...prev, comment };
+                                      });
                                     }
                                   } catch (err) {
                                     console.error(err);
+                                  } finally {
+                                    setComment("");
                                   }
                                 }}
                                 style={{ display: "flex" }}

@@ -79,7 +79,6 @@ function EditPost() {
         : hashtags;
       const processedData = { ...otherData, hashtags: stringifiedKey };
       setForm(processedData);
-      console.log(form);
     }
     fetchData();
   }, [params.id, navigate]);

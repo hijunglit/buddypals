@@ -175,7 +175,7 @@ function Upload() {
           required
         />
         <Input
-          placeholder='해시태그'
+          placeholder='해시태그(콤마,)로 구분해 주세요. ex) hash,tag'
           type='text'
           name='hashtags'
           value={form.hashtags}

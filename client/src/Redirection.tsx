@@ -30,7 +30,7 @@ function Redirection() {
       navigate("/");
     })();
   }, []);
-  return <h1>kakaotalk Redirection!</h1>;
+  return <h1>로딩중입니다...</h1>;
 }
 
 export default Redirection;

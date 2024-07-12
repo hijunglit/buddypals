@@ -67,7 +67,6 @@ function ChangePassword() {
         body: JSON.stringify(postData),
       });
       const json = await response.json();
-      console.log(json);
       if (response.status === 400) {
         return setMessage(json.message);
       }
