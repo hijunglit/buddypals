@@ -217,8 +217,9 @@ const CommentSection = styled.div``;
 
 function Home(): JSX.Element {
   const history = useNavigate();
+  let y = Number(sessionStorage.modalOffset);
   const postMatch: PathMatch<string> | null = useMatch("/post/:postId");
-  const { scrollY } = useScroll();
+  const [offsety, setOffsety] = useState<number>();
   const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
   const isTablet: boolean = useMediaQuery({
     minWidth: 768,
@@ -259,6 +260,9 @@ function Home(): JSX.Element {
       const json = await response.json();
       const posts = json.posts;
       setPosts(posts);
+      if (y) {
+        window.scroll(0, y);
+      }
     }
     getPosts();
   }, [posts.length, comments]);
@@ -268,6 +272,7 @@ function Home(): JSX.Element {
   const onCommentClickedOnBigScreen = (postId: string) => {
     history(`/post/${postId}`);
     const currentScrollY = window.scrollY;
+    sessionStorage.setItem("modalOffset", `${currentScrollY}`);
     document.body.style.position = "fixed";
     document.body.style.width = "100%";
     document.body.style.top = `-${currentScrollY}px`;
@@ -389,7 +394,7 @@ function Home(): JSX.Element {
                     exit={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                   />
-                  <PostModal style={{ top: scrollY.get() + 30 }}>
+                  <PostModal style={{ top: y + 30 }}>
                     {clickedPost && (
                       <>
                         <ModalPhotos>
