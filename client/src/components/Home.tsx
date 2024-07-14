@@ -8,7 +8,7 @@ import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useMediaQuery } from "react-responsive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { faComment, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import { API_BASE_URL } from "../urls";
@@ -569,6 +569,18 @@ function Home(): JSX.Element {
                       </>
                     )}
                   </PostModal>
+                  <div
+                    style={{
+                      zIndex: "9999",
+                      position: "fixed",
+                      top: "10px",
+                      right: "10px",
+                      cursor: "pointer",
+                    }}
+                    onClick={onOverlayClick}
+                  >
+                    <FontAwesomeIcon icon={faTimes} size={"xl"} />
+                  </div>
                 </>
               ) : null}
             </AnimatePresence>
