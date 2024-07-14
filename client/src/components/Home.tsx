@@ -9,7 +9,7 @@ import "react-multi-carousel/lib/styles.css";
 import { useMediaQuery } from "react-responsive";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-solid-svg-icons";
-import { AnimatePresence, motion, useScroll } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import axios from "axios";
 import { API_BASE_URL } from "../urls";
 
@@ -219,7 +219,6 @@ function Home(): JSX.Element {
   const history = useNavigate();
   let y = Number(sessionStorage.modalOffset);
   const postMatch: PathMatch<string> | null = useMatch("/post/:postId");
-  const [offsety, setOffsety] = useState<number>();
   const isDesktop: boolean = useMediaQuery({ minWidth: 992 });
   const isTablet: boolean = useMediaQuery({
     minWidth: 768,
@@ -249,6 +248,11 @@ function Home(): JSX.Element {
   const [posts, setPosts] = useState<IPostInfo[]>([]);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  useLayoutEffect(() => {
+    if (y) {
+      window.scroll(0, y);
+    }
+  });
   useEffect(() => {
     async function getPosts() {
       const response = await fetch(`${API_BASE_URL}`);
