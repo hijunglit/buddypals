@@ -170,7 +170,6 @@ const PostModal = styled(motion.div)`
   display: flex;
   column-gap: 16px;
   width: 80vw;
-  height: 96vh;
   background-color: ${(props) => props.theme.bgColor};
   left: 0;
   right: 0;
@@ -498,7 +497,7 @@ function Home(): JSX.Element {
                                 ))}
                               </ul>
                             </CommentSection>
-                            <div style={{ position: "fixed" }}>
+                            <div style={{ position: "fixed", width: "40%" }}>
                               <form
                                 onSubmit={async (
                                   event: React.FormEvent<HTMLFormElement>
@@ -558,6 +557,7 @@ function Home(): JSX.Element {
                                     color: "#0095f6",
                                     border: "none",
                                     fontWeight: "700",
+                                    cursor: "pointer",
                                   }}
                                 >
                                   게시
