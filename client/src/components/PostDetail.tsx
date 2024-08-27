@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -75,6 +75,7 @@ const CommentsSection = styled.div<{ $isbigscreen: boolean }>`
 `;
 const HeaderBody = styled.div`
   display: flex;
+  gap: 6px;
   margin-top: 44px;
   border-bottom: 1px solid #262626;
 `;
@@ -165,23 +166,27 @@ function PostDetail() {
             </div>
           </HeaderTop>
           <HeaderBody>
-            <div
-              style={{
-                width: "32px",
-                height: "32px",
-                backgroundImage: `url(${
-                  post?.owner.thumbnailImageUrl.includes("http")
-                    ? post?.owner.thumbnailImageUrl
-                    : `${API_BASE_URL}/${post?.owner.thumbnailImageUrl}`
-                })`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                borderRadius: "50%",
-              }}
-            ></div>
+            <Link to={`/users/${post?.owner._id}`}>
+              <div
+                style={{
+                  width: "32px",
+                  height: "32px",
+                  backgroundImage: `url(${
+                    post?.owner.thumbnailImageUrl.includes("http")
+                      ? post?.owner.thumbnailImageUrl
+                      : `${API_BASE_URL}/${post?.owner.thumbnailImageUrl}`
+                  })`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  borderRadius: "50%",
+                }}
+              ></div>
+            </Link>
             <div>
-              <div style={{ display: "flex" }}>
-                <h5>{post?.owner.username}</h5>
+              <div style={{ display: "flex", gap: "6px" }}>
+                <Link to={`/users/${post?.owner._id}`}>
+                  <h5 style={{ fontWeight: 600 }}>{post?.owner.username}</h5>
+                </Link>
                 <p style={{ overflowWrap: "anywhere" }}>{post?.text}</p>
               </div>
               <p style={{ color: "#e0f1ff" }}>{post?.hashtags}</p>
@@ -206,21 +211,27 @@ function PostDetail() {
                     columnGap: "6px",
                   }}
                 >
-                  <div
-                    style={{
-                      backgroundImage: comment.owner.thumbnailImageUrl.includes(
-                        "http"
-                      )
-                        ? `url(${comment.owner.thumbnailImageUrl})`
-                        : `url(${API_BASE_URL}/${comment.owner.thumbnailImageUrl})`,
-                      width: "32px",
-                      height: "32px",
-                      borderRadius: "50%",
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                    }}
-                  ></div>
+                  <Link to={`/users/${comment.owner._id}`}>
+                    <div
+                      style={{
+                        backgroundImage:
+                          comment.owner.thumbnailImageUrl.includes("http")
+                            ? `url(${comment.owner.thumbnailImageUrl})`
+                            : `url(${API_BASE_URL}/${comment.owner.thumbnailImageUrl})`,
+                        width: "32px",
+                        height: "32px",
+                        borderRadius: "50%",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                      }}
+                    ></div>
+                  </Link>
                   <div style={{ lineHeight: "1.4" }}>
+                    <Link to={`/users/${comment.owner._id}`}>
+                      <p style={{ fontWeight: 600 }}>
+                        {comment.owner.username}
+                      </p>
+                    </Link>
                     <p>{comment.text}</p>
                     <small style={{ fontSize: "12px", color: "#a8a8a8" }}>
                       {new Date(comment.createdAt).toLocaleDateString("ko-kr", {

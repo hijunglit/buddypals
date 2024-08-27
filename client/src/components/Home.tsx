@@ -495,6 +495,9 @@ function Home(): JSX.Element {
                                         }}
                                       ></div>
                                       <div style={{ lineHeight: "1.4" }}>
+                                        <p style={{ fontWeight: 600 }}>
+                                          {comment.owner.username}
+                                        </p>
                                         <p>{comment.text}</p>
                                         <small
                                           style={{
