@@ -247,6 +247,7 @@ function Home(): JSX.Element {
   const [posts, setPosts] = useState<IPostInfo[]>([]);
   const [comment, setComment] = useState("");
   const [comments, setComments] = useState([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   useLayoutEffect(() => {
     if (y) {
       window.scroll(0, y);
@@ -263,6 +264,7 @@ function Home(): JSX.Element {
       const json = await response.json();
       const posts = json.posts;
       setPosts(posts);
+      setIsLoading(false);
       if (y) {
         window.scroll(0, y);
       }
@@ -297,98 +299,114 @@ function Home(): JSX.Element {
       {profile.isAuthenticated ? (
         <>
           <PostContainer $isbigscreen={isTablet || isDesktop}>
-            {posts?.map((post) => (
-              <Post
-                layoutId={post._id}
-                key={post._id}
-                $isbigscreen={isTablet || isDesktop}
-              >
-                <PostTop>
-                  <OwnerInfo>
-                    <Link to={`users/${post.owner._id}`}>
-                      <Thumbnail
-                        {...{
-                          $ownerthumb: post.owner.thumbnailImageUrl.includes(
-                            "http"
-                          )
-                            ? post.owner.thumbnailImageUrl
-                            : `${API_BASE_URL}/${post.owner.thumbnailImageUrl}`,
-                        }}
-                      />
-                    </Link>
-                    <Link to={`users/${post.owner._id}`}>
-                      <UserName>{post.owner.username}</UserName>
-                    </Link>
-                  </OwnerInfo>
-                  <Controller>
-                    {String(post.owner._id) === String(profile.user?.id) ? (
-                      <>
-                        <OwnerController>
-                          <Edit>
-                            <Link to={`posts/${post._id}/edit`}>수정</Link>
-                          </Edit>
-                          <Delete onClick={() => deletePost(post._id)}>
-                            삭제
-                          </Delete>
-                        </OwnerController>
+            {isLoading ? (
+              <img
+                src='https://i.ibb.co/20zw80q/1487.gif'
+                alt='loading...'
+                style={{
+                  width: "64px",
+                  height: "64px",
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                }}
+              />
+            ) : (
+              posts?.map((post) => (
+                <Post
+                  layoutId={post._id}
+                  key={post._id}
+                  $isbigscreen={isTablet || isDesktop}
+                >
+                  <PostTop>
+                    <OwnerInfo>
+                      <Link to={`users/${post.owner._id}`}>
+                        <Thumbnail
+                          {...{
+                            $ownerthumb: post.owner.thumbnailImageUrl.includes(
+                              "http"
+                            )
+                              ? post.owner.thumbnailImageUrl
+                              : `${API_BASE_URL}/${post.owner.thumbnailImageUrl}`,
+                          }}
+                        />
+                      </Link>
+                      <Link to={`users/${post.owner._id}`}>
+                        <UserName>{post.owner.username}</UserName>
+                      </Link>
+                    </OwnerInfo>
+                    <Controller>
+                      {String(post.owner._id) === String(profile.user?.id) ? (
+                        <>
+                          <OwnerController>
+                            <Edit>
+                              <Link to={`posts/${post._id}/edit`}>수정</Link>
+                            </Edit>
+                            <Delete onClick={() => deletePost(post._id)}>
+                              삭제
+                            </Delete>
+                          </OwnerController>
+                          <SeePost>
+                            <Link to={`/posts/${post._id}`}>게시물로 이동</Link>
+                          </SeePost>
+                        </>
+                      ) : (
                         <SeePost>
                           <Link to={`/posts/${post._id}`}>게시물로 이동</Link>
                         </SeePost>
-                      </>
-                    ) : (
-                      <SeePost>
-                        <Link to={`/posts/${post._id}`}>게시물로 이동</Link>
-                      </SeePost>
-                    )}
-                  </Controller>
-                </PostTop>
-                <Carousel
-                  responsive={responsive}
-                  showDots={true}
-                  infinite={true}
-                >
-                  {post.img.map((img) => (
-                    <Photo
-                      key={img}
-                      style={{
-                        background: `url(${img})`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                      }}
-                    />
-                  ))}
-                </Carousel>
-                <PostBottom>
-                  <More>
-                    {isMobile && (
-                      <Comment
-                        onClick={() => onCommentClickedOnMobile(post._id)}
-                      >
-                        <FontAwesomeIcon icon={faComment} size={"xl"} />
-                      </Comment>
-                    )}
-                    {isTablet ||
-                      (isDesktop && (
+                      )}
+                    </Controller>
+                  </PostTop>
+                  <Carousel
+                    responsive={responsive}
+                    showDots={true}
+                    infinite={true}
+                  >
+                    {post.img.map((img) => (
+                      <Photo
+                        key={img}
+                        style={{
+                          background: `url(${img})`,
+                          backgroundSize: "cover",
+                          backgroundPosition: "center",
+                        }}
+                      />
+                    ))}
+                  </Carousel>
+                  <PostBottom>
+                    <More>
+                      {isMobile && (
                         <Comment
-                          onClick={() => onCommentClickedOnBigScreen(post._id)}
+                          onClick={() => onCommentClickedOnMobile(post._id)}
                         >
                           <FontAwesomeIcon icon={faComment} size={"xl"} />
                         </Comment>
-                      ))}
-                  </More>
-                  <Text>{post.text}</Text>
-                  <Hashtags>{post.hashtags}</Hashtags>
-                  <CreatedAt>
-                    {new Date(post.createdAt).toLocaleDateString("ko-kr", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </CreatedAt>
-                </PostBottom>
-              </Post>
-            ))}
+                      )}
+                      {isTablet ||
+                        (isDesktop && (
+                          <Comment
+                            onClick={() =>
+                              onCommentClickedOnBigScreen(post._id)
+                            }
+                          >
+                            <FontAwesomeIcon icon={faComment} size={"xl"} />
+                          </Comment>
+                        ))}
+                    </More>
+                    <Text>{post.text}</Text>
+                    <Hashtags>{post.hashtags}</Hashtags>
+                    <CreatedAt>
+                      {new Date(post.createdAt).toLocaleDateString("ko-kr", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </CreatedAt>
+                  </PostBottom>
+                </Post>
+              ))
+            )}
             <AnimatePresence>
               {postMatch ? (
                 <>

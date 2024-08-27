@@ -5,6 +5,7 @@ import { ThemeProvider, createGlobalStyle } from "styled-components";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "./atoms/atom";
 import { darkTheme, lightTheme } from "./theme";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const GlobalStyle = createGlobalStyle`
 /* http://meyerweb.com/eric/tools/css/reset/ 
@@ -71,12 +72,15 @@ a{
 
 function App() {
   const isDark = useRecoilValue(isDarkAtom);
+  const queryClient = new QueryClient();
   return (
     <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
       <GlobalStyle />
       <div className='w-full p-6'>
         <Navbar />
-        <Outlet />
+        <QueryClientProvider client={queryClient}>
+          <Outlet />
+        </QueryClientProvider>
       </div>
     </ThemeProvider>
   );
