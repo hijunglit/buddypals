@@ -309,6 +309,7 @@ function Home(): JSX.Element {
                   position: "absolute",
                   top: "50%",
                   left: "50%",
+                  transform: "translateX(-50%)",
                 }}
               />
             ) : (
