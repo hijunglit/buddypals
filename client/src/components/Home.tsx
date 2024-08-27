@@ -121,6 +121,7 @@ const Delete = styled.button`
   border: 1px solid #fff;
   border-radius: 6px;
   color: #fff;
+  cursor: pointer;
 `;
 const SeePost = styled.button`
   background: transparent;
@@ -304,12 +305,12 @@ function Home(): JSX.Element {
                 src='https://i.ibb.co/20zw80q/1487.gif'
                 alt='loading...'
                 style={{
-                  width: "64px",
-                  height: "64px",
+                  width: "32px",
+                  height: "32px",
                   position: "absolute",
                   top: "50%",
                   left: "50%",
-                  transform: "translateX(-50%)",
+                  transform: "translate(-50%, -50%)",
                 }}
               />
             ) : (

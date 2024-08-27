@@ -71,9 +71,6 @@ function Upload() {
     minWidth: 768,
     maxWidth: 991,
   });
-  const isMobile: boolean = useMediaQuery({
-    maxWidth: 767,
-  });
   const profile = useRecoilValue(authAtom);
   const [fileName, setFileName] = useState("");
   const [form, setForm] = useState({
@@ -83,6 +80,7 @@ function Upload() {
   });
   const [preview, setPreview] = useState<string[]>([]);
   const [isNew, setIsNew] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     (async () => {
@@ -97,6 +95,7 @@ function Upload() {
   }
   const onSubmit = async (e: any) => {
     e.preventDefault();
+    setIsLoading(true);
     const formData = new FormData();
     for (let i = 0; i < form.photos.length; i++) {
       formData.append("photos", form.photos[i]);
@@ -141,6 +140,33 @@ function Upload() {
   };
   return (
     <>
+      {isLoading && (
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 9,
+            transition: "0.5s ease",
+          }}
+        >
+          <img
+            src='https://i.ibb.co/20zw80q/1487.gif'
+            alt='loading...'
+            style={{
+              width: "32px",
+              height: "32px",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        </div>
+      )}
       <UploadForm
         onSubmit={onSubmit}
         encType='multipart/form-data'
@@ -193,11 +219,11 @@ function Upload() {
           <Preview key={id} style={{ width: "100px" }}>
             <Img src={image} alt={`${image}-${id}`} />
             {/* <Cancel
-              onClick={() => handleDeletePrevie(id)}
-              style={{ cursor: "pointer" }}
-            >
-              ❌
-            </Cancel> */}
+            onClick={() => handleDeletePrevie(id)}
+            style={{ cursor: "pointer" }}
+          >
+            ❌
+          </Cancel> */}
           </Preview>
         ))}
       </PreviewBox>

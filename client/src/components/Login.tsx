@@ -43,6 +43,7 @@ const KakaoLogin = styled.button`
   color: #000;
   padding: 8px 12px;
   font-weight: 800;
+  cursor: pointer;
 `;
 interface ILoginForm {
   username: string;
