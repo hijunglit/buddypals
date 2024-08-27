@@ -161,7 +161,7 @@ function EditProfile() {
       <Form encType='multipart/form-data' onSubmit={onSubmit}>
         <EditProfileImage htmlFor='avatar'>
           <CustomFileInput>
-            <UplodButton>🔗 FILE UPLOAD</UplodButton>
+            <UplodButton>🔗 프로필 사진 선택</UplodButton>
             {fileName ? <FileName>{fileName}</FileName> : ""}
           </CustomFileInput>
         </EditProfileImage>
@@ -188,6 +188,7 @@ function EditProfile() {
           id='intro'
           onChange={(e) => updateForm({ intro: e.target.value })}
           value={form.intro}
+          placeholder='상태 메시지를 입력하세요'
         />
         <SaveButton type='submit' value={"저장"} />
       </Form>
